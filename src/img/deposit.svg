@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20.348" height="16.876" viewBox="0 0 20.348 16.876">
+    <defs>
+        <style>
+            .cls-1,.cls-2{fill:#191919;stroke:#fff}.cls-1{stroke-width:.1px}.cls-2{stroke-width:.4px}
+        </style>
+    </defs>
+    <g id="withdrawal" transform="translate(.2 .2)">
+        <g id="withdraw" transform="translate(6.328 6.325)">
+            <g id="Group_283" data-name="Group 283">
+                <g id="Group_282" data-name="Group 282">
+                    <path id="Path_225" d="M149.321 198.11a.322.322 0 0 0-.455 0l-3.092 3.092v-8.88a.322.322 0 1 0-.644 0v8.88l-3.092-3.092a.322.322 0 0 0-.455.455l3.642 3.641a.322.322 0 0 0 .455 0l3.642-3.641a.322.322 0 0 0-.001-.455z" class="cls-1" data-name="Path 225" transform="translate(-141.487 -192.001)"/>
+                </g>
+            </g>
+        </g>
+        <path id="Subtraction_1" d="M5.722 13.934H2.078A2.132 2.132 0 0 1 0 11.756V2.177A2.132 2.132 0 0 1 2.078 0h15.793a2.131 2.131 0 0 1 2.077 2.177v9.58a2.131 2.131 0 0 1-2.077 2.177h-3.044v-.871h3.043a1.279 1.279 0 0 0 1.247-1.306v-9.58A1.279 1.279 0 0 0 17.871.871H2.078A1.279 1.279 0 0 0 .831 2.177v9.58a1.279 1.279 0 0 0 1.248 1.306h3.643v.871z" class="cls-2" data-name="Subtraction 1"/>
+    </g>
+</svg>

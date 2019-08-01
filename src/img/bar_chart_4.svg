@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="69" height="40" viewBox="0 0 69 40">
+    <defs>
+        <style>
+            .cls-1{fill:#b50012;opacity:.12}
+        </style>
+    </defs>
+    <path id="Bar_Chart" d="M53 119V84h8v35zm-9 0V94h8v25zm-9 0V99h8v20zm-9 0V79h8v40zm-9 0V89h8v30zm-7 0v-18h6v18zm-9 0V89h8v30zm-9 0V99h8v20z" class="cls-1" data-name="Bar Chart" transform="translate(8 -79)"/>
+</svg>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="22.142" height="14.761" viewBox="0 0 22.142 14.761">
+    <defs>
+        <style>
+            .cls-1{fill:#fff;stroke:#191919;stroke-linejoin:round;stroke-width:.6px}.cls-2{stroke:none}.cls-3{fill:none}
+        </style>
+    </defs>
+    <g id="billpayment">
+        <g id="Group_1143" data-name="Group 1143">
+            <g id="Rectangle_710" class="cls-1" data-name="Rectangle 710">
+                <rect width="22.142" height="14.761" class="cls-2" rx="2"/>
+                <rect width="21.542" height="14.161" x=".3" y=".3" class="cls-3" rx="1.7"/>
+            </g>
+            <g id="Rectangle_711" class="cls-1" data-name="Rectangle 711" transform="translate(15.815 9.489)">
+                <rect width="3.163" height="3.163" class="cls-2" rx="1"/>
+                <rect width="2.563" height="2.563" x=".3" y=".3" class="cls-3" rx=".7"/>
+            </g>
+        </g>
+    </g>
+</svg>
