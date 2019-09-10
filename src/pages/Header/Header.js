@@ -1,41 +1,44 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import {Link} from 'react-router-dom';
 
 class Header extends Component {
   constructor(){
     super()
     this.state = {
-      userDetails : {},
-      redirect: false
+      userDetails : {}
     }
   }
 
   componentDidMount = () => {
-    localStorage.getItem('userDetails') && this.setState ({
-      userDetails: JSON.parse(localStorage.getItem('userDetails'))
-    });
+    if (sessionStorage.getItem('userDetails')){
+      sessionStorage.getItem('userDetails') && this.setState ({
+        userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
+      });
+    }
   }
 
   Logout = () => {
-    localStorage.clear();
+    sessionStorage.clear();
   }
 
   render() {
     const { agentName } = this.state.userDetails;
+    const { pathname } = this.props.location;
     return (
     <div>
-      <div style={{backgroundColor:'#c60115'}}>
+      <div style={{backgroundColor:'#5C2584'}}>
         <div className="container-fluid" style={{ margin:'0 15%', padding: '0'}}>
-          <div className="nav navbar-header" style={{position: 'relative'}}>
+          <div className="nav navbar-header" style={{display: 'inline-block'}}>
             <Link to="/dashboard" className="navbar-brand" style={{padding: '10px 0'}}><img src={require("../../img/logo1.png")} width="80vw" height="45vh" alt="" /></Link>
           </div>
         
-          <ul className="nav navbar-nav navbar-right">
+          <ul className="nav navbar-nav navbar-right" style={{float: 'right', display: 'inline-block'}}>
              <div className="dropdown">
               <button className="btn btn-light btn-sm dropdown-toggle" 
                 type="button" 
                 data-toggle="dropdown" 
-                style={{color: 'white', backgroundColor: '#c60115', marginTop: '4vh'}}>
+                style={{color: 'white', backgroundColor: '#FBB700', marginTop: '2vh'}}>
                  {agentName} <span style={{fontSize: '8px'}} className="fa fa-chevron-down"></span></button>
               <ul className="dropdown-menu dropdown">
                 <li><Link to={"/passwordChange"}> Change Password</Link></li>
@@ -62,7 +65,7 @@ class Header extends Component {
                   <span>
                     <img src={require("../../img/home.svg")} alt="" />
                   </span> 
-                  Dashboard
+                  <span className={pathname === '/dashboard' ? 'dashboard-active': null}>Dashboard</span>
                 </Link>
               </li>
               <li>
@@ -70,7 +73,7 @@ class Header extends Component {
                   <span>
                     <img src={require("../../img/bank.svg")} alt="" />
                   </span> 
-                  Account Opening
+                  <span className={pathname === '/open-an-account' ? 'dashboard-active': null}>Account Opening</span>
                 </Link>
               </li>
               <li>
@@ -78,14 +81,15 @@ class Header extends Component {
                   <span>
                     <img src={require("../../img/deposit.svg")} alt="" />
                   </span>
-                  Deposit
+                  <span className={pathname === '/deposit' ? 'dashboard-active': null}>Deposit</span>
                 </Link>
               </li>
               <li>
                 <Link to="/withdrawal"> 
                   <span>
                     <img src={require("../../img/withdraw.png")} alt="" />
-                  </span> Withdrawal
+                  </span> 
+                  <span className={pathname === '/withdrawal' ? 'dashboard-active': null}>Withdrawal</span>
                 </Link>
               </li>
               <li>
@@ -93,7 +97,7 @@ class Header extends Component {
                   <span>
                     <img src={require("../../img/transfer.svg")} alt="" />
                   </span>
-                  Wallet Transfer
+                  <span className={pathname === '/transfer' ? 'dashboard-active': null}>Wallet Transfer</span>
                 </Link>
               </li>
               <li>
@@ -101,7 +105,7 @@ class Header extends Component {
                   <span>
                     <img src={require("../../img/billpayment.svg")} alt="" />
                   </span> 
-                  Bill Payment
+                  <span className={pathname === '/bill_payment' ? 'dashboard-active': null}>Bill Payment</span>
                 </Link>
               </li>
               <li>
@@ -109,7 +113,7 @@ class Header extends Component {
                   <span>
                     <img src={require("../../img/thrift.svg")} alt="" />
                   </span> 
-                  Thrift
+                  <span className={pathname === '/thrift' ? 'dashboard-active': null}>Thrift</span>
                 </Link>
               </li>    
             </ul>
@@ -122,4 +126,4 @@ class Header extends Component {
 	
 }
 
-export default Header;
+export default withRouter(Header);

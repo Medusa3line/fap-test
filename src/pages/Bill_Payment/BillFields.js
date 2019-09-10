@@ -19,11 +19,10 @@ import FlightBooking from './FlightBooking';
   }
 
   onRouteChange = async (route, value) => {
-    await this.setState({route: route})
-    await this.setState({value: value})
+    await this.setState({serviceName: [], route: route, value: value})
 
-    await localStorage.getItem('userDetails') && this.setState ({
-      userDetails: JSON.parse(localStorage.getItem('userDetails'))
+    await sessionStorage.getItem('userDetails') && this.setState ({
+      userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
     })
 
     let auth_token = this.state.userDetails.auth_token; 
@@ -42,23 +41,27 @@ import FlightBooking from './FlightBooking';
     }
 
     componentDidMount = async () => {
-      await localStorage.getItem('userDetails') && this.setState ({
-      userDetails: JSON.parse(localStorage.getItem('userDetails'))
-    }) 
+      await sessionStorage.getItem('userDetails') && this.setState ({
+      userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
+    })
+    
+    if(sessionStorage.getItem('userDetails')){
+      let auth_token = this.state.userDetails.auth_token; 
+      await fetch(`${baseUrl}/bills/category/1/service`, {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${auth_token}`
+        },
+        body: JSON.stringify({})
+      }).then(response => response.json())
+        .then(result => {
+            this.setState({ serviceName: result.respBody })
+          }
+        ); //End of Get Bill Payment Details
+    }
 
-    let auth_token = this.state.userDetails.auth_token; 
-    await fetch(`${baseUrl}/bills/category/1/service`, {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${auth_token}`
-      },
-      body: JSON.stringify({})
-    }).then(response => response.json())
-      .then(result => {
-          this.setState({ serviceName: result.respBody })
-        }
-      ); //End of Get Bill Payment Details
+     
     }
 
   render(){
@@ -77,7 +80,7 @@ import FlightBooking from './FlightBooking';
             {
               route === 'airtime_topup' ?
                 <AirtimeTopup 
-                  serviceName={serviceName} 
+                  serviceName={serviceName}
                 /> :
                 (
                   this.state.route === 'internet_services' ?

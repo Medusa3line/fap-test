@@ -65,10 +65,10 @@
   display: block;
   width: 35px;
   height: 35px;
-  background: #ce4233;
+  background-color: #5C2584;
   position: absolute;
   -webkit-animation: load .7s infinite alternate ease-in-out;
-          animation: load .7s infinite alternate ease-in-out;
+  animation: load .7s infinite alternate ease-in-out;
 }
 .loader::before {
   top: 0;
@@ -110,11 +110,3 @@
     width: 35px;
   }
 }
-
-/*.loader{
-  background-color: red;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}*/

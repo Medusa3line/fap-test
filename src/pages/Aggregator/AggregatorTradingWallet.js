@@ -88,6 +88,7 @@ componentWillUnmount(){
       body: JSON.stringify(reqBody)
     }).then(response => response.json())
       .then(allAgentsDetails => {
+        // console.log(allAgentsDetails)
         if(allAgentsDetails.respBody){
           this.setState({transactions: allAgentsDetails.respBody})
         }else {
@@ -178,7 +179,7 @@ componentWillUnmount(){
                               <div><h4><strong>Trading Wallet of {AgentId}</strong></h4></div>
                             </div>
                             <div className="dropdown" style={{textAlign: 'right'}}>
-                              <button type="button" className="btn btn-danger dropdown-toggle" data-toggle="dropdown" id="pad-aggregator-items">Export <span className="fa fa-chevron-down"></span></button>
+                              <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" id="pad-aggregator-items">Export <span className="fa fa-chevron-down"></span></button>
                               <ul className="dropdown-menu dropdown">
                                 <li onClick={() => this.print('print-div')}><Link to="#">PDF</Link></li>
                               </ul>

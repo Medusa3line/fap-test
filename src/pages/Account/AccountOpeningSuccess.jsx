@@ -5,7 +5,7 @@ const print = (divName) => {
     PrintReceipt(divName);
   }
 
-const AccountOpeningSuccess = ({goBack}) => {
+const AccountOpeningSuccess = ({goBackToDashboard}) => {
     return (
         <div id="print-receipt">
             <div className="form-horizontal" style={{textAlign: 'left'}} id="deposit-fields-2">
@@ -59,9 +59,9 @@ const AccountOpeningSuccess = ({goBack}) => {
                         </button>
                 
                         <button 
-                            onClick={goBack} 
+                            onClick={goBackToDashboard} 
                             type="button"
-                            className="btn btn-danger"
+                            className="btn"
                         >
                             Go Back
                         </button>

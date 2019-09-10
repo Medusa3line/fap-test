@@ -57,18 +57,18 @@ componentDidMount = async () => {
     userDetails: JSON.parse(localStorage.getItem('userDetails'))
   })
 
-// Handling timeout when there is no event
- this.events = [
-  'load',
-  'mousemove',
-  'mousedown',
-  'click',
-  'scroll',
-  'keypress'
-];
+  // Handling timeout when there is no event
+  this.events = [
+    'load',
+    'mousemove',
+    'mousedown',
+    'click',
+    'scroll',
+    'keypress'
+  ];
 
-for (var i in this.events) { window.addEventListener(this.events[i], this.resetTimeout); } 
-this.setTimeout(); //End of Timeout handling
+  for (var i in this.events) { window.addEventListener(this.events[i], this.resetTimeout); } 
+  this.setTimeout(); //End of Timeout handling
 
 }
   onSubmit = (e) => {
@@ -82,6 +82,9 @@ this.setTimeout(); //End of Timeout handling
   }
 
   goBack = () => { this.setState ({route: 'page1'}) }
+  goBackToDashboard = () => {
+    this.props.history.push('/dashboard')
+  }
   validateBvn = () => {
     let id = 'bvnValidation';
     document.getElementById(id).disabled = true;
@@ -187,7 +190,7 @@ this.setTimeout(); //End of Timeout handling
     await this.setState({bvn: event.target.value})
     if(this.state.bvn.length === 11){
       this.setState({showValidateBVNButton: true})
-      this.validateBvn();
+      // this.validateBvn();
     } else {
       this.setState({showValidateBVNButton: false})
     }
@@ -225,14 +228,17 @@ this.setTimeout(); //End of Timeout handling
     this.props.history.push("/");  
   }
   if (route === 'receipt') {
-    return <AccountOpeningSuccess goBack={this.goBack} />
-    
+    return <AccountOpeningSuccess 
+      goBackToDashboard={this.goBackToDashboard} 
+    />    
   } else {
     return (
     <div className="body">
       {/* <!-- Main Wrapper --> */}
       <div className="container-fluid" style={{padding: '0'}}>
-        <Header />
+        <Header 
+          history={this.props.history.location.pathname}
+        />
         <div className="container-fluid" id="bottom-content">    
           <div id="main">   
             <div id="container">

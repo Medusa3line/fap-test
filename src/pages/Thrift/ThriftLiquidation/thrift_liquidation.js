@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import swal from 'sweetalert';
-import {TimeOut} from '../../../timeOut';
 import baseUrl from '../../../baseUrl';
 
 import ThriftLiquidationFields from './ThriftLiquidationFields';
@@ -9,7 +8,6 @@ import ThriftLiquidationSuccessful from './ThriftLiquidationSuccessful';
 class ThriftLiquidation extends Component {
     state = {
         route: "liquidation",
-        redirect: false,
         userDetails: {},
         phoneNumber: '',
         cardPin: '',
@@ -19,7 +17,7 @@ class ThriftLiquidation extends Component {
         makingPayment: false   
     }
 
-    cardLiquidate = (e) => {
+  cardLiquidate = (e) => {
     const { cardPin, lastNine, firstNine } = this.state;
       if( cardPin === '' || lastNine === '' || firstNine === '' ){
         alert('All fields are required')
@@ -103,39 +101,10 @@ class ThriftLiquidation extends Component {
         }
     }
 
-      // For Setting Time Out
-    clearTimeoutFunc = () => { if (this.logoutTimeout) {clearTimeout(this.logoutTimeout)}; };
-    setTimeout = () => { this.logoutTimeout = setTimeout(this.logout, TimeOut); };
-    resetTimeout = () => { this.clearTimeoutFunc(); this.setTimeout(); };
-    logout = () => { localStorage.clear(); if(this._isMounted){ this.props.history.push("/"); alert('Your session timed out'); } };
-
-    // Cancelling subscriptions
-    componentWillUnmount(){
-      this._isMounted = false;
-    }
-
-    componentDidMount = async () => {
-    this._isMounted = true;
-    if(!localStorage.getItem('userDetails')){
-      this.setState({redirect: true})
-    }
-    await localStorage.getItem('userDetails') && this.setState ({
-      userDetails: JSON.parse(localStorage.getItem('userDetails'))
+  componentDidMount = async () => {
+    await sessionStorage.getItem('userDetails') && this.setState ({
+      userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
     })
-
-    // Handling timeout when there is no event
-     this.events = [
-      'load',
-      'mousemove',
-      'mousedown',
-      'click',
-      'scroll',
-      'keypress'
-    ];
-
-    for (var i in this.events) { window.addEventListener(this.events[i], this.resetTimeout); } 
-    this.setTimeout(); //End of Timeout handling
-
   }
 
     select_transaction = async (e) => {
@@ -146,11 +115,12 @@ class ThriftLiquidation extends Component {
         this.setState({[event.target.name]: event.target.value});
     }
 
+    goBack = () => {
+      this.setState({route: 'liquidation'})
+    }  
+
   render() {
     const { route, phoneNumber, firstNine, lastNine, cardPin, phonePin, makingPayment } = this.state;
-    if (this.state.redirect){
-      this.props.history.push("/");  
-    }
     return (
       <div id="thrift-main">   
         <div id="thrift-container">
@@ -172,7 +142,9 @@ class ThriftLiquidation extends Component {
                 /> :
               (
                 route === 'receipt' ? 
-                    <ThriftLiquidationSuccessful /> : 
+                    <ThriftLiquidationSuccessful 
+                      goBack={this.goBack}
+                    /> : 
                     null
               )                                    
             }

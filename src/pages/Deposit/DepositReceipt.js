@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import PrintReceipt from '../../print';
 
 class DepositReceipt extends Component {
-
   print = (divName) => {
     PrintReceipt(divName);
   }
 
   render(){
-    const { commission, amount, goBackToDeposit, acctNumber, bank, acctName, refNumber } = this.props;
+    const { commission, amount, acctNumber, bank, acctName, refNumber } = this.props;
     return (
       <div id="print-receipt">
         <div className="form-horizontal" style={{textAlign: 'left'}} id="deposit-fields-2">
@@ -55,13 +55,13 @@ class DepositReceipt extends Component {
           <div style={{display: 'flex', justifyContent: 'space-between'}}>        
             <button type="button"
               className="btn btn-success"
-              onClick={() => this.print()}
+              onClick={() => this.print('print-receipt')}
             >
               Print Receipt
             </button>
             
-              <button onClick={goBackToDeposit} type="button"
-              className="btn btn-danger">
+              <button onClick={() => this.props.history.push("/dashboard")} type="button"
+              className="btn">
               Go Back
               </button>
           </div>
@@ -72,4 +72,4 @@ class DepositReceipt extends Component {
 	
 }
 
-export default DepositReceipt;
+export default withRouter(DepositReceipt);

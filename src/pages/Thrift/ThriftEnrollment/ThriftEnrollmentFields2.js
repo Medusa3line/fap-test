@@ -1,11 +1,11 @@
 import React from 'react';
-import MakingPayment from '../../../makingPayment.js';
+import MakingPayment from '../../../Components/makingPayment/makingPayment';
 import { manipulateNumber } from '../../../manipulateNumber';
 
 const ThriftEnrollmentFields2 = ({changeRouteToMain, onChange, finalSubmit, lastNine, cycle, amount, pin, makingPayment}) => {
 	return (
     <div>
-      <div className="row">
+        <div className="form-horizontal">
             <div className="form-group">
                 <div className="col-sm-12 col-md-8 col-lg-12" style={{marginBottom: '2vh'}}>
                     <input 
@@ -69,13 +69,13 @@ const ThriftEnrollmentFields2 = ({changeRouteToMain, onChange, finalSubmit, last
             <div className="col-sm-12 col-md-12 col-lg-12"> <br/>
                 <div style={{display: 'flex', justifyContent: 'space-between'}}>                      
                     <button 
-                        className="btn btn-danger" 
+                        className="btn" 
                         onClick={changeRouteToMain} 
                     > Go Back
                     </button>                      
                     <button 
                         type="submit"
-                        className="btn btn-success" 
+                        className="btn btn-success col-sm-8 col-md-6 col-lg-4" 
                         id="submit_button"                    
                         onClick={finalSubmit}>
                         {

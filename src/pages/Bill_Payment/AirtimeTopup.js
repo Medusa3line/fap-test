@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import NetworkList from './NetworkList';
 import swal from 'sweetalert';
 import NetworkOptions from './NetworkOptions';
 import baseUrl from '../../baseUrl';
-import MakingPayment from '../../makingPayment.js';
+import MakingPayment from '../../Components/makingPayment/makingPayment';
 import { manipulateNumber } from '../../manipulateNumber';
 
  class AirtimeTopup extends Component {
 
-    constructor(){
-    super()
+    constructor(props){
+    super(props)
     this.state = {
       networkNames: 'Select Network',
       serviceID: [],
@@ -20,16 +21,16 @@ import { manipulateNumber } from '../../manipulateNumber';
       amount: '',
       deviceNumber: '',
       agentPin:'',
-      makingPayment: false
+      makingPayment: false,
     }
   }
 
   componentDidMount = async () => {
     await this.setState({serviceID: this.props.serviceName})
 
-    await localStorage.getItem('userDetails') && this.setState ({
-      userDetails: JSON.parse(localStorage.getItem('userDetails'))
-    }) 
+    await sessionStorage.getItem('userDetails') && this.setState ({
+      userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
+    })   
 }
 
   getServiceAmount = async (amount, optionName) => {
@@ -38,6 +39,7 @@ import { manipulateNumber } from '../../manipulateNumber';
 
   getServiceNames = async (name) => {
     await this.setState({networkNames: name})
+    await this.setState({optionName: 'Select Option'})
 
   // Unique ID generation
     await this.setState({serviceID: this.props.serviceName})
@@ -75,9 +77,9 @@ import { manipulateNumber } from '../../manipulateNumber';
   //End of Get Service Code for each ID
 }
 
-  amount = async (event) =>{ await this.setState({amount: event.target.value}); }
-  deviceNumber = async (event) =>{ await this.setState({deviceNumber: event.target.value}); }
-  agentPin = async (event) =>{ await this.setState({agentPin: event.target.value}); }
+  onChange = async (event) =>{ 
+    await this.setState({[event.target.name]: event.target.value}); 
+  }
 
 //Making the payment
   makePayment = async (e) => {
@@ -95,8 +97,9 @@ import { manipulateNumber } from '../../manipulateNumber';
           customerId: this.state.deviceNumber,
           amount: this.state.amount,
           pin: this.state.agentPin,
-          paymentCode: this.state.code
-          };
+          paymentCode: this.state.code,
+          phoneNumber: this.state.deviceNumber
+        };
 
         this.setState({makingPayment: true})
 
@@ -111,8 +114,9 @@ import { manipulateNumber } from '../../manipulateNumber';
           .then(paymentResponse => {
             document.getElementById(id).disabled = false;
             if(paymentResponse.respCode === "00"){
-              swal("Successful Operation", `${paymentResponse.respDescription}`, "success");
+              swal("Successful Operation", "Airtime recharge was successful", "success");
               this.setState({makingPayment: false})
+              this.props.history.push('/dashboard');
             }
             else if(paymentResponse.respCode === "119"){
               swal("Failed Operation", `${paymentResponse.respDescription}`, "error");
@@ -125,6 +129,7 @@ import { manipulateNumber } from '../../manipulateNumber';
             document.getElementById(id).disabled = false;
             swal("Failed Operation", "An Error Occurred, Please try again", "error")
             this.setState({makingPayment: false})
+            this.props.history.push('/dashboard');
           })
     }
     
@@ -158,7 +163,7 @@ import { manipulateNumber } from '../../manipulateNumber';
             <div className="row" style={{display:'flex', justifyContent: 'center', marginBottom:'5%'}}>
               <ul className="nav navbar-nav">
                 <div className="dropdown">
-                  <li className="btn dropdown-toggle" type="button" data-toggle="dropdown"><strong>{this.state.optionName}</strong> <span className="fa fa-chevron-down"></span></li>
+                  <li className="btn dropdown-toggle" type="button" data-toggle="dropdown" style={{backgroundColor: '#faa831'}}><strong>{this.state.optionName}</strong> <span className="fa fa-chevron-down"></span></li>
                   <ul className="dropdown-menu dropdown" id="billPaymentOptionsDropdown">
                     {
                       options === null ? null : (options.length === 0 ? null : 
@@ -171,6 +176,7 @@ import { manipulateNumber } from '../../manipulateNumber';
                 </div>
               </ul>
             </div>
+
           }
 
           <div>
@@ -181,25 +187,26 @@ import { manipulateNumber } from '../../manipulateNumber';
                   <h4 id="serviceName"> {networkNames} </h4>
                   <form className="form-horizontal">
                     <div className="form-group">
-                      <input className="form-control" type="number" name="" value={amount} maxLength="10" required="required" placeholder="Enter Amount" onChange={this.amount} onKeyPress={(e) => manipulateNumber(e)} />
+                      <input className="form-control" type="number" name="amount" value={amount} step="0.01" maxLength="10" required="required" placeholder="Enter Amount" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} />
                     </div>
                     <div className="form-group">
-                      <input className="form-control" type="number" name="" required="required" placeholder="Enter Phone Number" onChange={this.deviceNumber} onKeyPress={(e) => manipulateNumber(e)} maxLength="11" /> 
+                      <input className="form-control" type="number" name="deviceNumber" required="required" placeholder="Enter Phone Number" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} maxLength="11" /> 
                     </div>
                     <div className="form-group">
-                      <input className="form-control" type="password" name="" required="required" placeholder="Enter Agent PIN" onChange={this.agentPin} onKeyPress={(e) => manipulateNumber(e)} maxLength="4" />
-                    </div>          
-                    <button 
-                      type="submit"
-                      className="btn btn-success" 
-                      id="button"
-                      
-                      onClick={this.makePayment}>
-                      {
-                        makingPayment ? <MakingPayment />
-                        : 'Proceed'
-                      }
-                    </button>
+                      <input className="form-control" type="password" name="agentPin" required="required" placeholder="Enter Agent PIN" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} maxLength="4" />
+                    </div>
+                    <div className="form-group">         
+                      <button 
+                        type="submit"
+                        className="btn btn-success col-sm-8 col-md-6 col-lg-4" 
+                        id="button"                      
+                        onClick={this.makePayment}>
+                        {
+                          makingPayment ? <MakingPayment />
+                          : 'Proceed'
+                        }
+                      </button>
+                    </div> 
                   </form>
               </React.Fragment>
             }
@@ -210,4 +217,4 @@ import { manipulateNumber } from '../../manipulateNumber';
     )  
   }
 }
-export default AirtimeTopup;
+export default withRouter(AirtimeTopup);

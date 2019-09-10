@@ -1,0 +1,11 @@
+#balanceComponent {
+	background-color: #fef6f6; 
+	display: flex;
+	justify-content: space-between;
+	width: 80%; 
+	left: 10%; 
+	position: relative;
+	padding: 1vh 2vh; 
+	margin-bottom: 2vh;
+	border-radius: 3px;
+}

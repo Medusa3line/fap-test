@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import swal from 'sweetalert';
-import {TimeOut} from '../../../timeOut';
 import baseUrl from '../../../baseUrl';
-import MakingPayment from '../../../makingPayment.js';
+import MakingPayment from '../../../Components/makingPayment/makingPayment';
 import { manipulateNumber } from '../../../manipulateNumber';
 
 class ThriftContributionFields extends Component{
   state = {
     route: "",
-    redirect: false,
     userDetails: {},
     cardAmount: '',
     phoneAmount: '',
@@ -108,39 +106,10 @@ class ThriftContributionFields extends Component{
         }
   }
 
-    // For Setting Time Out
-    clearTimeoutFunc = () => { if (this.logoutTimeout) {clearTimeout(this.logoutTimeout)}; };
-    setTimeout = () => { this.logoutTimeout = setTimeout(this.logout, TimeOut); };
-    resetTimeout = () => { this.clearTimeoutFunc(); this.setTimeout(); };
-    logout = () => { localStorage.clear(); if(this._isMounted){ this.props.history.push("/"); alert('Your session timed out'); } };
-
-    // Cancelling subscriptions
-    componentWillUnmount(){
-      this._isMounted = false;
-    }
-
     componentDidMount = async () => {
-    this._isMounted = true;
-    if(!localStorage.getItem('userDetails')){
-      this.setState({redirect: true})
-    }
-    await localStorage.getItem('userDetails') && this.setState ({
-      userDetails: JSON.parse(localStorage.getItem('userDetails'))
-    })
-
-    // Handling timeout when there is no event
-     this.events = [
-      'load',
-      'mousemove',
-      'mousedown',
-      'click',
-      'scroll',
-      'keypress'
-    ];
-
-    for (var i in this.events) { window.addEventListener(this.events[i], this.resetTimeout); } 
-    this.setTimeout(); //End of Timeout handling
-
+      await sessionStorage.getItem('userDetails') && this.setState ({
+        userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
+      })
   }
 
   select_transaction = async (e) => {
@@ -153,9 +122,6 @@ class ThriftContributionFields extends Component{
 
   render(){
     const { route, phoneNumber, cardAmount, phoneAmount, firstNine, lastNine, cardPin, phonePin, makingPayment } = this.state;
-    if (this.state.redirect){
-      this.props.history.push("/");  
-    }
     return (
       <div>
         <div className="form-horizontal">
@@ -223,7 +189,7 @@ class ThriftContributionFields extends Component{
                   <div className="col-sm-12 col-md-12 col-lg-12">
                     <button 
                       type="submit"
-                      className="btn btn-success" 
+                      className="btn btn-success col-sm-8 col-md-6 col-lg-4" 
                       id="proceed_button"                    
                       onClick={this.payWithPhone}>
                       {
@@ -300,7 +266,7 @@ class ThriftContributionFields extends Component{
                     <div className="col-sm-12 col-md-12 col-lg-12">
                       <button 
                         type="submit"
-                        className="btn btn-success" 
+                        className="btn btn-success col-sm-8 col-md-6 col-lg-4" 
                         id="proceed_button"                    
                         onClick={this.payWithCard}>
                         {

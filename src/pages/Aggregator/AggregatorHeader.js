@@ -22,7 +22,7 @@ class AggregatorHeader extends Component{
 
 	render(){
 		return(
-			<div style={{backgroundColor:'#c60115'}}>
+			<div style={{backgroundColor:'#5C2584'}}>
 				<div className="container-fluid" style={{ margin:'0 14%', padding: '0'}}>
 	        <div className="nav navbar-header" style={{position: 'relative'}}>
 	          <Link to="/aggregator" className="navbar-brand" style={{padding: '10px 0'}}><img src={require("../../img/logo1.png")} width="80vw" height="45vh" alt="" /></Link>
@@ -33,7 +33,7 @@ class AggregatorHeader extends Component{
               <button className="btn btn-light btn-sm dropdown-toggle" 
                 type="button" 
                 data-toggle="dropdown" 
-                style={{color: 'white', backgroundColor: '#c60115', marginTop: '4vh'}}>
+                style={{color: 'white', backgroundColor: '#FBB700', marginTop: '4vh'}}>
                  {this.state.userDetails.agentName} <span style={{fontSize: '8px'}} className="fa fa-chevron-down"></span></button>
               <ul className="dropdown-menu dropdown">
                 <li><Link to={"/passwordChange"}> Change Password</Link></li>

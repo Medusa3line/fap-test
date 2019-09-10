@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-import 'bootstrap/dist/js/bootstrap.js';
-import '../../assets/css/bootstrap.min.css';
-import '../../assets/extras/animate.css';
 import AggregatorHeader from './AggregatorHeader';
 import AggregatorTransferFields from './AggregatorTransferFields';
 import {TimeOut} from '../../timeOut';
@@ -44,7 +41,10 @@ componentWillUnmount(){
 
     for (var i in this.events) { window.addEventListener(this.events[i], this.resetTimeout); } 
     this.setTimeout(); //End of Timeout handling
+  }
 
+  goToDashboard = () => {
+    this.props.history.push('/dashboard');
   }
 
   render() {
@@ -64,7 +64,9 @@ componentWillUnmount(){
                     <h6> Transfer funds to any account </h6>
                   </div>
                   <div className="line"></div><br/>
-                  <AggregatorTransferFields />
+                  <AggregatorTransferFields 
+                    goToDashboard={this.goToDashboard}
+                  />
               </div>
             </div>
           </div>

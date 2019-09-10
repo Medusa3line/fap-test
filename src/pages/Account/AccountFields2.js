@@ -78,12 +78,12 @@ const AccountFields2 = ({phoneNumber, email, occupation, address, amount, openAc
                     </div> 
                     <div className="col-sm-12 col-md-12 col-lg-12">
                         <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                            <button className="btn btn-danger" onClick={goBack}>
+                            <button className="btn" onClick={goBack}>
                                 Back
                             </button>
                             <button 
                                 type="submit" 
-                                className="btn btn-success" 
+                                className="btn btn-success col-sm-8 col-md-6 col-lg-4" 
                                 id="submit_button"
                                 onClick={openAccount}
                             >

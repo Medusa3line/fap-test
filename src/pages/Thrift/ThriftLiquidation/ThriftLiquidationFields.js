@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import MakingPayment from '../../../makingPayment.js';
+import MakingPayment from '../../../Components/makingPayment/makingPayment';
 import { manipulateNumber } from '../../../manipulateNumber';
 
 class ThriftLiquidationFields extends Component{
@@ -64,7 +64,7 @@ class ThriftLiquidationFields extends Component{
               <div className="col-sm-12 col-md-12 col-lg-12">
                 <button 
                   type="submit"
-                  className="btn btn-success" 
+                  className="btn btn-success col-sm-8 col-md-6 col-lg-4" 
                   id="proceed_button"                    
                   onClick={phoneLiquidate}>
                   {
@@ -126,7 +126,7 @@ class ThriftLiquidationFields extends Component{
                 <div className="col-sm-12 col-md-12 col-lg-12">
                   <button 
                   type="submit"
-                  className="btn btn-success" 
+                  className="btn btn-success col-sm-8 col-md-6 col-lg-4" 
                   id="proceed_button"                    
                   onClick={cardLiquidate}>
                   {

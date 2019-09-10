@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom';
 
 class TransactionsList extends Component {
   render() {
-  	const { transId, amount, transType, transDate, status, serialNumber, transaction } = this.props;
-
+    const { transId, amount, transType, transDate, status, serialNumber, transaction } = this.props;
     const statusClass = () => {
     if(status === 'SUCCESSFULL' || status === 'SUCCESSFUL'){
       return {
@@ -12,7 +11,7 @@ class TransactionsList extends Component {
         borderRadius: '.5vw',
         padding: '3px',
         color: 'white',
-        width: '85%'
+        width: '100%'
       }
     } 
     else if (status === 'PENDING'){
@@ -21,7 +20,7 @@ class TransactionsList extends Component {
         borderRadius: '.5vw',
         padding: '3px',
         color: 'white',
-        width: '85%'
+        width: '100%'
       }
     } else if (status === 'FAILED'){
       return {
@@ -29,7 +28,7 @@ class TransactionsList extends Component {
         borderRadius: '.5vw',
         padding: '3px',
         color: 'white',
-        width: '85%'
+        width: '100%'
       }
     } else if (status === 'REVERSED'){
       return {
@@ -37,7 +36,7 @@ class TransactionsList extends Component {
         borderRadius: '.5vw',
         padding: '3px',
         color: 'white',
-        width: '85%'
+        width: '100%'
       }
     }
   }
@@ -50,7 +49,7 @@ class TransactionsList extends Component {
           <td style={{fontSize: '1rem', textAlign: 'center'}}><p style={statusClass()}>{status}</p></td>
         	<td>{transDate.substring(0, transDate.length - 18)}</td>
           <td>{transDate.substring(11, transDate.length - 9)}</td>
-          <td><Link to={{pathname: `/PrintReceipt/${transId}`, state: {transaction}}} id="view"><i style={{fontSize: '20px'}} className="fa fa-print"></i></Link></td>
+          <td><Link to={{pathname: `/${transType === 'Bill Payment' || transType === 'Recharge' ? 'bill-payment-receipt' : 'receipt'}/${transId}`, state: {transaction}}} id="view"><i style={{fontSize: '20px'}} className="fa fa-print"></i></Link></td>
         </tr>
     );
   }

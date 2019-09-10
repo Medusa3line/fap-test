@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import MakingPayment from '../../../makingPayment.js';
+import MakingPayment from '../../../Components/makingPayment/makingPayment';
 import { manipulateNumber } from '../../../manipulateNumber';
 
 class Thrift_balance_enquiry_fields extends Component {
@@ -14,10 +14,6 @@ class Thrift_balance_enquiry_fields extends Component {
   render (){
     const { phoneBalance, cardBalance, phoneNumber, firstNine, lastNine, cardPin, phonePin, onChange, makingPayment } = this.props;
     const { route } = this.state;
-
-    if (this.state.redirect){
-      this.props.history.push("/");  
-    }
     return (
       <React.Fragment>
           <div className="form-horizontal">
@@ -69,7 +65,7 @@ class Thrift_balance_enquiry_fields extends Component {
                   <div className="col-sm-12 col-md-12 col-lg-12">
                     <button 
                       type="submit"
-                      className="btn btn-success" 
+                      className="btn btn-success col-sm-8 col-md-6 col-lg-4" 
                       id="proceed_button"                    
                       onClick={phoneBalance}>
                       {
@@ -131,7 +127,7 @@ class Thrift_balance_enquiry_fields extends Component {
                     <div className="col-sm-12 col-md-12 col-lg-12">
                       <button 
                       type="submit"
-                      className="btn btn-success" 
+                      className="btn btn-success col-sm-8 col-md-6 col-lg-4" 
                       id="proceed_button"                    
                       onClick={cardBalance}>
                       {

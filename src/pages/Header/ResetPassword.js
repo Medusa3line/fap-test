@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import baseUrl from '../../baseUrl';
-import IsLoading from '../../isLoading.js';
+import IsLoading from '../../Components/isLoading/isLoading.js';
 import swal from 'sweetalert';
+import LoginError from '../../Components/loginError/LoginError';
 
 class ResetPassword extends Component {
   _isMounted = false;
@@ -91,24 +92,22 @@ class ResetPassword extends Component {
                         </div>
                       </div> <br/>
         
-                        <div className="form-group col-sm-12 col-md-12 col-lg-12" style={{padding: '0'}}>
-                          <button 
-                            type="submit" 
-                            className="btn btn-danger" 
-                            style={{width: '66.66667%'}}
-                            id="login_button" 
-                            onClick={this.resetPassword}>
-                            {
-                              loggingIn ? <IsLoading />
-                              : 'Proceed'
-                            }
-                          </button>
-                        </div>
+                      <div className="form-group">
+                        <button 
+                          type="submit" 
+                          className="btn" 
+                          style={{width: '66.67%'}}
+                          id="login_button" 
+                          onClick={this.resetPassword}>
+                          {
+                            loggingIn ? <IsLoading />
+                            : 'Proceed'
+                          }
+                        </button>
+                      </div>
                       {
-                          loginError ? <div className="alert alert-danger alert-dismissible out" style={{padding: '5px',width: '20%', position: 'fixed', right: '1%', top: '1%', fontSize: '12px'}}>
-                            Wrong username provided
-                          </div> : null
-                        }
+                        loginError ? <LoginError /> : null
+                      }
                 </div>
               </div>
           </div>

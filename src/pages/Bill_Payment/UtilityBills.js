@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+import PaymentReceipt from './PaymentReceipt/PaymentReceipt';
 import NetworkList from './NetworkList';
 import swal from 'sweetalert';
 import baseUrl from '../../baseUrl';
 import NetworkOptions from './NetworkOptions';
-import MakingPayment from '../../makingPayment.js';
+import MakingPayment from '../../Components/makingPayment/makingPayment';
 import { manipulateNumber } from '../../manipulateNumber';
 
 class UtilityBills extends Component {
@@ -15,13 +17,16 @@ class UtilityBills extends Component {
       serviceID: [],
       options: [],
       optionName: 'Select Option',
+      receipt: false,
       id: '',
       code: '',
       amount: '',
+      charge: '',
       deviceNumber: '',
       agentPin:'',
       makingPayment: false,
       validDeviceNumber: false,
+      customerPhoneNumber: '',
       customerName: ''
     }
   }
@@ -40,8 +45,7 @@ manipulateNumber = (e) => {
 
   validateDeviceNumber = async(e) => {
     let id = e.target.id;
-
-    if (this.state.amount === '' || this.state.deviceNumber === '' || this.state.agentPin === ''){
+    if (this.state.amount === '' || this.state.deviceNumber === ''){
       swal("Failed Operation", "All Fields are required. Please fill all fields correctly", "error")
     } else if (this.state.code === ''){
       swal("Missing Field", "Select a Network", "info")
@@ -64,12 +68,14 @@ manipulateNumber = (e) => {
           body: JSON.stringify(reqBody)
         }).then(response => response.json())
           .then(result => {
+            
             document.getElementById(id).disabled = false;
             this.setState({makingPayment: false})
             if(result.respCode === "00"){
               this.setState({
                 validDeviceNumber: true,
-                customerName: result.respBody.customerName
+                customerName: result.respBody.customerName,
+                charge: result.respBody.charge
               })
             } else {
               swal("Failed Operation", `${result.respDescription}`, "error");
@@ -88,6 +94,7 @@ manipulateNumber = (e) => {
 
   getServiceNames = async (name) => {
     await this.setState({serviceNames: name})
+    await this.setState({optionName: 'Select Option'})
 
     // Unique ID generation
     await this.setState({serviceID: this.props.serviceName})
@@ -126,9 +133,13 @@ manipulateNumber = (e) => {
 
   }
 
-  amount = async (event) =>{ await this.setState({amount: event.target.value}); }
-  deviceNumber = async (event) =>{ await this.setState({deviceNumber: event.target.value, validDeviceNumber: false}); }
-  agentPin = async (event) =>{ await this.setState({agentPin: event.target.value}); }
+  onChange = async (event) => { 
+    if (event.target.name === 'deviceNumber'){
+     await this.setState({deviceNumber: event.target.value, validDeviceNumber: false})
+    } else {
+     await this.setState({[event.target.name]: event.target.value}); 
+    } 
+  }
 
   //Making the payment
   makePayment = async (e) => {
@@ -146,10 +157,11 @@ manipulateNumber = (e) => {
             customerId: this.state.deviceNumber,
             amount: this.state.amount,
             pin: this.state.agentPin,
-            paymentCode: this.state.code
-            };
+            paymentCode: this.state.code,
+            phoneNumber: this.state.customerPhoneNumber
+          };
 
-            this.setState({makingPayment: true})
+          this.setState({makingPayment: true})
 
         await fetch(`${baseUrl}/bills/pay`, {
           method: 'post',
@@ -161,37 +173,49 @@ manipulateNumber = (e) => {
         }).then(response => response.json())
           .then(paymentResponse => {
             document.getElementById(id).disabled = false;
+            this.setState({makingPayment: false});
             if(paymentResponse.respCode === "00"){
-              swal("Successful Operation", `${paymentResponse.respDescription}`, "success");
-              this.setState({makingPayment: false})
+              swal("Successful Operation", "Payment for utility bill was successful", "success");
+              this.setState({
+                payload: paymentResponse.respBody, 
+                receipt: true
+              })
             } else {
-              this.setState({makingPayment: false})
               swal("Failed Operation", `${paymentResponse.respDescription}`, "error");
             }   
       }).catch(err => {
             swal("Failed Operation", "An Error Occurred, Please try again", "error");
             document.getElementById(id).disabled = false;
-            this.setState({makingPayment: false})
+            this.setState({makingPayment: false});
+            this.props.history.push('/dashboard');
           })
     }
     
 }
 
   componentDidMount = async () => {
-    await localStorage.getItem('userDetails') && this.setState ({
-      userDetails: JSON.parse(localStorage.getItem('userDetails'))
+    await sessionStorage.getItem('userDetails') && this.setState ({
+      userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
     })
 }
 
   render() {
     const serviceName = this.props.serviceName;
-    const { options, makingPayment, serviceNames, optionName, validDeviceNumber, customerName, amount } = this.state;
-    return (
+    const { options, makingPayment, serviceNames, optionName, validDeviceNumber, customerName, amount, charge, payload } = this.state;
+    const totalAmount = Number(amount) + Number(charge);
+    if (this.state.receipt){
+      return <PaymentReceipt 
+        payload={payload} 
+        optionName={optionName}
+        serviceNames={serviceNames}
+      />
+    } else {
+      return (
         <div>
         <div className="row" style={{display:'flex', justifyContent: 'center', marginBottom:'5%'}}>
           <ul className="nav navbar-nav">
             <div className="dropdown">
-              <li className="btn dropdown-toggle" type="button" data-toggle="dropdown" style={{backgroundColor: '#faa831'}}><strong>{this.state.serviceNames}</strong> <span className="fa fa-chevron-down"></span></li>
+              <li className="btn dropdown-toggle" type="button" data-toggle="dropdown" style={{backgroundColor: '#faa831'}}><strong>{serviceNames}</strong> <span className="fa fa-chevron-down"></span></li>
               <ul className="dropdown-menu dropdown" id="billPaymentOptionsDropdown">
                 {
                     serviceName.map((name,i) => {
@@ -208,7 +232,7 @@ manipulateNumber = (e) => {
           <div className="row" style={{display:'flex', justifyContent: 'center', marginBottom:'5%'}}>
             <ul className="nav navbar-nav">
               <div className="dropdown">
-                <li className="btn dropdown-toggle" type="button" data-toggle="dropdown"><strong>{this.state.optionName}</strong> <span className="fa fa-chevron-down"></span></li>
+                <li className="btn dropdown-toggle" type="button" data-toggle="dropdown" style={{backgroundColor: '#faa831'}}><strong>{this.state.optionName}</strong> <span className="fa fa-chevron-down"></span></li>
                 <ul className="dropdown-menu dropdown" id="billPaymentOptionsDropdown">
                   {
                     options === null ? null : (options.length === 0 ? null : 
@@ -231,26 +255,34 @@ manipulateNumber = (e) => {
                 <h4 id="serviceName"> {serviceNames} </h4>
                 <form className="form-horizontal">
                   <div className="form-group">
-                    <input className="form-control" type="number" name="" value={amount} maxLength="8" required="required" placeholder="Enter Amount" onChange={this.amount} onKeyPress={(e) => manipulateNumber(e)} />
+                    <input className="form-control" type="number" name="amount" value={amount} step="0.01" maxLength="10" required="required" placeholder="Enter Amount" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} />
                   </div>
                   <div className="form-group">
-                    <input className="form-control" type="number" name="" required="required" placeholder="Enter Meter Number" onChange={this.deviceNumber} onKeyPress={(e) => manipulateNumber(e)} maxLength="25" /> 
+                    <input className="form-control" type="number" name="deviceNumber" required="required" placeholder="Enter Meter Number" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} maxLength="25" /> 
                   </div>
                   {
-                    validDeviceNumber ? 
-                    <div className="form-group">
-                      <input className="form-control" type="text" value={customerName} readOnly required="required" />
-                    </div>
+                    validDeviceNumber ?
+                    <React.Fragment> 
+                      <div className="form-group">
+                        <input className="form-control" type="text" value={customerName} readOnly required="required" />
+                      </div>
+                      <div className="form-group">
+                        <input className="form-control" type="number" name="customerPhoneNumber" required="required" placeholder="Enter Customer Phone Number" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} maxLength="11" /> 
+                      </div>
+                      <p>You will be charged <b>₦{charge}</b> for this transaction. Total transaction amount is <b>₦{totalAmount}</b></p>
+                      <div className="form-group">
+                        <input className="form-control" type="password" name="agentPin" required="required" placeholder="Enter Agent PIN" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} maxLength="4" />
+                      </div>
+                    </React.Fragment>
                     : null
                   }                  
+                  
                   <div className="form-group">
-                    <input className="form-control" type="password" name="" required="required" placeholder="Enter Agent PIN" onChange={this.agentPin} onKeyPress={(e) => manipulateNumber(e)} maxLength="4" />
-                  </div>
                   {
                     !validDeviceNumber ? 
                     <button 
                       type="submit"
-                      className="btn btn-danger" 
+                      className="btn col-sm-8 col-md-6 col-lg-4" 
                       id="validateButton"                     
                       onClick={this.validateDeviceNumber}>
                       {
@@ -261,7 +293,7 @@ manipulateNumber = (e) => {
                     :
                     <button 
                       type="submit"
-                      className="btn btn-success" 
+                      className="btn btn-success col-sm-8 col-md-6 col-lg-4" 
                       id="button"                     
                       onClick={this.makePayment}>
                       {
@@ -269,7 +301,8 @@ manipulateNumber = (e) => {
                         : 'Proceed'
                       }
                     </button>
-                  }                        
+                  }
+                  </div>                        
                 </form>
               </React.Fragment>
             }
@@ -277,7 +310,9 @@ manipulateNumber = (e) => {
           </div>      
       
         </div>
-    )  
+    )
+    }
+      
   }
 }
-export default UtilityBills;
+export default withRouter(UtilityBills);

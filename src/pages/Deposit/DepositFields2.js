@@ -1,5 +1,5 @@
 import React from 'react';
-import MakingPayment from '../../makingPayment.js';
+import MakingPayment from '../../Components/makingPayment/makingPayment.js';
 import { manipulateNumber } from '../../manipulateNumber';
 
 const DepositFields2 = ({ commission, amount, onChange, validation, makingPayment, bank, acctName, acctNumber, goBack }) => {
@@ -50,21 +50,21 @@ const DepositFields2 = ({ commission, amount, onChange, validation, makingPaymen
             </div>
         </div>
         
-        <div style={{display: 'flex', justifyContent: 'space-between'}}>        
+        <div style={{display: 'flex', justifyContent: 'space-between'}}> 
           <button 
             type="submit"
-            className="btn btn-success" 
+            className="btn col-sm-8 col-md-6 col-lg-4"                    
+            onClick={goBack}>Go Back
+          </button>       
+          <button 
+            type="submit"
+            className="btn btn-success col-sm-8 col-md-6 col-lg-4" 
             id="validation"                    
             onClick={validation}>
             {
               makingPayment ? <MakingPayment />
               : 'Validate'
             }
-          </button>
-          <button 
-            type="submit"
-            className="btn btn-danger"                    
-            onClick={goBack}>Go Back
           </button>
         </div> 
       </div>

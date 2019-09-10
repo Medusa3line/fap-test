@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import swal from 'sweetalert';
-import {TimeOut} from '../../../timeOut';
 import baseUrl from '../../../baseUrl';
 
 import ThriftBalanceEnquiryFields from './ThriftBalanceEnquiryFields';
@@ -9,7 +8,6 @@ import ThriftBalanceSuccessful from './ThriftBalanceSuccessful';
 class ThriftBalanceEnquiry extends Component {
         state = {
           route : 'balance',
-          redirect: false,
           userDetails: {},
           phoneNumber: '',
           cardPin: '',
@@ -113,43 +111,18 @@ cardBalance = (e) => {
         }
     }
 
-    // For Setting Time Out
-clearTimeoutFunc = () => { if (this.logoutTimeout) {clearTimeout(this.logoutTimeout)}; };
-setTimeout = () => { this.logoutTimeout = setTimeout(this.logout, TimeOut); };
-resetTimeout = () => { this.clearTimeoutFunc(); this.setTimeout(); };
-logout = () => { localStorage.clear(); if(this._isMounted){ this.props.history.push("/"); alert('Your session timed out'); } };
-
-    // Cancelling subscriptions
-    componentWillUnmount(){
-      this._isMounted = false;
-    }
-
-    componentDidMount = async () => {
-    this._isMounted = true;
-    if(!localStorage.getItem('userDetails')){
-      this.setState({redirect: true})
-    }
-    await localStorage.getItem('userDetails') && this.setState ({
-      userDetails: JSON.parse(localStorage.getItem('userDetails'))
+  componentDidMount = async () => {
+    await sessionStorage.getItem('userDetails') && this.setState ({
+      userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
     })
-
-    // Handling timeout when there is no event
-     this.events = [
-      'load',
-      'mousemove',
-      'mousedown',
-      'click',
-      'scroll',
-      'keypress'
-    ];
-
-    for (var i in this.events) { window.addEventListener(this.events[i], this.resetTimeout); } 
-    this.setTimeout(); //End of Timeout handling
 
   }
 
   onChange = (event) => {
     this.setState({[event.target.name]: event.target.value});
+  }
+  goBack = () => {
+    this.setState({route: 'balance'})
   }
     
   render() {
@@ -178,6 +151,7 @@ logout = () => { localStorage.clear(); if(this._isMounted){ this.props.history.p
                       <ThriftBalanceSuccessful 
                         thriftBalance = {thriftBalance}
                         nextLiqDate = {nextLiqDate}
+                        goBack={this.goBack}
                       /> : 
                       null
                 )                                    

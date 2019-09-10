@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import IsLoading from '../../isLoading.js';
+import IsLoading from '../../Components/isLoading/isLoading.js';
+import LoginError from '../../Components/loginError/LoginError';
 
-const Login = ({ onChange, loginButtonClick, routeChange, loggingIn, loginError }) => {
+const Login = ({ onChange, loginButtonClick, loggingIn, loginError }) => {
 	return (
 		<div className="body">
             {/*-- Login Form */}
@@ -12,10 +13,10 @@ const Login = ({ onChange, loginButtonClick, routeChange, loggingIn, loginError 
               </div>
               <div className="col-lg-6 col-md-6 col-sm-12 animated zoomIn delay-2s">
                 <div id="login-container">
-                    <div className="header">
-                      <img src={require("../../img/logo.png")} width="100vw" height="55vh" alt="3LINE LOGO" /> <br /><br /><br/>
-                      <p style={{fontSize: '16px', color: '#4d4f5c', fontWeight: 'bolder'}}>Welcome back! <br/> Please login to your account </p>
-                    </div><br/>
+                  <div className="header">
+                    <img src={require("../../img/logo.png")} width="25%" height="25%" alt="3LINE LOGO" /> <br /><br /><br/>
+                    <p style={{fontSize: '16px', color: '#4d4f5c', fontWeight: 'bolder'}}>Welcome back! <br/> Please login to your account </p>
+                  </div><br/>
                   <form onSubmit={loginButtonClick}>
                     <div className="form-group">
                       <div className="col-sm-12 col-md-8 col-lg-8" style={{padding: '0'}}>
@@ -45,18 +46,18 @@ const Login = ({ onChange, loginButtonClick, routeChange, loggingIn, loginError 
                       </div>
                     </div>
                   
-                    <div className="form-group col-sm-12 col-md-12 col-lg-12" style={{padding: '0'}}>        
-                        <button 
-                          type="submit"
-                          style={{width: '66.66667%'}} 
-                          className="btn btn-danger" 
-                          id="login_button" 
-                          onClick={loginButtonClick}>
-                          {
-                            loggingIn ? <IsLoading />
-                            : 'Login'
-                          }
-                        </button>
+                    <div className="form-group" >        
+                      <button 
+                        type="submit"
+                        style={{width: '66.67%'}}
+                        className="btn" 
+                        id="login_button" 
+                        onClick={loginButtonClick}>
+                        {
+                          loggingIn ? <IsLoading />
+                          : 'Login'
+                        }
+                      </button>
                     </div>
                   </form>
 
@@ -65,16 +66,9 @@ const Login = ({ onChange, loginButtonClick, routeChange, loggingIn, loginError 
                         <h6>Forgot your password? <Link to="/resetPassword" style={{color: '#ff0014'}}>Reset It</Link></h6> 
                       </div>
                     </div>
-
-
                     {
-                      loginError ? <div className="alert alert-danger alert-dismissible out" id="loginError">
-                        Please enter correct username and password
-                      </div> : null
+                      loginError ? <LoginError /> : null
                     }
-                  
-
-
                 <footer>
                   <p className="text-center" style={{fontSize: '11px'}}>Powered by <img src={require("../../img/3line_logo.png")} style={{marginLeft: '5px'}} alt="3LINE CARD MANAGEMENT LIMITED" /> </p>
                 </footer>

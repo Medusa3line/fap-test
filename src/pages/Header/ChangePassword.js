@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import baseUrl from '../../baseUrl';
-import IsLoading from '../../isLoading.js';
-import {TimeOut} from '../../timeOut';
+import IsLoading from '../../Components/isLoading/isLoading.js';
+import withTimeoutWithoutRestriction from '../../Components/HOCs/withTimeoutWithoutRestriction.hoc';
 import swal from 'sweetalert';
+import LoginError from '../../Components/loginError/LoginError';
 
 class ChangePassword extends Component {
   _isMounted = false;
@@ -10,7 +12,6 @@ class ChangePassword extends Component {
     super()
     this.state = {
       userDetails : {},
-      redirect: false,
       loggingIn: false,
       loginError: false,
       oldPassword: '',
@@ -18,17 +19,6 @@ class ChangePassword extends Component {
       newPasswordAgain: ''
     }
   }
-
-// For Setting Time Out
-clearTimeoutFunc = () => { if (this.logoutTimeout) {clearTimeout(this.logoutTimeout)}; };
-setTimeout = () => { this.logoutTimeout = setTimeout(this.logout, TimeOut); };
-resetTimeout = () => { this.clearTimeoutFunc(); this.setTimeout(); };
-logout = () => { localStorage.clear(); if(this._isMounted){ this.props.history.push("/"); alert('Your session timed out'); } };
-
-// Cancelling subscriptions
-componentWillUnmount(){
-  this._isMounted = false;
-}
 
   onChange = (event) => { this.setState({[event.target.name]: event.target.value});}
 
@@ -85,32 +75,12 @@ componentWillUnmount(){
   componentDidMount = async () => {
     this._isMounted = true;
 
-    await localStorage.getItem('userDetails') && this.setState ({
-      userDetails: JSON.parse(localStorage.getItem('userDetails'))
-    })
-
-    if(!localStorage.getItem('userDetails')){
-      this.setState({redirect: true})
-    } 
-
-// Handling timeout when there is no event
-     this.events = [
-      'load',
-      'mousemove',
-      'mousedown',
-      'click',
-      'scroll',
-      'keypress'
-    ];
-
-    for (var i in this.events) { window.addEventListener(this.events[i], this.resetTimeout); } 
-    this.setTimeout(); //End of Timeout handling
+    await sessionStorage.getItem('userDetails') && this.setState ({
+      userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
+    }) 
   }
 
   render() {
-    if (this.state.redirect){
-    this.props.history.push("/");   
-  }
     const { loginError, loggingIn } = this.state;
 
     return (
@@ -169,11 +139,11 @@ componentWillUnmount(){
                         </div>
                       </div> <br/>
         
-                        <div className="form-group col-sm-12 col-md-12 col-lg-12" style={{padding: '0'}}>
+                        <div className="form-group">
                           <button 
                             type="submit" 
-                            className="btn btn-danger" 
-                            style={{width: '66.66667%'}}
+                            className="btn"
+                            style={{width: '66.67%'}}
                             id="login_button" 
                             onClick={this.ChangePassword}>
                             {
@@ -184,10 +154,8 @@ componentWillUnmount(){
                         </div>
                       </form>
                       {
-                          loginError ? <div className="alert alert-danger alert-dismissible out" style={{padding: '5px',width: '20%', position: 'fixed', right: '1%', top: '1%', fontSize: '12px'}}>
-                            Wrong credentials provided
-                          </div> : null
-                        }
+                        loginError ? <LoginError /> : null
+                      }
                 </div>
               </div>
           </div>
@@ -198,4 +166,4 @@ componentWillUnmount(){
 	
 }
 
-export default ChangePassword;
+export default withTimeoutWithoutRestriction(withRouter(ChangePassword));

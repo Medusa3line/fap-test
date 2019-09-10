@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import swal from 'sweetalert';
-import {TimeOut} from '../../timeOut';
+import withTimeout from '../../Components/HOCs/withTimeout.hoc';
 import baseUrl from '../../baseUrl';
 
 import Header from '../Header/Header';
-import Balance from '../Balance/Balance';
+import Balance from '../../Components/Balance/Balance';
 import DepositFields from './DepositFields';
 import DepositFields2 from './DepositFields2';
 import DepositReceipt from './DepositReceipt';
@@ -23,7 +24,6 @@ class deposit extends Component {
         description: '',
         commission: '',
         pin: '',
-        redirect: false,
         makingPayment: false,
         validAcct: false,
         validatedButton: false,
@@ -35,43 +35,22 @@ class deposit extends Component {
         showReadOnlyAccountName: true
       }
     }
-// For Setting Time Out
-clearTimeoutFunc = () => { if (this.logoutTimeout) {clearTimeout(this.logoutTimeout)}; };
-setTimeout = () => { this.logoutTimeout = setTimeout(this.logout, TimeOut); };
-resetTimeout = () => { this.clearTimeoutFunc(); this.setTimeout(); };
-logout = () => { localStorage.clear(); if(this._isMounted){ this.props.history.push("/"); alert('Your session timed out'); } };
 
-// Cancelling subscriptions
-componentWillUnmount(){
-  this._isMounted = false;
-}
+  componentDidMount = async () => {
+    await sessionStorage.getItem('userDetails') && this.setState ({
+      userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
+    })
+  }
 
-    componentDidMount = async () => {
-      this._isMounted = true;
-      if(!localStorage.getItem('userDetails')){
-        this.setState({redirect: true})
-      }
-      await localStorage.getItem('userDetails') && this.setState ({
-        userDetails: JSON.parse(localStorage.getItem('userDetails'))
-      })
-
-  // Handling timeout when there is no event
-     this.events = [
-      'load',
-      'mousemove',
-      'mousedown',
-      'click',
-      'scroll',
-      'keypress'
-    ];
-
-    for (var i in this.events) { window.addEventListener(this.events[i], this.resetTimeout); } 
-    this.setTimeout(); //End of Timeout handling
-
-}
-
-changeBank = async (event) => {
-    await this.setState({bank: event.target.value, acctName: '', acctNumber: '', nameValidation: false, validAcct: false, validatedButton: false})
+  changeBank = async (event) => {
+    await this.setState({
+      bank: event.target.value, 
+      acctName: '', 
+      acctNumber: '', 
+      nameValidation: false, 
+      validAcct: false, 
+      validatedButton: false
+    })
   }
 
     depositInitial = (e) => {
@@ -119,8 +98,8 @@ changeBank = async (event) => {
     document.getElementById(id).disabled = true;
 
     let reqBody = {
-    accountNumber: this.state.acctNumber,
-    bankCode: this.state.bank
+      accountNumber: this.state.acctNumber,
+      bankCode: this.state.bank
     };
 
     let auth_token = this.state.userDetails.auth_token;
@@ -141,7 +120,11 @@ changeBank = async (event) => {
         if(validationStatus.respCode === '999'){
           swal("Failed Operation", `Account Number ${validationStatus.respDescription}, please try again`, "error")
         } else if (validationStatus.respCode === '00'){
-          this.setState({acctName: validationStatus.respBody.name, validatedButton: false, validAcct: true})
+          this.setState({
+            acctName: validationStatus.respBody.name, 
+            validatedButton: false, 
+            validAcct: true
+          })
         } else {
           swal("Failed Attempt", `${validationStatus.respDescription}`, "info");
         }
@@ -159,8 +142,8 @@ changeBank = async (event) => {
 
   accountNumber = async (event) => {
     await this.setState({acctNumber: event.target.value});
-    await localStorage.getItem('userDetails') && this.setState ({
-      userDetails: JSON.parse(localStorage.getItem('userDetails'))
+    await sessionStorage.getItem('userDetails') && this.setState ({
+      userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
     })
 
     if(this.state.acctNumber.length === 10){
@@ -223,36 +206,15 @@ changeBank = async (event) => {
           }
         }
 
-    onChange = async(event) => { await this.setState({[event.target.name]: event.target.value}); }
-
-    goBack = () => { this.setState({route: "deposit"}) }
-    goBackToDeposit = () => { 
-      this.setState({
-        route: 'deposit',
-        transactionType: 'SAVING',
-        amount: '',
-        depositorName: '',
-        depositorNumber: '',
-        description: '',
-        commission: '',
-        pin: '',
-        redirect: false,
-        makingPayment: false,
-        validAcct: false,
-        validatedButton: false,
-        bank: '',
-        acctNumber: '',
-        acctName: '',
-        nameValidation: false,
-        refNumber: '',
-        showReadOnlyAccountName: true
-      })
+    onChange = async(event) => { 
+      await this.setState({
+        [event.target.name]: event.target.value
+      }); 
     }
 
+    goBack = () => { this.setState({route: "deposit"}) }
+
   render() {
-    if (this.state.redirect){
-    this.props.history.push("/");   
-  }
   const { 
     makingPayment, 
     bank, 
@@ -274,7 +236,6 @@ changeBank = async (event) => {
     return <DepositReceipt 
       amount={amount}
       commission={commission}
-      goBackToDeposit={this.goBackToDeposit}
       acctNumber={acctNumber}
       bank={bank}
       acctName={acctName}
@@ -319,20 +280,20 @@ changeBank = async (event) => {
                         description={description}
                       />
                     </div> : (
-                        this.state.route === 'deposit_1' ?
-                          <DepositFields2 
-                            amount={amount}
-                            onChange={this.onChange}
-                            commission={commission}
-                            validation={this.validation}
-                            makingPayment={makingPayment}
-                            acctNumber={acctNumber}
-                            bank={bank}
-                            acctName={acctName}
-                            goBack={this.goBack}
-                          /> : 
-                          null
-                      )                        
+                      this.state.route === 'deposit_1' ?
+                        <DepositFields2 
+                          amount={amount}
+                          onChange={this.onChange}
+                          commission={commission}
+                          validation={this.validation}
+                          makingPayment={makingPayment}
+                          acctNumber={acctNumber}
+                          bank={bank}
+                          acctName={acctName}
+                          goBack={this.goBack}
+                        /> : 
+                        null
+                    )                        
                 }            
               </div>
           </div>
@@ -346,4 +307,4 @@ changeBank = async (event) => {
     
   }
 }
-export default deposit;
+export default withTimeout(withRouter(deposit));

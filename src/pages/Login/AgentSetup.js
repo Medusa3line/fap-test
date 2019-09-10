@@ -1,7 +1,8 @@
 import React from 'react';
-import IsLoading from '../../isLoading.js';
+import IsLoading from '../../Components/isLoading/isLoading.js';
+import LoginError from '../../Components/loginError/LoginError';
 
-const AgentSetup = ({ onChange, AgentSetupButton, routeChange, loggingIn, loginError, manipulateNumber }) => {
+const AgentSetup = ({ onChange, AgentSetupButton, loggingIn, loginError, manipulateNumber }) => {
 	return (
 		<div className="body">
           <div className="row" style={{margin: '0'}}>
@@ -15,7 +16,7 @@ const AgentSetup = ({ onChange, AgentSetupButton, routeChange, loggingIn, loginE
                 </div><br/>
 
               {/*-- Agent Setup Form */}
-                <div>
+                  <div>
                     <form onSubmit={AgentSetupButton}>
                       <div className="form-group">
                         <div className="col-sm-12 col-md-8 col-lg-8" style={{padding: '0'}}>
@@ -75,25 +76,23 @@ const AgentSetup = ({ onChange, AgentSetupButton, routeChange, loggingIn, loginE
                         </div>
                       </div> <br/>
         
-                        <div className="form-group col-sm-12 col-md-12 col-lg-12" style={{padding: '0'}}>
-                          <button 
-                            type="submit" 
-                            className="btn btn-danger" 
-                            style={{width: '66.66667%'}}
-                            id="login_button" 
-                            onClick={AgentSetupButton}>
-                            {
-                              loggingIn ? <IsLoading />
-                              : 'Proceed'
-                            }
-                          </button>
-                        </div>
-                      </form>
+                      <div className="form-group">
+                        <button 
+                          type="submit" 
+                          className="btn"
+                          style={{width: '66.67%'}}
+                          id="login_button" 
+                          onClick={AgentSetupButton}>
+                          {
+                            loggingIn ? <IsLoading />
+                            : 'Proceed'
+                          }
+                        </button>
+                      </div>
+                    </form>
                       {
-                          loginError ? <div className="alert alert-danger alert-dismissible out" style={{padding: '5px',width: '20%', position: 'fixed', right: '1%', top: '1%', fontSize: '12px'}}>
-                            Wrong credentials provided
-                          </div> : null
-                        }
+                        loginError ? <LoginError /> : null
+                      }
                 </div>
               </div>
           </div>

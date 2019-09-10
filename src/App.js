@@ -1,6 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component, lazy, Suspense } from 'react';
 import { Route, Switch, HashRouter } from 'react-router-dom';
+
+import 'bootstrap/dist/js/bootstrap.js';
 import './assets/css/bootstrap.min.css';
+import './assets/extras/animate.css';
+import './assets/css/font-awesome.min.css';
+
 import './css/main.css';
 
 // Routes for Login and setups
@@ -9,66 +14,71 @@ import ChangePassword from './pages/Header/ChangePassword';
 import ResetPassword from './pages/Header/ResetPassword';
 import ChangePin from './pages/Header/ChangePin';
 
+//Performance Optimization components
+import ErrorBoundary from './Components/ErrorBoundary/ErrorBoundary';
+import Spinner from './Components/PreLoader/preLoader';
+
 // Routes for Aggregator Portal
-import Aggregator from './pages/Aggregator/Aggregator';
-import AggregatorView from './pages/Aggregator/AggregatorView';
-import AggregatorIncomeWallet from './pages/Aggregator/AggregatorIncomeWallet';
-import AggregatorTradingWallet from './pages/Aggregator/AggregatorTradingWallet';
-import AggregatorAllAgentTransactions from './pages/Aggregator/AggregatorAllAgentTransactions';
-import AggregatorTransfer from './pages/Aggregator/AggregatorTransfer';
+const Aggregator = lazy(() => import('./pages/Aggregator/AggregatorDashboard/AggregatorDashboard')) ;
+const AggregatorView = lazy(() => import('./pages/Aggregator/AggregatorViewAgent/AggregatorView'));
+const AggregatorIncomeWallet = lazy(() => import('./pages/Aggregator/AggregatorIncomeWallet/AggregatorIncomeWallet'));
+const AggregatorTradingWallet = lazy(() => import('./pages/Aggregator/AggregatorTradingWallet/AggregatorTradingWallet'));
+const AggregatorAllAgentTransactions = lazy(() => import('./pages/Aggregator/AggregatorAllTransactions/AggregatorAllAgentTransactions'));
+const AggregatorTransfer = lazy(() => import('./pages/Aggregator/AggregatorTransfer/AggregatorTransfer'));
+const AggregatorReceipt = lazy(() => import('./pages/Aggregator/Receipts/PrintReceipt')) ;
+const AggregatorBillPaymentReceipt = lazy(() => import('./pages/Aggregator/Receipts/bill-payment-receipt'));
 
 //Routes for Agent Portal
-import Dashboard from './pages/Dashboard/dashboard';
-import FundWallet from './pages/Dashboard/FundWallet';
-import Bill_payment from './pages/Bill_Payment/bill_payment';
-import Deposit from './pages/Deposit/deposit';
-import Transfer from './pages/Transfer/transfer';
-import AccountOpening from './pages/Account/account';
-import Withdrawal from './pages/Withdrawal/withdrawal';
-import Thrift from './pages/Thrift/thrift';
-import ThriftEnrollment from './pages/Thrift/ThriftEnrollment/thrift_enrollment';
-import ThriftLiquidation from './pages/Thrift/ThriftLiquidation/thrift_liquidation';
-import ThriftBalanceEnquiry from './pages/Thrift/ThriftBalance/thrift_balance_enquiry';
-import ThriftContribution from './pages/Thrift/ThriftContribution/thrift_contribution';
-import AgentTradingWallet from './pages/Dashboard/AgentTradingWallet';
-import AgentIncomeWallet from './pages/Dashboard/AgentIncomeWallet';
-import Receipt from './pages/Dashboard/PrintReceipt';
+const FundWallet = lazy(() => import('./pages/FundWallet/FundWallet'));
+const Bill_payment = lazy(() => import('./pages/Bill_Payment/bill_payment'));
+const Transfer = lazy(() => import('./pages/Transfer/transfer'));
+const AccountOpening = lazy(() => import('./pages/Account/OpenAnAccount.component'));
+const Withdrawal = lazy(() => import('./pages/Withdrawal/withdrawal'));
+const Thrift = lazy(() => import('./pages/Thrift/thrift'));
+const AgentTradingWallet = lazy(() => import('./pages/Dashboard/AgentTradingWallet/AgentTradingWallet'));
+const AgentIncomeWallet = lazy(() => import('./pages/Dashboard/AgentIncomeWallet/AgentIncomeWallet'));
+const Receipt = lazy(() => import('./pages/Dashboard/Dashboard/PrintReceipt')) ;
+const BillPaymentReceipt = lazy(() => import('./pages/Dashboard/Dashboard/bill-payment-receipt'));
+const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard/dashboard'));
+const Deposit = lazy(() => import('./pages/Deposit/deposit'));
 
 class App extends Component {
   render() {
     return (
       <HashRouter>
-        <Switch>
-          <Route exact path="/" component={MainLogin} /> 
-          <Route exact path="/dashboard" component={Dashboard} />
-          <Route exact path="/fundWallet" component={FundWallet} />
-          <Route exact path="/bill_payment" component={Bill_payment} />
-          <Route exact path="/deposit" component={Deposit} />
-          <Route exact path="/transfer" component={Transfer} />
-          <Route exact path="/thrift" component={Thrift} />
-          <Route exact path="/thrift/thrift_enrollment" component={ThriftEnrollment} />
-          <Route exact path="/thrift/thrift_contribution" component={ThriftContribution} />
-          <Route exact path="/thrift/thrift_liquidation" component={ThriftLiquidation} />
-          <Route exact path="/thrift/thrift_balance_enquiry" component={ThriftBalanceEnquiry} />
-          <Route exact path="/passwordChange" component={ChangePassword} />
-          <Route exact path="/resetPassword" component={ResetPassword} />
-          <Route exact path="/pinChange" component={ChangePin} />
-          <Route exact path="/myTradingWallet/:agentId" component={AgentTradingWallet} />
-          <Route exact path="/myIncomeWallet/:agentId" component={AgentIncomeWallet} />
-          <Route exact path='/PrintReceipt/:transId' component={Receipt} />
-          <Route exact path="/open-an-account" component={AccountOpening} />
-          <Route exact path="/withdrawal" component={Withdrawal} />
+        <ErrorBoundary>
+          <Suspense fallback={<Spinner />}>
+            <Switch>
+              <Route exact path="/" component={MainLogin} /> 
+              <Route exact path="/dashboard" component={Dashboard} />
+              <Route exact path="/fundWallet" component={FundWallet} />
+              <Route exact path="/bill_payment" component={Bill_payment} />
+              <Route exact path="/deposit" component={Deposit} />
+              <Route exact path="/transfer" component={Transfer} />
+              <Route exact path="/thrift" component={Thrift} />
+              <Route exact path="/passwordChange" component={ChangePassword} />
+              <Route exact path="/resetPassword" component={ResetPassword} />
+              <Route exact path="/pinChange" component={ChangePin} />
+              <Route exact path="/myTradingWallet/:agentId" component={AgentTradingWallet} />
+              <Route exact path="/myIncomeWallet/:agentId" component={AgentIncomeWallet} />
+              <Route exact path='/receipt/:transId' component={Receipt} />
+              <Route exact path="/bill-payment-receipt/:transId" component={BillPaymentReceipt} />
+              <Route exact path="/open-an-account" component={AccountOpening} />
+              <Route exact path="/withdrawal" component={Withdrawal} />
 
-          <Route exact path="/aggregator" component={Aggregator} />
-          <Route exact path="/aggregatorTransfer" component={AggregatorTransfer} />
-          <Route exact path={"/viewAgent/:agentId"} component={AggregatorView} />
-          <Route exact path={"/incomeWallet/:agentId"} component={AggregatorIncomeWallet} />
-          <Route exact path="/tradingWallet/:agentId" component={AggregatorTradingWallet} />
-          <Route exact path={"/allWallet/:agentId"} component={AggregatorAllAgentTransactions} />
-          <Route path="*" component={MainLogin} />
-        </Switch>
+              <Route exact path="/aggregator" component={Aggregator} />
+              <Route exact path="/aggregatorTransfer" component={AggregatorTransfer} />
+              <Route exact path={"/viewAgent/:agentId"} component={AggregatorView} />
+              <Route exact path={"/incomeWallet/:agentId"} component={AggregatorIncomeWallet} />
+              <Route exact path="/tradingWallet/:agentId" component={AggregatorTradingWallet} />
+              <Route exact path={"/allWallet/:agentId"} component={AggregatorAllAgentTransactions} />
+              <Route exact path='/aggregator-receipt/:transId' component={AggregatorReceipt} />
+              <Route exact path="/aggregator-bill-payment-receipt/:transId" component={AggregatorBillPaymentReceipt} />
+              <Route path="*" component={MainLogin} />
+            </Switch>
+          </Suspense>
+        </ErrorBoundary>
       </HashRouter>
-
     );  
   }
 }

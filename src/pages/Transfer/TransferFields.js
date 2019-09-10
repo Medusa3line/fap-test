@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom'
 import swal from 'sweetalert';
 import baseUrl from '../../baseUrl';
-import {TimeOut} from '../../timeOut';
-import MakingPayment from '../../makingPayment.js';
+import MakingPayment from '../../Components/makingPayment/makingPayment';
 import { manipulateNumber } from '../../manipulateNumber';
 
 class TransferFields extends Component {
@@ -20,36 +20,11 @@ class TransferFields extends Component {
     }
   }
 
-// For Setting Time Out
-clearTimeoutFunc = () => { if (this.logoutTimeout) {clearTimeout(this.logoutTimeout)}; };
-setTimeout = () => { this.logoutTimeout = setTimeout(this.logout, TimeOut); };
-resetTimeout = () => { this.clearTimeoutFunc(); this.setTimeout(); };
-logout = () => { localStorage.clear(); if(this._isMounted){ this.props.history.push("/"); alert('Your session timed out'); } };
-
-// Cancelling subscriptions
-componentWillUnmount(){
-  this._isMounted = false;
-}
-
   onChange = async (event) => { await this.setState({[event.target.name]: event.target.value}) }
 
   componentDidMount = async () => {
     this._isMounted = true;
-    await this.setState({userDetails: JSON.parse(localStorage.getItem('userDetails'))});
-
-    // Handling timeout when there is no event
-     this.events = [
-      'load',
-      'mousemove',
-      'mousedown',
-      'click',
-      'scroll',
-      'keypress'
-    ];
-
-    for (var i in this.events) { window.addEventListener(this.events[i], this.resetTimeout); } 
-    this.setTimeout(); //End of Timeout handling
-
+    await this.setState({userDetails: JSON.parse(sessionStorage.getItem('userDetails'))});
   }
 
   incomeToTradingTransfer = async (e) => {
@@ -81,6 +56,7 @@ componentWillUnmount(){
             document.getElementById(id).disabled = false;
             if (transferStatus.respCode === '00'){
                 swal("Succesful Operation", "Transfer was Succesful", "success")
+                this.props.history.push('/dashboard');
             } else if (transferStatus.respCode === '100'){
                 swal("Unsuccesful Operation", "Balance is insufficient", "error")
             } else if (transferStatus.respCode === '154'){
@@ -96,6 +72,7 @@ componentWillUnmount(){
             this.setState({makingPayment: false})
             swal("Unsuccesful Operation", "An Error Occured, Please try again", "error");
             document.getElementById(id).disabled = false;
+            this.props.history.push('/dashboard');
           })
     }
     
@@ -128,6 +105,7 @@ componentWillUnmount(){
             document.getElementById(id).disabled = false;
             if (transferStatus.respCode === '00'){
                 swal("Succesful Operation", "Transfer was Succesful", "success")
+                this.props.history.push('/dashboard');
             } else if (transferStatus.respCode === '100'){
                 swal("Unsuccesful Operation", "Balance is insufficient", "error")
             } else if (transferStatus.respCode === '154'){
@@ -143,135 +121,135 @@ componentWillUnmount(){
             this.setState({makingPayment: false});
             document.getElementById(id).disabled = false;
             swal("Unsuccesful Operation", "An Error Occured, Please try again", "error");
-            
+            this.props.history.push('/dashboard');
           })
     }
 }
 
-    render(){
-      const { transferType, makingPayment } = this.state;
-        return (
-          <div>
-              <div className="form-horizontal">    
-                <div className="form-group">
-                  <div className="col-sm-12 col-md-12 col-lg-12">
-                    <select className="form-control" required="required" name="transferType" onChange={this.onChange} id="select_bank">
-                      <option value="" defaultValue>Transfer Type</option>
-                      <option value="income-to-trading">Income to Trading Wallet Transfer</option>
-                      <option value="trading-to-account">Trading Wallet to Account Transfer</option>
-                    </select>
-                  </div>
-                </div>
-
-                  {
-                    transferType === '' ? null: (
-                      transferType === 'income-to-trading' ? 
-                        <div>
-                          <div className="form-group has-feedback">
-                            <div className="col-sm-12 col-md-12 col-lg-12">
-                              <input 
-                                type="number" 
-                                className="form-control" 
-                                required="required" 
-                                name="ittAmount" 
-                                maxLength="8"
-                                placeholder="Amount" 
-                                onChange={this.onChange}
-                                onKeyPress={(e) => manipulateNumber(e)}
-                              />                        
-                            </div>
-                          </div>
-
-                          <div className="form-group">
-                            <div className="col-sm-12 col-md-12 col-lg-12">
-                              <input 
-                                type="password" 
-                                className="form-control" 
-                                required="required" 
-                                placeholder="Agent PIN" 
-                                maxLength="4"
-                                name="ittPin" 
-                                onChange={this.onChange}
-                                onKeyPress={(e) => manipulateNumber(e)}
-                              />
-                            </div>
-                          </div>
-                            
-                          <div className="form-group">        
-                            <div className="col-sm-12 col-md-12 col-lg-12">
-                              <button 
-                                type="submit"
-                                className="btn btn-danger col-sm-8 col-md-6 col-lg-4" 
-                                id="validate_button"                    
-                                onClick={this.incomeToTradingTransfer}>
-                                {
-                                  makingPayment ? <MakingPayment />
-                                  : 'Transfer'
-                                }
-                              </button>
-                            </div>
-                          </div>
-                        </div> 
-
-                          :
-
-                        <div>
-                          <div id="transferDetails">
-                            <h6>Account Number: <span>{this.state.userDetails.accountNo}</span></h6>  
-                            <h6>Transaction Fee: <span>₦52.00</span></h6>                   
-                          </div>
-                          <div className="form-group">
-                            <div className="col-sm-12 col-md-12 col-lg-12">
-                              <input 
-                                type="number" 
-                                className="form-control" 
-                                required="required" 
-                                maxLength="8"
-                                name="wtaAmount" 
-                                placeholder="Amount" 
-                                onChange={this.onChange}
-                                onKeyPress={(e) => manipulateNumber(e)}
-                              />                        
-                            </div>
-                          </div>
-
-                          <div className="form-group">
-                            <div className="col-sm-12 col-md-12 col-lg-12">
-                              <input 
-                                type="password" 
-                                className="form-control" 
-                                required="required"  
-                                name="wtaPin"
-                                placeholder="Agent PIN" 
-                                maxLength="4" 
-                                onChange={this.onChange}
-                                onKeyPress={(e) => manipulateNumber(e)}
-                              />
-                            </div>
-                          </div>
-                            
-                          <div className="form-group">        
-                            <div className="col-sm-12 col-md-12 col-lg-12">
-                              <button 
-                                type="submit"
-                                className="btn btn-danger col-sm-8 col-md-6 col-lg-4" 
-                                id="validate_button"                    
-                                onClick={this.walletToAccountTransfer}>
-                                {
-                                  makingPayment ? <MakingPayment />
-                                  : 'Transfer'
-                                }
-                              </button>
-                            </div>
-                          </div>  <br />
-                        </div>
-                    )  
-                  }  
-              </div>
+render(){
+  const { transferType, makingPayment, userDetails } = this.state;
+    return (
+      <div>
+        <div className="form-horizontal">    
+          <div className="form-group">
+            <div className="col-sm-12 col-md-12 col-lg-12">
+              <select className="form-control" required="required" name="transferType" onChange={this.onChange} id="select_bank">
+                  <option value="" defaultValue>Transfer Type</option>
+                  <option value="income-to-trading">Income to Trading Wallet Transfer</option>
+                  <option value="trading-to-account">Trading Wallet to Account Transfer</option>
+              </select>
+            </div>
           </div>
-    );
-  }
+
+            {
+              transferType === '' ? null: (
+                transferType === 'income-to-trading' ? 
+                  <div>
+                    <div className="form-group has-feedback">
+                      <div className="col-sm-12 col-md-12 col-lg-12">
+                        <input 
+                          type="number" 
+                          className="form-control" 
+                          required="required" 
+                          name="ittAmount" 
+                          maxLength="8"
+                          placeholder="Amount" 
+                          onChange={this.onChange}
+                          onKeyPress={(e) => manipulateNumber(e)}
+                        />                        
+                      </div>
+                    </div>
+
+                    <div className="form-group">
+                      <div className="col-sm-12 col-md-12 col-lg-12">
+                        <input 
+                          type="password" 
+                          className="form-control" 
+                          required="required" 
+                          placeholder="Agent PIN" 
+                          maxLength="4"
+                          name="ittPin" 
+                          onChange={this.onChange}
+                          onKeyPress={(e) => manipulateNumber(e)}
+                        />
+                      </div>
+                    </div>
+                      
+                    <div className="form-group">        
+                      <div className="col-sm-12 col-md-12 col-lg-12">
+                        <button 
+                          type="submit"
+                          className="btn col-sm-8 col-md-6 col-lg-4" 
+                          id="validate_button"                    
+                          onClick={this.incomeToTradingTransfer}>
+                          {
+                            makingPayment ? <MakingPayment />
+                            : 'Transfer'
+                          }
+                        </button>
+                      </div>
+                    </div>
+                  </div> 
+
+                    :
+
+                  <div>
+                    <div id="transferDetails">
+                      <h6>Account Number: <span>{userDetails.accountNo}</span></h6>  
+                      <h6>Transaction Fee: <span>₦52.00</span></h6>                   
+                    </div>
+                    <div className="form-group">
+                      <div className="col-sm-12 col-md-12 col-lg-12">
+                        <input 
+                          type="number" 
+                          className="form-control" 
+                          required="required" 
+                          maxLength="8"
+                          name="wtaAmount" 
+                          placeholder="Amount" 
+                          onChange={this.onChange}
+                          onKeyPress={(e) => manipulateNumber(e)}
+                        />                        
+                      </div>
+                    </div>
+
+                    <div className="form-group">
+                      <div className="col-sm-12 col-md-12 col-lg-12">
+                        <input 
+                          type="password" 
+                          className="form-control" 
+                          required="required"  
+                          name="wtaPin"
+                          placeholder="Agent PIN" 
+                          maxLength="4" 
+                          onChange={this.onChange}
+                          onKeyPress={(e) => manipulateNumber(e)}
+                        />
+                      </div>
+                    </div>
+                      
+                    <div className="form-group">        
+                      <div className="col-sm-12 col-md-12 col-lg-12">
+                        <button 
+                          type="submit"
+                          className="btn col-sm-8 col-md-6 col-lg-4" 
+                          id="validate_button"                    
+                          onClick={this.walletToAccountTransfer}>
+                          {
+                            makingPayment ? <MakingPayment />
+                            : 'Transfer'
+                          }
+                        </button>
+                      </div>
+                    </div>  <br />
+                  </div>
+              )  
+            }  
+          </div>
+        </div>
+  );
+}
 	
 }
 
-export default TransferFields;
+export default withRouter(TransferFields);

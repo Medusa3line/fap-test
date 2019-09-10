@@ -1,0 +1,48 @@
+
+/* Start of CSS Loader makingPayment.js*/
+
+.lds-facebook {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    height: 12px;
+  }
+  .lds-facebook div {
+    display: inline-block;
+    position: relative;
+    left: 0px;
+    width: 5px;
+    background: #fff;
+    animation: lds-facebook 2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+  }
+  .lds-facebook div:nth-child(1) {
+    left: -20px;
+    animation-delay: -0.48s;
+  }
+  .lds-facebook div:nth-child(2) {
+    left: -10px;
+    animation-delay: -0.36s;
+  }
+  .lds-facebook div:nth-child(3) {
+    left: 0px;
+    animation-delay: -0.24s;
+  }
+  .lds-facebook div:nth-child(4) {
+    left: 10px;
+    animation-delay: -0.12s;
+  }
+  .lds-facebook div:nth-child(5) {
+    left: 20px;
+    animation-delay: 0;
+  }
+  @keyframes lds-facebook {
+    0% {
+      top: -8px;
+      height: 12px;
+    }
+    50%, 100% {
+      top: 6px;
+      height: 12px;
+    }
+  }
+  /* End of CSS Loader makingPayment.js*/

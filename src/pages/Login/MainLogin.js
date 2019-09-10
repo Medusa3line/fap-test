@@ -19,13 +19,12 @@ class MainLogin extends Component {
       newPasswordAgain: '',
       loggingIn: false,
       userType: '',
-      redirect: false,
       loginError: false
     }
   }
 
   componentDidMount (){
-    localStorage.clear();
+    sessionStorage.clear();
   }
 
 AgentSetupButton = (e) => {
@@ -91,9 +90,9 @@ otpButton = (e) => {
       .then(user => {
         if(user.respCode === '00'){
           if(user.respBody.isFirstTime === 'false' && user.respBody.isNewDevice === 'false'){
-            localStorage.setItem('userDetails', JSON.stringify(user.respBody));
+            sessionStorage.setItem('userDetails', JSON.stringify(user.respBody));
             document.getElementById(id).disabled = false;
-            this.setState({loggingIn: false, redirect: true});
+            this.setState({loggingIn: false});
             this.renderRedirect();
           } else {
             this.setState({loggingIn: false, loginError: true})
@@ -144,9 +143,8 @@ loginButtonClick = (e) => {
           } else if(user.respBody.isFirstTime === 'false' && user.respBody.isNewDevice === 'true') {
             this.setState({route: 'otp'})
           } else if (user.respBody.isFirstTime === 'false' && user.respBody.isNewDevice === 'false'){
-            localStorage.setItem('userDetails', JSON.stringify(user.respBody));
+            sessionStorage.setItem('userDetails', JSON.stringify(user.respBody));
             document.getElementById(id).disabled = false;
-            this.setState({ redirect: true});
             this.renderRedirect();
         }
       } else if(user.respCode === '96'){
@@ -178,10 +176,10 @@ manipulateNumber = (e) => {
 }
 
 renderRedirect = () => {
-  const { userType, redirect } = this.state;
-  if (redirect && (userType === 'aggregator' || userType === 'subaggregator')) {
+  const { userType } = this.state;
+  if (userType === 'aggregator' || userType === 'subaggregator') {
     this.props.history.push("/aggregator");
-    } else if (redirect && (userType === 'sub agent' || userType === 'sub-agent' || userType === 'subagent' || userType === 'sole' || userType === 'sub_agent')){
+    } else if (userType === 'sub agent' || userType === 'sub-agent' || userType === 'subagent' || userType === 'sole' || userType === 'sub_agent'){
       this.props.history.push("/dashboard");
     } else {
       swal("Login Failed", 'User type unknown', 'error')

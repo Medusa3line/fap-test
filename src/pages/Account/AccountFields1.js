@@ -38,7 +38,7 @@ const AccountFields1 = ({bvn, onChangeBVN, showValidateBVNButton, firstName, las
                             <div className="col-sm-12 col-md-12 col-lg-12">
                                 <button 
                                     type="submit" 
-                                    className="btn btn-danger" 
+                                    className="btn" 
                                     id="bvnValidation"
                                     onClick={validateBvn}
                                 > 
@@ -171,7 +171,7 @@ const AccountFields1 = ({bvn, onChangeBVN, showValidateBVNButton, firstName, las
                         <div className="col-sm-12 col-md-12 col-lg-12">
                             <button 
                                 type="submit" 
-                                className="btn btn-success" 
+                                className="btn btn-success col-sm-8 col-md-6 col-lg-4" 
                                 id="login"
                                 onClick={onSubmit}
                             > 

@@ -1,0 +1,25 @@
+#loginError{
+	padding: 5px;
+	width: 20%;
+	position: fixed;
+	right: 1%;
+	top: 1%; 
+	font-size: 12px;
+}
+
+.out {
+	opacity: 0;
+    animation: notification 5s linear 1;
+}
+
+@keyframes notification {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+  100% {
+  	opacity: 0;
+  }
+}

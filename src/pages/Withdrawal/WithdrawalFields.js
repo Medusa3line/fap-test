@@ -40,7 +40,7 @@ const WithdrawalFields = ({withdrawFund, onChangePhoneNumber, phoneNumber, tranR
               <div className="col-sm-12 col-md-12 col-lg-12">
                 <button 
                   type="submit"
-                  className="btn btn-danger" 
+                  className="btn col-sm-8 col-md-6 col-lg-4" 
                   id="validate_button"                    
                   onClick={validatePaymentCode}>
                   {
@@ -97,7 +97,7 @@ const WithdrawalFields = ({withdrawFund, onChangePhoneNumber, phoneNumber, tranR
             <div className="form-group">
               <div className="col-sm-12 col-md-12 col-lg-12">
                 <input 
-                  type="number" 
+                  type="password" 
                   className="form-control" 
                   required="required" 
                   placeholder="Agent PIN" 
@@ -114,7 +114,7 @@ const WithdrawalFields = ({withdrawFund, onChangePhoneNumber, phoneNumber, tranR
               <div className="col-sm-12 col-md-12 col-lg-12">
                 <button 
                   type="submit"
-                  className="btn btn-success" 
+                  className="btn btn-success col-sm-8 col-md-6 col-lg-4" 
                   id="withdrawal_button"                    
                   onClick={withdrawFund}>
                   {

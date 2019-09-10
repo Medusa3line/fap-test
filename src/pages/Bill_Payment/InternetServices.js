@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import NetworkList from './NetworkList';
 import swal from 'sweetalert';
 import baseUrl from '../../baseUrl';
 import NetworkOptions from './NetworkOptions';
-import MakingPayment from '../../makingPayment.js';
+import MakingPayment from '../../Components/makingPayment/makingPayment';
 import { manipulateNumber } from '../../manipulateNumber';
 
 class InternetServices extends Component {
@@ -20,13 +21,14 @@ class InternetServices extends Component {
       amount: '',
       deviceNumber: '',
       agentPin:'',
+      customerPhoneNumber: '',
       makingPayment: false
     }
   }
 
   componentDidMount = async () => {
-    await localStorage.getItem('userDetails') && this.setState ({
-      userDetails: JSON.parse(localStorage.getItem('userDetails'))
+    await sessionStorage.getItem('userDetails') && this.setState ({
+      userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
     })
 }
 
@@ -48,6 +50,7 @@ manipulateNumber = (e) => {
 
   getServiceNames = async (name) => {
     await this.setState({serviceNames: name})
+    await this.setState({optionName: 'Select Option'})
 
     // Unique ID generation
     await this.setState({serviceID: this.props.serviceName})
@@ -86,9 +89,9 @@ manipulateNumber = (e) => {
   //End of Get Service Code for each ID
   }
 
-  amount = async (event) =>{ await this.setState({amount: event.target.value}); }
-  deviceNumber = async (event) =>{ await this.setState({deviceNumber: event.target.value}); }
-  agentPin = async (event) =>{ await this.setState({agentPin: event.target.value}); }
+  onChange = async (event) =>{ 
+    await this.setState({[event.target.name]: event.target.value}); 
+  }
 
   //Making the payment
   makePayment = async (e) => {
@@ -105,8 +108,9 @@ manipulateNumber = (e) => {
             customerId: this.state.deviceNumber,
             amount: this.state.amount,
             pin: this.state.agentPin,
-            paymentCode: this.state.code
-            };
+            paymentCode: this.state.code,
+            phoneNumber: this.state.customerPhoneNumber
+          };
 
             this.setState({makingPayment: true})
 
@@ -121,8 +125,9 @@ manipulateNumber = (e) => {
           .then(paymentResponse => {
             document.getElementById(id).disabled = false;
             if(paymentResponse.respCode === "00"){
-              swal("Successful Operation", `${paymentResponse.respDescription}`, "success");
-              this.setState({makingPayment: false})
+              swal("Successful Operation", "Data purchase was successful", "success");
+              this.setState({makingPayment: false});
+              this.props.history.push('/dashboard');
             }
             else if(paymentResponse.respCode === "119"){
               swal("Failed Operation", `${paymentResponse.respDescription}`, "error");
@@ -134,14 +139,15 @@ manipulateNumber = (e) => {
       }).catch(err => {
             swal("Failed Operation", "An Error Occurred, Please try again", "error");
             document.getElementById(id).disabled = false;
-            this.setState({makingPayment: false})
+            this.setState({makingPayment: false});
+            this.props.history.push('/dashboard');
           })
     }
 }
 
   render() {
     const serviceName = this.props.serviceName;
-    const { options, makingPayment, serviceNames, optionName } = this.state;
+    const { options, makingPayment, serviceNames, optionName, amount } = this.state;
     return (
         <div>
           <div className="row" style={{display:'flex', justifyContent: 'center', marginBottom:'5%'}}>
@@ -188,24 +194,29 @@ manipulateNumber = (e) => {
                 <h4 id="serviceName"> {serviceNames} </h4>
                 <form className="form-horizontal">
                   <div className="form-group">
-                    <input className="form-control" type="number" name="" value={this.state.amount} maxLength="8" required="required" placeholder="Enter Amount" onChange={this.amount} onKeyPress={(e) => manipulateNumber(e)} />
+                    <input className="form-control" type="number" name="amount" value={amount} step="0.01" maxLength="10" required="required" placeholder="Enter Amount" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} />
                   </div>
                   <div className="form-group">
-                    <input className="form-control" type="number" name="" required="required" placeholder="Enter Phone Number" onChange={this.deviceNumber} onKeyPress={(e) => manipulateNumber(e)} maxLength="11" />
+                    <input className="form-control" type="number" name="deviceNumber" required="required" placeholder="Enter Phone Number to be recharged" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} maxLength="11" />
                   </div>
                   <div className="form-group">
-                    <input className="form-control" type="password" name="" required="required" placeholder="Enter Agent PIN" onChange={this.agentPin} onKeyPress={(e) => manipulateNumber(e)} maxLength="4" />
-                  </div>          
-                  <button 
-                    type="submit"
-                    className="btn btn-success" 
-                    id="button"                    
-                    onClick={this.makePayment}>
-                    {
-                      makingPayment ? <MakingPayment />
-                      : 'Proceed'
-                    }
-                  </button>
+                    <input className="form-control" type="number" name="customerPhoneNumber" required="required" placeholder="Enter Customer Phone Number" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} maxLength="11" /> 
+                  </div>
+                  <div className="form-group">
+                    <input className="form-control" type="password" name="agentPin" required="required" placeholder="Enter Agent PIN" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} maxLength="4" />
+                  </div>
+                  <div className="form-group">          
+                    <button 
+                      type="submit"
+                      className="btn btn-success col-sm-8 col-md-6 col-lg-4" 
+                      id="button"                    
+                      onClick={this.makePayment}>
+                      {
+                        makingPayment ? <MakingPayment />
+                        : 'Proceed'
+                      }
+                    </button>
+                  </div>
                 </form>
               </React.Fragment>
             }
@@ -215,4 +226,4 @@ manipulateNumber = (e) => {
     )  
   }
 }
-export default InternetServices;
+export default withRouter(InternetServices);

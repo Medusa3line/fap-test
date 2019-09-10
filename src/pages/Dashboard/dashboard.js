@@ -188,7 +188,9 @@ componentWillUnmount(){
         return (
         <div className="body">  
           <div className="container-fluid" style={{padding: '0'}}>  
-            <Header />
+            <Header 
+              history={this.props.history.location.pathname}
+            />
                 <div className="container-fluid" style={{padding: '0'}} id="bottom-content">
                   <Wallets 
                     goToTradingWallet={this.goToTradingWallet} 
@@ -205,7 +207,7 @@ componentWillUnmount(){
                         <h4 style={{fontWeight: 'bolder'}}> &nbsp; Transactions History</h4>
                       </div>
                       <div>
-                        <h4><button type="button" className="btn btn-danger" onClick={() => this.print('table')} id="pad-aggregator-items">Print</button></h4>
+                        <h4><button type="button" className="btn" onClick={() => this.print('table')} id="pad-aggregator-items">Print</button></h4>
                       </div>
                     </div>
                     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', overflowX: 'auto'}}>

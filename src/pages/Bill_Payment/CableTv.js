@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import NetworkList from './NetworkList';
 import NetworkOptions from './NetworkOptions';
 import swal from 'sweetalert';
 import baseUrl from '../../baseUrl';
-import MakingPayment from '../../makingPayment.js';
+import MakingPayment from '../../Components/makingPayment/makingPayment';
 import { manipulateNumber } from '../../manipulateNumber';
-
- class CableTv extends Component {
-
+ 
+class CableTv extends Component {
     constructor(){
     super()
     this.state = {
@@ -18,17 +18,20 @@ import { manipulateNumber } from '../../manipulateNumber';
       code: '',
       optionName: 'Select Option',
       amount: '',
+      charge: '',
       deviceNumber: '',
       agentPin:'',
       makingPayment: false, 
       validDeviceNumber: false,
-      customerName: ''
+      customerName: '',
+      customerPhoneNumber: '',
+      payload: {}
     }
   }
 
   componentDidMount = async () => {
-    await localStorage.getItem('userDetails') && this.setState ({
-      userDetails: JSON.parse(localStorage.getItem('userDetails'))
+    await sessionStorage.getItem('userDetails') && this.setState ({
+      userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
     }) 
 }
 
@@ -47,7 +50,7 @@ manipulateNumber = (e) => {
 validateDeviceNumber = async(e) => {
   let id = e.target.id;
 
-  if (this.state.amount === '' || this.state.deviceNumber === '' || this.state.agentPin === ''){
+  if (this.state.amount === '' || this.state.deviceNumber === ''){
     swal("Failed Operation", "All Fields are required. Please fill all fields correctly", "error")
   } else if (this.state.code === ''){
     swal("Missing Field", "Select a Network", "info")
@@ -75,7 +78,8 @@ validateDeviceNumber = async(e) => {
           if(result.respCode === "00"){
             this.setState({
               validDeviceNumber: true,
-              customerName: result.respBody.customerName
+              customerName: result.respBody.customerName,
+              charge: result.respBody.charge
             })
           } else {
             this.setState({validDeviceNumber: false})
@@ -90,12 +94,12 @@ validateDeviceNumber = async(e) => {
 }
 
 getServiceAmount = async (amount, optionName) => {
-  console.log(amount, optionName)
   this.setState({amount: amount, optionName: optionName})
 }
 
   getServiceNames = async (name) => {
     await this.setState({serviceNames: name})
+    await this.setState({optionName: 'Select Option'})
 
     // Unique ID generation
     await this.setState({serviceID: this.props.serviceName})
@@ -132,9 +136,13 @@ getServiceAmount = async (amount, optionName) => {
   //End of Get Service Code for each ID
   }
 
-  amount = async (event) =>{ await this.setState({amount: event.target.value}); }
-  deviceNumber = async (event) =>{ await this.setState({deviceNumber: event.target.value, validDeviceNumber: false}); }
-  agentPin = async (event) =>{ await this.setState({agentPin: event.target.value}); }
+  onChange = async (event) =>{ 
+    if (event.target.name === 'deviceNumber'){
+     await this.setState({deviceNumber: event.target.value, validDeviceNumber: false})
+    } else {
+     await this.setState({[event.target.name]: event.target.value}); 
+    } 
+  }
 
 //Making the payment
   makePayment = async (e) => {
@@ -152,7 +160,8 @@ getServiceAmount = async (amount, optionName) => {
             customerId: this.state.deviceNumber,
             amount: this.state.amount,
             pin: this.state.agentPin,
-            paymentCode: this.state.code
+            paymentCode: this.state.code,
+            phoneNumber: this.state.customerPhoneNumber
         };
 
             this.setState({makingPayment: true})
@@ -169,7 +178,8 @@ getServiceAmount = async (amount, optionName) => {
             document.getElementById(id).disabled = false;
             this.setState({makingPayment: false})
             if(paymentResponse.respCode === "00"){
-              swal("Successful Operation", `${paymentResponse.respDescription}`, "success");
+              swal("Successful Operation", "Recharge was successful", "success");
+              this.props.history.push('/dashboard');
             } else {
               swal("Failed Operation", `${paymentResponse.respDescription}`, "error");
             }     
@@ -177,14 +187,16 @@ getServiceAmount = async (amount, optionName) => {
             swal("Failed Operation", "An Error Occurred, Please try again", "error");
             document.getElementById(id).disabled = false;
             this.setState({makingPayment: false});
+            this.props.history.push('/dashboard');
           })
     }   
 }
 
   render() {
     const serviceName = this.props.serviceName;
-    const { options, optionName, amount, makingPayment, serviceNames, validDeviceNumber, customerName } = this.state;
-    return (
+    const { options, optionName, amount, makingPayment, serviceNames, validDeviceNumber, customerName, charge } = this.state;
+    const totalAmount = Number(amount) + Number(charge)
+      return (
         <div>
           <div className="row" style={{display:'flex', justifyContent: 'center', marginBottom:'5%'}}>
             <ul className="nav navbar-nav">
@@ -207,7 +219,13 @@ getServiceAmount = async (amount, optionName) => {
           <div className="row" style={{display:'flex', justifyContent: 'center', marginBottom:'5%'}}>
             <ul className="nav navbar-nav">
               <div className="dropdown">
-                <li className="btn dropdown-toggle" type="button" data-toggle="dropdown"><strong>{this.state.optionName}</strong> <span className="fa fa-chevron-down"></span></li>
+                <li 
+                  className="btn dropdown-toggle" 
+                  type="button" data-toggle="dropdown" 
+                  style={{backgroundColor: '#faa831'}}>
+                    <strong>{optionName}</strong> 
+                    <span className="fa fa-chevron-down"></span>
+                  </li>
                 <ul className="dropdown-menu dropdown"  id="billPaymentOptionsDropdown">
                   {
                     options === null ? null : (options.length === 0 ? null : 
@@ -230,26 +248,33 @@ getServiceAmount = async (amount, optionName) => {
                 <h4 id="serviceName"> {serviceNames} </h4>
                 <form className="form-horizontal">
                   <div className="form-group">
-                    <input className="form-control" type="number" name="" value={amount} maxLength="10" required="required" placeholder="Enter Amount" onChange={this.amount} onKeyPress={(e) => manipulateNumber(e)} />
+                    <input className="form-control" type="number" name="amount" value={amount} step="0.01" maxLength="10" required="required" placeholder="Enter Amount" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} />
                   </div>
                   <div className="form-group">
-                    <input className="form-control" type="number" name="" required="required" placeholder="Enter Smart Card Number" onChange={this.deviceNumber} onKeyPress={(e) => manipulateNumber(e)} maxLength="25" /> 
+                    <input className="form-control" type="number" name="deviceNumber" required="required" placeholder="Enter Smart Card Number" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} maxLength="25" /> 
                   </div>
                   {
                     validDeviceNumber ? 
-                    <div className="form-group">
-                      <input className="form-control" type="text" value={customerName} readOnly required="required" />
-                    </div>
+                    <React.Fragment>
+                      <div className="form-group">
+                        <input className="form-control" type="text" value={customerName} readOnly required="required" />
+                      </div>
+                      <div className="form-group">
+                        <input className="form-control" type="number" name="customerPhoneNumber" required="required" placeholder="Enter Customer Phone Number" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} maxLength="11" /> 
+                      </div>
+                      <p>You will be charged <b>₦{charge}</b> for this transaction. Total transaction amount is <b>₦{totalAmount}</b></p>
+                      <div className="form-group">
+                        <input className="form-control" type="password" name="agentPin" required="required" placeholder="Enter Agent PIN" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} maxLength="4" />
+                      </div>
+                    </React.Fragment>
                     : null
                   }
-                  <div className="form-group">
-                    <input className="form-control" type="password" name="" required="required" placeholder="Enter Agent PIN" onChange={this.agentPin} onKeyPress={(e) => manipulateNumber(e)} maxLength="4" />
-                  </div>          
+                  <div className="form-group">          
                   {
                     !validDeviceNumber ? 
                     <button 
                       type="submit"
-                      className="btn btn-danger" 
+                      className="btn col-sm-8 col-md-6 col-lg-4" 
                       id="validateButton"                     
                       onClick={this.validateDeviceNumber}>
                       {
@@ -260,7 +285,7 @@ getServiceAmount = async (amount, optionName) => {
                     :
                     <button 
                       type="submit"
-                      className="btn btn-success" 
+                      className="btn btn-success col-sm-8 col-md-6 col-lg-4" 
                       id="button"                     
                       onClick={this.makePayment}>
                       {
@@ -269,12 +294,13 @@ getServiceAmount = async (amount, optionName) => {
                       }
                     </button>
                   }
+                  </div>
                 </form>
               </React.Fragment>
             }            
           </div>         
         </div>
-    )  
+    )      
   }
 }
-export default CableTv;
+export default withRouter(CableTv);

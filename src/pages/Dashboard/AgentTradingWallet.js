@@ -68,7 +68,9 @@ componentWillUnmount(){
     } else {
       let reqBody = {
         from: this.state.fromDate,
-        to: this.state.toDate
+        to: this.state.toDate,
+        page: this.state.page,
+        size: this.state.size
       }
       this.fetchHistory(reqBody);
       }  
@@ -87,6 +89,7 @@ componentWillUnmount(){
       body: JSON.stringify(reqBody)
     }).then(response => response.json())
       .then(allAgentsDetails => {
+        // console.log(allAgentsDetails)
         if(allAgentsDetails.respBody){
           this.setState({transactions: allAgentsDetails.respBody})
         }else {
@@ -131,14 +134,22 @@ componentWillUnmount(){
   showLess = async () => {
     if(this.state.page > 0){
       await this.setState({page: this.state.page - 1});
-      this.fetchHistory();
+      let reqBody={
+        page: this.state.page,
+        size: this.state.size
+      }
+      this.fetchHistory(reqBody);
     }
   }
 
   showMore = async() => {
     if (this.state.transactions.length === this.state.size){
       await this.setState({page: this.state.page + 1});
-      this.fetchHistory();
+      let reqBody={
+        page: this.state.page,
+        size: this.state.size
+      }
+      this.fetchHistory(reqBody);
     }
   }
 
@@ -165,7 +176,7 @@ componentWillUnmount(){
                             <div className="col-lg-6"><h4><strong>Trading Wallet</strong></h4></div>
                           </div>
                           <div className="dropdown" style={{textAlign: 'right'}}>
-                            <button type="button" className="btn btn-danger dropdown-toggle" data-toggle="dropdown" id="pad-aggregator-items">Export <span className="fa fa-chevron-down"></span></button>
+                            <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" id="pad-aggregator-items">Export <span className="fa fa-chevron-down"></span></button>
                             <ul className="dropdown-menu dropdown">
                               <li onClick={() => this.print('print-div')}><Link to="#">PDF</Link></li>
                             </ul>

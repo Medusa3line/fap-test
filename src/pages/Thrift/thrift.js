@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {TimeOut} from '../../timeOut';
+import withTimeout from '../../Components/HOCs/withTimeout.hoc';
 
 import Header from '../Header/Header';
 import ThriftEnrollment from './ThriftEnrollment/thrift_enrollment';
@@ -11,53 +11,21 @@ class thrift extends Component {
   constructor(){
       super()
       this.state = {
-        redirect: false, 
         route: 'enrollment'
       }
     }
 
-// For Setting Time Out
-clearTimeoutFunc = () => { if (this.logoutTimeout) {clearTimeout(this.logoutTimeout)}; };
-setTimeout = () => { this.logoutTimeout = setTimeout(this.logout, TimeOut); };
-resetTimeout = () => { this.clearTimeoutFunc(); this.setTimeout(); };
-logout = () => { localStorage.clear(); if(this._isMounted){ this.props.history.push("/"); alert('Your session timed out'); } };
-
-// Cancelling subscriptions
-componentWillUnmount(){
-  this._isMounted = false;
+componentDidMount = async () => {
+  await sessionStorage.getItem('userDetails') && this.setState ({
+    userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
+  })
 }
 
-componentDidMount = async () => {
-    this._isMounted = true;
-    if(!localStorage.getItem('userDetails')){
-      this.setState({redirect: true})
-    }
-    await localStorage.getItem('userDetails') && this.setState ({
-      userDetails: JSON.parse(localStorage.getItem('userDetails'))
-    })
-
-    // Handling timeout when there is no event
-     this.events = [
-      'load',
-      'mousemove',
-      'mousedown',
-      'click',
-      'scroll',
-      'keypress'
-    ];
-
-    for (var i in this.events) { window.addEventListener(this.events[i], this.resetTimeout); } 
-    this.setTimeout(); //End of Timeout handling
-
-  }
-  changeRoute = (route) => {
-    this.setState({route: route})
-  }   
+changeRoute = (route) => {
+  this.setState({route: route})
+}   
 
   render() {
-    if (this.state.redirect){
-    this.props.history.push("/");  
-  }
   const { route } = this.state;
     return (
       <div className="body">
@@ -99,4 +67,4 @@ componentDidMount = async () => {
     }
   }
 
-export default thrift;
+export default withTimeout(thrift);

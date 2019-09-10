@@ -30,6 +30,9 @@ componentWillUnmount(){
 
   wtaAmount = async (event) => { await this.setState({wtaAmount: event.target.value}) }
   wtaPin = async (event) => { await this.setState({wtaPin: event.target.value}) }
+  redirectToDashboard = () => {
+    this.props.goToDashboard()
+  }
 
   componentDidMount = async () => {
     this._isMounted = true;
@@ -76,14 +79,15 @@ componentWillUnmount(){
             this.setState({makingPayment: false})
             document.getElementById(id).disabled = false;
             if (transferStatus.respCode === '00'){
-                swal("Succesful Operation", "Transfer was Succesful", "success")
+                swal("Succesful Operation", "Transfer was Succesful", "success");
+                this.redirectToDashboard();
             } else if (transferStatus.respCode === '100'){
                 swal("Unsuccesful Operation", "Balance is insufficient", "error")
             } else if (transferStatus.respCode === '154'){
                 swal("Unsuccesful Operation", "Pin is Incorrect", "error")
             } else {
                 if (transferStatus.respDescription !== null){
-                   swal("Unsuccesful Operation", transferStatus.respDescription, "error") 
+                   swal("Unsuccesful Operation", `${transferStatus.respDescription}`, "error") 
                 } else {
                     swal("Unsuccesful Operation", "An Error Occured, please try again later.", "error")
                 }
@@ -92,6 +96,7 @@ componentWillUnmount(){
             this.setState({makingPayment: false})
             swal("Unsuccesful Operation", "An Error Occured, Please try again", "error");
             document.getElementById(id).disabled = false;
+            this.redirectToDashboard();
           })
     }
 }
@@ -141,7 +146,7 @@ componentWillUnmount(){
                           <div className="col-sm-12 col-md-12 col-lg-12">
                             <button 
                                 type="submit"
-                                className="btn btn-md btn-danger col-sm-8 col-md-6 col-lg-4" 
+                                className="btn btn-md col-sm-8 col-md-6 col-lg-4" 
                                 id="validate_button"                    
                                 onClick={this.walletToAccountTransfer}>
                                 {

@@ -156,7 +156,7 @@ class Receipt extends Component {
 	            <button
 	            	onClick={this.goBack}
 	            	type="submit" 	            	
-	                className="btn btn-danger btn-xs col-sm-4 col-md-4 col-lg-4">	                
+	                className="btn btn-xs col-sm-4 col-md-4 col-lg-4">	                
 	                Go Back
 	            </button>
 
