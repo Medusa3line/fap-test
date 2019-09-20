@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import withTimeout from "../../Components/HOCs/withTimeout.hoc"
 
@@ -7,11 +7,18 @@ import Balance from '../../Components/Balance/Balance';
 import GTBCashout from './gtb/GTBCashout';
 import FidelityCashout from './fidelity/FidelityCashout';
 
-const withdrawal = () => {
-  const [bank, setBank] = useState('');
-  const selectedBank = (e) => {
-    setBank(e.target.value)
+class withdrawal extends Component {
+  constructor(){
+    super();
+    this.state = {
+      bank: ''
+    }
   }
+  selectedBank = (e) => {
+    this.setState({bank: e.target.value})
+  }
+  render(){
+    const { bank } = this.state;
     return (
       <div className="body">
         {/* <!-- Main Wrapper --> */}
@@ -29,7 +36,7 @@ const withdrawal = () => {
                 <div className="form-horizontal">
                   <div className="form-group">
                     <div className="col-sm-12 col-md-12 col-lg-12"> 
-                      <select className="form-control" required="required" onChange={selectedBank} name="selectedBank">
+                      <select className="form-control" required="required" onChange={this.selectedBank} name="selectedBank">
                         <option value="">Select a Bank</option>
                         <option value="fidelity">Fidelity Bank</option>
                         <option value="gtb">Guaranty Trust Bank</option>
@@ -48,5 +55,7 @@ const withdrawal = () => {
         </div>
       </div>
     )
+  }  
+    
 }
 export default withTimeout(withRouter(withdrawal));

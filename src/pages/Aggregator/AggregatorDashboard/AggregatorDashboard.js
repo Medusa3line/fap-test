@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import swal from 'sweetalert';
 import ExportToExcel from '../../../Components/ExportToExcel/ExportToExcel';
 import DashboardDetails from './DashboardDetails';
-import AggregatorHeader from '../AggregatorHeader/AggregatorHeader';
 import AgentsPerformance from './AgentsPerformance';
 import AgentsTransactions from '../Components/AgentsTransactions';
 import SearchComponent from '../Components/SearchComponent';
@@ -13,6 +12,7 @@ import {Link} from 'react-router-dom';
 import baseUrl from '../../../baseUrl';
 import PrintReceipt from '../../../print';
 import SwitchButton from '../Components/SwitchButton/SwitchButton';
+import AggregatorHeader from '../AggregatorHeader';
 
 class AggregatorDashboard extends Component{
     _isMounted = false;
@@ -288,7 +288,7 @@ componentDidMount = async () => {
           return(
             <div className="body">
               <div style={{backgroundColor: '#f3f3f3'}}>
-                <AggregatorHeader />
+                <AggregatorHeader/>
                 <div id="main">
                 <div style={{width: '100%'}}>
                   <div>

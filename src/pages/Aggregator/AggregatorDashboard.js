@@ -306,136 +306,137 @@ componentDidMount = async () => {
               <AggregatorHeader />
               <div className="container-fluid" style={{padding: '0'}}>
                 <div style={{backgroundColor: '#f3f3f3'}}>
-                      <div id="main">
-                        <div>
-                          <div className="row" style={{margin: '0px'}}>
-                            <div style={{position: 'relative', top: '2vh', left: '4%'}}>
-                              <label className="switchBtn"> 
-                                <input type="checkbox" onChange={this.showMore} />
-                                <div className="slide round">
-                                </div>
-                              </label><br/>                          
+                  <div id="main">
+                    <div>
+                      <div className="row" style={{margin: '0px'}}>
+                        <div style={{position: 'relative', top: '2vh', left: '4%'}}>
+                          <label className="switchBtn"> 
+                            <input type="checkbox" onChange={this.showMore} />
+                            <div className="slide round">
                             </div>
-                          {
-                            showMore ? 
-                            <React.Fragment>
-                              <div className="row" id="stats-top-most-card">
-                                  <div className="row" style={{margin: '0px'}}>
-                                      <DashboardDetails /><br />
-                                      <div id="stats-top-card">
-                                          <h6 className="col-lg-4 col-md-12 col-sm-12" style={{ fontSize: '12px', fontWeight: 'bold'}}>Total Statistics</h6>
-                                          <h4 className="col-lg-4 col-md-12 col-sm-12" style={{textAlign: 'center', fontSize: '12px', fontWeight: 'bold', color: '#2e5a03'}}>Amount: ₦ {totalStats.totals}</h4>
-                                          <h6 className="col-lg-4 col-md-12 col-sm-12" style={{textAlign: 'right', fontSize: '12px', fontWeight: 'bold', color: '#b11d11'}}>Count: {totalStats.totalCount} Counts</h6>
-                                      </div>
-                                      <div id="stats-card-row">
-                                        <div id="stats-card">
-                                            <h6> Deposit</h6> 
-                                            <h4 id="bold">₦ {totalStats.deposits}</h4>
-                                            <h6 id="first-aggregator-count" className="yellow">{totalStats.depositCount} Counts </h6> <img id="aggregator-count-image" alt="" src={require("../../img/bar_chart_1.svg")} />
-                                        </div>
-                                        <div id="stats-card">
-                                            <h6> Withdrawal</h6> 
-                                            <h4 id="bold">₦ {totalStats.withDrawals}</h4>
-                                            <h6 id="first-aggregator-count" className="grey">{totalStats.withDrawalsCount} Counts </h6> <img id="aggregator-count-image" alt="" src={require("../../img/bar_chart_3.svg")} />
-                                        </div>
-                                        <div id="stats-card">
-                                            <h6> Bill Payment</h6> 
-                                            <h4 id="bold">₦ {totalStats.billPayments}</h4> 
-                                            <h6 id="first-aggregator-count" className="green">{totalStats.billPaymentsCount} Counts </h6> <img id="aggregator-count-image" alt="" src={require("../../img/bar_chart_2.svg")} />
-                                        </div>
-                                      </div>
+                          </label><br/>                          
+                        </div>
+                      {
+                        showMore ? 
+                        <React.Fragment>
+                          <div className="row" id="stats-top-most-card">
+                              <div className="row" style={{margin: '0px'}}>
+                                  <DashboardDetails /><br />
+                                  <div id="stats-top-card">
+                                      <h6 className="col-lg-4 col-md-12 col-sm-12" style={{ fontSize: '12px', fontWeight: 'bold'}}>Total Statistics</h6>
+                                      <h4 className="col-lg-4 col-md-12 col-sm-12" style={{textAlign: 'center', fontSize: '12px', fontWeight: 'bold', color: '#2e5a03'}}>Amount: ₦ {totalStats.totals}</h4>
+                                      <h6 className="col-lg-4 col-md-12 col-sm-12" style={{textAlign: 'right', fontSize: '12px', fontWeight: 'bold', color: '#b11d11'}}>Count: {totalStats.totalCount} Counts</h6>
                                   </div>
-                                </div>
-                             <div className="row" id="stats-top-most-card">
-                                  <div className="row" style={{margin: '0px'}}>
-                                      <div id="stats-top-card">
-                                          <h6 className="col-lg-4 col-md-12 col-sm-12" style={{ fontSize: '12px', fontWeight: 'bold'}}>Today's Statistics</h6>
-                                          <h4 className="col-lg-4 col-md-12 col-sm-12" style={{textAlign: 'center', fontSize: '12px', fontWeight: 'bold', color: '#2e5a03'}}>Amount: ₦ {dailyStats.totals}</h4>
-                                          <h6 className="col-lg-4 col-md-12 col-sm-12" style={{textAlign: 'right', fontSize: '12px', fontWeight: 'bold', color: '#b11d11'}}>Count: {dailyStats.totalCount} Counts</h6>
-                                      </div>
-                                      <div id="stats-card-row">
-                                        <div id="stats-card">
-                                          <h6> Deposit</h6>
-                                          <h4 id="bold">₦ {dailyStats.deposits}</h4>
-                                          <h6 id="first-aggregator-count" className="yellow">{dailyStats.depositCount} Counts</h6> <img id="aggregator-count-image" alt="" src={require("../../img/bar_chart_1.svg")} />
-                                        </div>
-                                        <div id="stats-card">
-                                          <h6> Withdrawal</h6>
-                                          <h4 id="bold">₦ {dailyStats.withDrawals}</h4>
-                                          <h6 id="first-aggregator-count" className="grey">{dailyStats.withDrawalsCount} Counts</h6> <img id="aggregator-count-image" alt="" src={require("../../img/bar_chart_3.svg")} />
-                                        </div>
-                                        <div id="stats-card">
-                                          <h6> Bill Payment</h6>
-                                          <h4 id="bold">₦ {dailyStats.billPayments}</h4> 
-                                          <h6 id="first-aggregator-count" className="green">{dailyStats.billPaymentsCount} Counts</h6> <img id="aggregator-count-image" alt="" src={require("../../img/bar_chart_2.svg")} />
-                                        </div>
-                                      </div>
+                                  <div id="stats-card-row">
+                                    <div id="stats-card">
+                                        <h6> Deposit</h6> 
+                                        <h4 id="bold">₦ {totalStats.deposits}</h4>
+                                        <h6 id="first-aggregator-count" className="yellow">{totalStats.depositCount} Counts </h6> <img id="aggregator-count-image" alt="" src={require("../../img/bar_chart_1.svg")} />
+                                    </div>
+                                    <div id="stats-card">
+                                        <h6> Withdrawal</h6> 
+                                        <h4 id="bold">₦ {totalStats.withDrawals}</h4>
+                                        <h6 id="first-aggregator-count" className="grey">{totalStats.withDrawalsCount} Counts </h6> <img id="aggregator-count-image" alt="" src={require("../../img/bar_chart_3.svg")} />
+                                    </div>
+                                    <div id="stats-card">
+                                        <h6> Bill Payment</h6> 
+                                        <h4 id="bold">₦ {totalStats.billPayments}</h4> 
+                                        <h6 id="first-aggregator-count" className="green">{totalStats.billPaymentsCount} Counts </h6> <img id="aggregator-count-image" alt="" src={require("../../img/bar_chart_2.svg")} />
+                                    </div>
                                   </div>
-                                </div>
-                              </React.Fragment>
-                              : null
-                          }
-                          <div style={{margin:'0px', marginBottom: '5vh', boxSizing:'border-box', display: 'flex', position: 'relative', top: '2vh', overflowX:'auto'}} id="dashboard-wallet-div">
-                              <div className="col-sm-12 col-md-12 col-lg-12">
-                                <div id="toggleAgentPerformance">
-                                    {
-                                      !agentsPerformanceTitle ? 
-                                        <h5 onClick={() => this.showAgentsPerformance(true)}>Show Agents Performance</h5> : 
-                                        <h5 onClick={() => {this.showAgentsPerformance(false); this.fetchTransactions()}}>
-                                          Show Agents Transactions
-                                        </h5>
-                                    }                                  
-                                </div>
-                                <div className="row" style={{paddingTop: '2vh'}}>
-                                  <div className="col-lg-6"><h4><strong>{agentsPerformanceTitle ? 'Agents Performance' : 'Agents Transactions'}</strong></h4></div>
-                                  <div className="dropdown" style={{textAlign: 'right'}}>
-                                      <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" id="pad-aggregator-items">Export <span style={{fontSize: '8px'}} className="fa fa-chevron-down"></span></button>
-                                      <ul className="dropdown-menu dropdown">
-                                        <li onClick={() => this.print('right-aggregator-view')}><Link to="#">PDF</Link></li>
-                                      </ul>
-                                  </div>
-                                </div><br/>
-                                  
-                                  <React.Fragment>
-                                  {
-                                    showAgentsPerformance ? 
-                                    <React.Fragment>
-                                      <SearchComponent 
-                                        searchAgents={this.searchAgents}
-                                        fromDate={this.fromDate}
-                                        toDate={this.toDate} 
-                                        filter={this.filterPerformance}
-                                      />
-                                      <AgentsPerformance 
-                                        performance={performance}  
-                                      />
-                                    </React.Fragment>
-                                     :
-                                    <React.Fragment>
-                                      <SearchComponent 
-                                        searchAgents={this.searchAgentsTransactions}
-                                        fromDate={this.fromDateTransactions}
-                                        toDate={this.toDateTransactions} 
-                                        filter={this.filterTransactions}
-                                      />
-                                      <AgentsTransactions 
-                                        transactions={transactions} 
-                                        page={page}
-                                        size={size}
-                                        showLessTransactions={this.showLessTransactions}
-                                        showMoreTransactions={this.showMoreTransactions}
-                                        transactionsCount={transactionsCount}
-                                        hasNextRecord={hasNextRecord}
-                                      />
-                                    </React.Fragment>                                    
-                                  }
-                                  </React.Fragment>   
-                                </div>
                               </div>
+                            </div>
+                          <div className="row" id="stats-top-most-card">
+                              <div className="row" style={{margin: '0px'}}>
+                                  <div id="stats-top-card">
+                                      <h6 className="col-lg-4 col-md-12 col-sm-12" style={{ fontSize: '12px', fontWeight: 'bold'}}>Today's Statistics</h6>
+                                      <h4 className="col-lg-4 col-md-12 col-sm-12" style={{textAlign: 'center', fontSize: '12px', fontWeight: 'bold', color: '#2e5a03'}}>Amount: ₦ {dailyStats.totals}</h4>
+                                      <h6 className="col-lg-4 col-md-12 col-sm-12" style={{textAlign: 'right', fontSize: '12px', fontWeight: 'bold', color: '#b11d11'}}>Count: {dailyStats.totalCount} Counts</h6>
+                                  </div>  
+                                  <div id="stats-card-row">
+                                    <div id="stats-card">
+                                      <h6> Deposit</h6>
+                                      <h4 id="bold">₦ {dailyStats.deposits}</h4>
+                                      <h6 id="first-aggregator-count" className="yellow">{dailyStats.depositCount} Counts</h6> <img id="aggregator-count-image" alt="" src={require("../../img/bar_chart_1.svg")} />
+                                    </div>
+                                    <div id="stats-card">
+                                      <h6> Withdrawal</h6>
+                                      <h4 id="bold">₦ {dailyStats.withDrawals}</h4>
+                                      <h6 id="first-aggregator-count" className="grey">{dailyStats.withDrawalsCount} Counts</h6> <img id="aggregator-count-image" alt="" src={require("../../img/bar_chart_3.svg")} />
+                                    </div>
+                                    <div id="stats-card">
+                                      <h6> Bill Payment</h6>
+                                      <h4 id="bold">₦ {dailyStats.billPayments}</h4> 
+                                      <h6 id="first-aggregator-count" className="green">{dailyStats.billPaymentsCount} Counts</h6> <img id="aggregator-count-image" alt="" src={require("../../img/bar_chart_2.svg")} />
+                                    </div>
+                                  </div>
+                              </div>
+                            </div>
+                          </React.Fragment>
+                          : null
+                      }
+                      <div style={{margin:'0px', marginBottom: '5vh', boxSizing:'border-box', display: 'flex', position: 'relative', top: '2vh', overflowX:'auto'}} id="dashboard-wallet-div">
+                          <div className="col-sm-12 col-md-12 col-lg-12">
+                            <div id="toggleAgentPerformance">
+                                {
+                                  !agentsPerformanceTitle ? 
+                                    <h5 onClick={() => this.showAgentsPerformance(true)}>Show Agents Performance</h5> : 
+                                    <h5 onClick={() => {this.showAgentsPerformance(false); this.fetchTransactions()}}>
+                                      Show Agents Transactions
+                                    </h5>
+                                }                                  
+                            </div>
+                            <div className="row" style={{paddingTop: '2vh'}}>
+                              <div className="col-lg-6"><h4><strong>{agentsPerformanceTitle ? 'Agents Performance' : 'Agents Transactions'}</strong></h4></div>
+                              <div className="dropdown" style={{textAlign: 'right'}}>
+                                  <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" id="pad-aggregator-items">Export <span style={{fontSize: '8px'}} className="fa fa-chevron-down"></span></button>
+                                  <ul className="dropdown-menu dropdown">
+                                    <li onClick={() => this.print('right-aggregator-view')}><Link to="#">PDF</Link></li>
+                                  </ul>
+                              </div>
+                            </div><br/>
+                              
+                              <React.Fragment>
+                              {
+                                showAgentsPerformance ? 
+                                <React.Fragment>
+                                  <SearchComponent 
+                                    searchAgents={this.searchAgents}
+                                    fromDate={this.fromDate}
+                                    toDate={this.toDate} 
+                                    filter={this.filterPerformance}
+                                  />
+                                  <AgentsPerformance 
+                                    performance={performance}  
+                                  />
+                                </React.Fragment>
+                                  :
+                                <React.Fragment>
+                                  <SearchComponent 
+                                    searchAgents={this.searchAgentsTransactions}
+                                    fromDate={this.fromDateTransactions}
+                                    toDate={this.toDateTransactions} 
+                                    filter={this.filterTransactions}
+                                  />
+                                  <AgentsTransactions 
+                                    transactions={transactions} 
+                                    page={page}
+                                    size={size}
+                                    showLessTransactions={this.showLessTransactions}
+                                    showMoreTransactions={this.showMoreTransactions}
+                                    transactionsCount={transactionsCount}
+                                    hasNextRecord={hasNextRecord}
+                                  />
+                                </React.Fragment>                                    
+                              }
+                              </React.Fragment>   
+                            </div>
                           </div>
                       </div>
-                      </div>
                   </div>
+                  </div>
+                              
+                </div>
               </div>
             </div>
           )

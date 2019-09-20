@@ -23,7 +23,18 @@ export default React.memo(({transactions, showMore, showLess, page, printReceipt
             transactions === null ? null : (transactions.length === 0 ? 
               <NoResultFound /> : 
               transactions.map((transaction,i) => {
-              return <TransactionsList transaction={transaction} key={i} printReceipt={printReceipt} transId={transaction.tranId} serialNumber={i} status={transaction.statusdescription} amount={transaction.amount} transType={transaction.transactionType} transDate={transaction.tranDate} />
+              return (
+                <TransactionsList 
+                  transaction={transaction} 
+                  key={i} 
+                  printReceipt={printReceipt} 
+                  transId={transaction.tranId} 
+                  serialNumber={i} 
+                  status={transaction.statusdescription} 
+                  amount={transaction.amount} 
+                  transType={transaction.transactionType} 
+                  transDate={transaction.tranDate} 
+                />)
             })
             ) 
           }
