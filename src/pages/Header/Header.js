@@ -110,11 +110,11 @@ class Header extends Component {
                 </Link>
               </li>
               <li>
-                <Link to="/thrift">
+                <Link to="/airtime">
                   <span>
                     <img src={require("../../img/thrift.svg")} alt="" />
                   </span> 
-                  <span className={pathname === '/thrift' ? 'dashboard-active': null}>Thrift</span>
+                  <span className={pathname === '/airtime' ? 'dashboard-active': null}>Airtime Topup</span>
                 </Link>
               </li>    
             </ul>

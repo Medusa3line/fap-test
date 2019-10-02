@@ -1,1 +1,1 @@
-export const TimeOut = 1000 * 60 * 5 ;
+export const TimeOut = 1000 * 60 * 5;

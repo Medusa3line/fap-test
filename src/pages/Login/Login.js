@@ -8,10 +8,10 @@ const Login = ({ onChange, loginButtonClick, loggingIn, loginError }) => {
 		<div className="body">
             {/*-- Login Form */}
 
-            <div className="row" style={{margin: '0'}}>
-              <div id="fit-image" className="col-lg-6 col-md-6">
+            <div id="login-layout">
+              <div id="fit-image">
               </div>
-              <div className="col-lg-6 col-md-6 col-sm-12 animated zoomIn delay-2s">
+              <div className="animated zoomIn delay-2s">
                 <div id="login-container">
                   <div className="header">
                     <img src={require("../../img/logo.png")} width="25%" height="25%" alt="3LINE LOGO" /> <br /><br /><br/>

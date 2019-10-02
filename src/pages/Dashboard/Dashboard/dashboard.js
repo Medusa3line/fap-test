@@ -8,10 +8,10 @@ import baseUrl from '../../../baseUrl';
 import PrintReceipt from '../../../print';
 
 import Header from '../../Header/Header';
-import Wallets from './Wallets';
+import Wallets from './Wallet';
 import Table from './Table';
 
-class dashboard extends Component {
+class Dashboard extends Component {
   _isMounted = false;
   constructor(){
     super()
@@ -38,12 +38,27 @@ class dashboard extends Component {
       userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
     }) 
 
+    //Fetching Balance for Dashboard
+    const auth_token = this.state.userDetails.auth_token;
+    await fetch(`${baseUrl}/agents/fetchprofile`, {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${auth_token}`
+      },
+      body: JSON.stringify({})
+    }).then(response => response.json())
+      .then(result => {
+        this.setState({balance: result.respBody})
+      })
+      .catch(err => {
+        swal('An Error Occured', `${err}`, 'info')
+      });
+
     // Fetch Transactions History
     if (sessionStorage.getItem('userDetails')){
       this.fetchTransactions();
     }
-      
-    
   } //End of ComponentDidMount
 
   fetchTransactions = async () => {
@@ -81,32 +96,17 @@ class dashboard extends Component {
         swal('Connection Problem', 'There was an error while fetching transactions, please check your network connection', 'info')
       });
 
-      //Fetching Balance for Dashboard
-      await fetch(`${baseUrl}/agents/fetchprofile`, {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${auth_token}`
-      },
-      body: JSON.stringify({})
-    }).then(response => response.json())
-      .then(result => {
-        this.setState({balance: result.respBody})
-      })
-      .catch(err => {
-        swal('An Error Occured', 'There was an error while fetching wallet details, please try again', 'info')
-      });
-      this.setState({ finishedLoading: true})
+    this.setState({ finishedLoading: true})
   }
 
-    fromDate = async (event) => { 
-      let date = event.target.value;
-      let day = date.slice (8);
-      let month = date.slice(5,7);
-      let year = date.slice(0,4);
-      let fromdate = `${day}-${month}-${year}`;
-      await this.setState({fromDate: fromdate})
-    }
+  fromDate = async (event) => { 
+    let date = event.target.value;
+    let day = date.slice (8);
+    let month = date.slice(5,7);
+    let year = date.slice(0,4);
+    let fromdate = `${day}-${month}-${year}`;
+    await this.setState({fromDate: fromdate})
+  }
 
   toDate = async (event) => { 
     let date = event.target.value;
@@ -153,7 +153,6 @@ class dashboard extends Component {
               <div className="container-fluid" style={{padding: '0'}} id="bottom-content">
                 <Wallets 
                   walletBalance={balance.walletBalance} 
-                  incomeBalance={balance.incomeBalance}
                 />
 
                 {/* <!-- Table -->             */}
@@ -213,4 +212,4 @@ class dashboard extends Component {
      
   }
 }
-export default withTimeout(dashboard);
+export default withTimeout(Dashboard);

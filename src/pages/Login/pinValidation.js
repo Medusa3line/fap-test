@@ -3,13 +3,13 @@ import {Link} from 'react-router-dom';
 import IsLoading from '../../Components/isLoading/isLoading.js';
 import LoginError from '../../Components/loginError/LoginError';
 
-const Otp = ({ onChange, otpButton, loggingIn, loginError, manipulateNumber }) => {
+const Otp = ({ onChange, pinValidation, loggingIn, loginError, manipulateNumber }) => {
   return (
     <div className="body">
-      <div className="row" style={{margin: '0'}}>
-        <div id="fit-image" className="col-lg-6 col-md-6">
+      <div id="login-layout">
+        <div id="fit-image">
         </div>
-        <div className="col-lg-6 col-md-6 col-sm-12 animated zoomIn delay-2s">
+        <div className="animated zoomIn delay-2s">
           <div id="login-container">
             <div className="header">
               <img src={require("../../img/logo.png")} width="100vw" height="55vh" alt="3LINE LOGO" /> <br /><br /><br/>
@@ -17,18 +17,18 @@ const Otp = ({ onChange, otpButton, loggingIn, loginError, manipulateNumber }) =
             </div><br/>
 
           {/*-- Login Form */}
-                <form onSubmit={otpButton}>
+                <form onSubmit={pinValidation}>
                   <div className="form-group">
                     <div className="col-sm-12 col-md-8 col-lg-8" style={{padding: '0'}}>          
                       <input 
                         type="password" 
                         className="form-control" 
                         required="required" 
-                        id="otp"
+                        id="pin"
                         autoFocus="autofocus" 
                         placeholder="Enter Pin"
                         maxLength="4"
-                        name="otp" 
+                        name="pin" 
                         onChange={onChange} 
                         onKeyPress={manipulateNumber}
                       />
@@ -41,7 +41,7 @@ const Otp = ({ onChange, otpButton, loggingIn, loginError, manipulateNumber }) =
                       style={{width: '66.67%'}}
                       className="btn" 
                       id="login_button" 
-                      onClick={otpButton}>
+                      onClick={pinValidation}>
                       {
                         loggingIn ? <IsLoading />
                         : 'Proceed'

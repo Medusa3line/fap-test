@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import swal from 'sweetalert';
-import { Link } from 'react-router-dom';
 import baseUrl from '../../../baseUrl';
 
 class DashboardDetails extends Component {
@@ -48,7 +47,6 @@ class DashboardDetails extends Component {
           <div className="row" id="stats-top-card" style={{padding: 'unset'}}>
             <h6 className="col-lg-4 col-md-12 col-sm-4" style={{ fontSize: '12px', fontWeight: 'bold'}}>Trading Balance: ₦ {tradingBalance}</h6>
             <h6 className="col-lg-4 col-md-12 col-sm-4" style={{ fontSize: '12px', fontWeight: 'bold', textAlign: 'center'}}>Income Balance: ₦ {incomeBalance}</h6>
-            <h6 style={{marginLeft: 'auto', marginRight: '10px'}}><Link  to="/aggregatorTransfer"><button className="btn btn-sm btn-primary"> Transfer</button></Link></h6>
           </div>
       );
     }

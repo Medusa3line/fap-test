@@ -1,12 +1,17 @@
 import React from 'react';
-import './preLoader.css';
+import './preLoader.scss';
 
 export default () => {
 	return (
-		<div className="loaderContainer">
-			<div className="loader">
-				Loading...
-			</div>
+		<div className="lds-roller">
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
 		</div>
 	);
 }

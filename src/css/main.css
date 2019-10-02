@@ -34,6 +34,10 @@
 	min-height: 100vh;
 	position: relative;
 }
+#login-layout{
+	display: grid; 
+	grid-template-columns: 1fr 1fr;
+}
 #login-container{
 	margin-top: 10vh;
 	text-align: center;
@@ -329,12 +333,7 @@ span img{
 	height: 2.5em;
 	width: 2.5em;
 }
-/* Animate the Cards in Dashboard */
-#dashboard-card:hover, #dashboard-card-side:hover{
-	transform: scale(1.05);
-	position: relative;
-	cursor: pointer;
-}
+
 #panel1, #panel2{
 	margin: 4vh 2vw 4vh 0vw;
 }
@@ -501,21 +500,12 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 #dashboard-card{
 	background-color: white; 
 	border-radius: 3px;
-	width: 35%; 
 	box-sizing: border-box; 
-	padding: 20px; 
+	padding: 10px 20px; 
 	box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
 	overflow: auto;
-}
-#dashboard-card-side{
-	background-color: white; 
-	border-radius: 3px;
-	width: 20%; 
-	box-sizing: border-box; 
-	padding: 20px;
-	text-align: center; 
-	box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
-	overflow: auto;
+	display: flex;
+	justify-content: space-between
 }
 #stats-top-card{
 	background-color: white; 
@@ -540,10 +530,9 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 	justify-content: space-between;
 }
 #stats-card-row-dashboard {
-	padding: 10px 0px; 
-	box-sizing: border-box; 
-	display: flex;
-	justify-content: space-between;
+	padding: 10px 0px;
+	display: grid;
+	grid-template-columns: 1fr;
 }
 .yellow{ color: #FBB700; }
 .green{ color: #418003; }
