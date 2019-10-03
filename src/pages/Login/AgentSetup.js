@@ -1,6 +1,7 @@
 import React from 'react';
 import IsLoading from '../../Components/isLoading/isLoading.js';
 import LoginError from '../../Components/loginError/LoginError';
+import LoginContainerHeader from '../../Components/LoginContainerHeader/LoginContainerHeader.jsx';
 
 const AgentSetup = ({ onChange, AgentSetupButton, loggingIn, loginError, manipulateNumber }) => {
 	return (
@@ -10,10 +11,7 @@ const AgentSetup = ({ onChange, AgentSetupButton, loggingIn, loginError, manipul
             </div>
             <div className="animated zoomIn delay-2s">
               <div id="login-container">
-                <div className="header">
-                  <img src={require("../../img/logo.png")} width="100vw" height="55vh" alt="3LINE LOGO" /> <br /><br /><br />
-                  <p style={{fontSize: '16px', color: '#4d4f5c', fontWeight: 'bolder'}}>Set New Password and PIN</p>
-                </div><br/>
+                <LoginContainerHeader content={<p>Set New Password and PIN</p>} /><br/>
 
               {/*-- Agent Setup Form */}
                   <div>

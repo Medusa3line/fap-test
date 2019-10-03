@@ -6,6 +6,7 @@ import withTimeoutWithoutRestriction from '../../Components/HOCs/withTimeoutWith
 import { manipulateNumber } from '../../manipulateNumber';
 import swal from 'sweetalert';
 import LoginError from '../../Components/loginError/LoginError';
+import LoginContainerHeader from '../../Components/LoginContainerHeader/LoginContainerHeader';
 
 class ChangePin extends Component {
   _isMounted = false;
@@ -103,10 +104,7 @@ class ChangePin extends Component {
             </div>
             <div className="animated zoomIn delay-2s">
               <div id="login-container">
-                <div className="header">
-                  <img src={require("../../img/logo.png")} width="100vw" height="55vh" alt="3LINE LOGO" /> <br /><br /><br />
-                  <p style={{fontSize: '16px', color: '#4d4f5c', fontWeight: 'bolder'}}>Change Pin</p>
-                </div><br/>
+                <LoginContainerHeader content={<p>Change Pin</p>} /><br/>
 
               {/*-- Agent Setup Form */}
                 <div>

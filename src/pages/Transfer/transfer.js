@@ -19,9 +19,7 @@ class transfer extends Component {
                       <h6> Transfer funds to any account </h6>
                     </div>
                     <div className="line"></div><br/>
-    
-                    <Balance />
-    
+                    <Balance />    
                     <TransferFields />
                 </div>
             </div>

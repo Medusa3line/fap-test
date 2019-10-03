@@ -2,11 +2,14 @@ import React, {Component} from 'react';
 import { withRouter } from 'react-router-dom'
 import {Link} from 'react-router-dom';
 import AggregatorHeader from '../AggregatorHeader/AggregatorHeader';
+import './AggregatorView.styles.scss';
 
 import withTimeout from '../../../Components/HOCs/withTimeoutAggregator.hoc';
 import Spinner from '../../../Components/PreLoader/preLoader';
 import baseUrl from '../../../baseUrl';
 import swal from 'sweetalert';
+import AggregatorStatistics from '../Components/AggregatorStatistics/AggregatorStatistics';
+import AgentViewInputField from './AgentViewInputField';
 
 class AggregatorView extends Component {
   _isMounted = false;
@@ -16,8 +19,6 @@ class AggregatorView extends Component {
       userDetails : {},
       AgentId: '',
       agentDetails: {},
-      incomeWalletDetails: {},
-      tradingWalletDetails: {},
       totalStats: {},
       dailyStats: {},
       finishedLoading: false
@@ -47,8 +48,6 @@ class AggregatorView extends Component {
       }).then(response => response.json())
         .then(result => {
           this.setState({agentDetails: result.respBody.agent})
-          this.setState({incomeWalletDetails: result.respBody.walletStatsDTO.incomeWalletDTO})
-          this.setState({tradingWalletDetails: result.respBody.walletStatsDTO.tradingWalletDTO})
           this.setState({totalStats: result.respBody.totalDaysStats})
           this.setState({dailyStats: result.respBody.currentStats})
           } 
@@ -61,187 +60,84 @@ class AggregatorView extends Component {
   }
 
 	render(){
-    const { agentDetails, incomeWalletDetails, tradingWalletDetails, totalStats, dailyStats, finishedLoading } = this.state;
+    const { agentDetails, totalStats, dailyStats, finishedLoading } = this.state;
+    const { agentId, username, firstName, lastName, email, dob, phoneNumber, address, gender, state, lga, businessName, terminalId, businessLocation, agentType } = agentDetails;
     if (!finishedLoading){
         return <Spinner />
       } else {
     		return (
     			<div className="body">
-    				<div className="container-fluid" style={{padding: '0', backgroundColor: '#f3f3f3', boxSizing: 'border-box'}}>
+    				<div className="AggregatorViewcontainer">
           		<AggregatorHeader />
                 <div id="main">
                 	<div className="row" id="aggregator-container">
-                    <div className="row" id="back-button">
+                    <div id="back-button">
                       <button className="btn btn-sm" onClick={() => this.props.history.goBack()}> 
-                        <i style={{fontSize: '8px'}} className="fa fa-chevron-left"></i> 
+                        <i className="fa fa-chevron-left"></i> 
                           Back
                       </button>
-                      </div>
+                    </div>
                 		<div className="col-lg-6 col-md-12 col-sm-12" id="aggregator-view-card">
                 		  <h4>Profile Details</h4>
-                      <div className="form-group col-lg-6 col-md-12 col-sm-12">
-                        <label>Agent ID</label><br/>
-                        <input type="text" className="form-control" readOnly defaultValue={agentDetails.agentId} />
-                      </div>
-                      <div className="form-group col-lg-6 col-md-12 col-sm-12">
-                        <label>User Name</label><br/>
-                        <input type="text" className="form-control" readOnly defaultValue={agentDetails.username} />
-                      </div>
-                      <div className="form-group col-lg-6 col-md-12 col-sm-12">
-                        <label>First Name</label><br/>
-                        <input type="text" className="form-control" readOnly defaultValue={agentDetails.firstName} />
-                      </div>
-                      <div className="form-group col-lg-6 col-md-12 col-sm-12">
-                        <label>Last Name</label><br/>
-                        <input type="text" className="form-control" readOnly defaultValue={agentDetails.lastName} />
-                      </div>
-                      <div className="form-group col-lg-6 col-md-12 col-sm-12">
-                        <label>Email</label><br/>
-                        <input type="email" className="form-control col-md-12 col-sm-12" readOnly defaultValue={agentDetails.email} />
-                      </div>
+                      <AgentViewInputField label="Agent ID" value={agentId} />
+                      <AgentViewInputField label="User Name" value={username} />
+                      <AgentViewInputField label="First Name" value={firstName} />
+                      <AgentViewInputField label="Last Name" value={lastName} />
+                      <AgentViewInputField label="Email" value={email} />
                       <div className="form-group col-lg-2 col-md-4 col-sm-4">
                         <label htmlFor="month">Month</label>
-                        <input type="text" className="form-control" readOnly defaultValue={typeof(agentDetails.dob) !== 'string' || agentDetails.dob === null ? null : agentDetails.dob.slice(5,7)} />
+                        <input type="text" className="form-control" readOnly defaultValue={typeof(dob) !== 'string' || dob === null ? null : dob.slice(5,7)} />
                       </div>
                       <div className="form-group col-lg-2 col-md-4 col-sm-4">
                         <label htmlFor="month">Day</label>
-                        <input type="text" className="form-control" readOnly defaultValue={typeof(agentDetails.dob) !== 'string' || agentDetails.dob === null  ? null : agentDetails.dob.slice(8)}  />
+                        <input type="text" className="form-control" readOnly defaultValue={typeof(dob) !== 'string' || dob === null  ? null : dob.slice(8)}  />
                       </div>
                       <div className="form-group col-lg-2 col-md-4 col-sm-4">
                         <label htmlFor="month">Year</label>
-                        <input type="text" className="form-control" readOnly defaultValue={typeof(agentDetails.dob) !== 'string' || agentDetails.dob === null  ? null : agentDetails.dob.slice(0,4)} />
+                        <input type="text" className="form-control" readOnly defaultValue={typeof(dob) !== 'string' || dob === null  ? null : dob.slice(0,4)} />
                       </div>
-                      <div className="form-group col-lg-6 col-md-12 col-sm-12">
-                        <label>Phone Number</label><br/>
-                        <input type="tel" className="form-control" readOnly defaultValue={agentDetails.phoneNumber} />
-                      </div>
-                      <div className="form-group col-lg-6 col-md-12 col-sm-12">
-                          <label>Gender</label><br/>
-                          <input type="tel" className="form-control" readOnly defaultValue={agentDetails.gender} />
-                      </div>
-                      <div className="form-group col-lg-6 col-md-12 col-sm-12">
-                        <label>Address</label><br/>
-                        <input type="address" className="form-control" readOnly defaultValue={agentDetails.address} />
-                      </div>
+                      <AgentViewInputField label="Phone Number" value={phoneNumber} />
+                      <AgentViewInputField label="Gender" value={gender} />
+                      <AgentViewInputField label="Address" value={address} />
                       <div className="form-group col-lg-3 col-md-6 col-sm-6">
                         <label>State</label><br/>
-                        <input type="text" className="form-control" readOnly defaultValue={agentDetails.state} />
+                        <input type="text" className="form-control" readOnly defaultValue={state} />
                       </div>
                       <div className="form-group col-lg-3 col-md-6 col-sm-6">
                         <label>Local Gov</label><br/>
-                        <input type="text" className="form-control" readOnly defaultValue={agentDetails.lga} />
+                        <input type="text" className="form-control" readOnly defaultValue={lga} />
                       </div>
-                      <div className="form-group col-lg-6 col-md-12 col-sm-12">
-                        <label>Business Name</label><br/>
-                        <input type="text" className="form-control" readOnly defaultValue={agentDetails.businessName} />
-                      </div>
+                      <AgentViewInputField label="Business Name" value={businessName} />
                       <div className="form-group col-lg-6 col-md-12 col-sm-12">
                         <label>Terminal ID</label><br/>
-                        <input type="text" className="form-control" readOnly defaultValue={agentDetails.terminalId} />
+                        <input type="text" className="form-control" readOnly defaultValue={terminalId} />
                       </div>
-                      <div className="form-group col-lg-6 col-md-12 col-sm-12">
-                        <label>Business Location</label><br/>
-                        <input type="text" className="form-control" readOnly defaultValue={agentDetails.businessLocation} />
-                      </div>
-                      <div className="form-group col-lg-6 col-md-12 col-sm-12">
-                        <label>Agent Type</label><br/>
-                        <input type="text" className="form-control" readOnly defaultValue={agentDetails.agentType} />
-                      </div>
+                      <AgentViewInputField label="Email" value={email} />
+                      <AgentViewInputField label="Business Location" value={businessLocation} />
+                      <AgentViewInputField label="Agent Type" value={agentType} />
         	        	</div>
 
                     <div className="col-lg-6 col-md-12 col-sm-12">
                       <div id="aggregator-view-card-top">
                         <div id="toggleAgentPerformance">
                           <h5 style={{fontWeight: 'bold'}}>
-                            <Link to={`/allWallet/${agentDetails.agentId}`}>
+                            <Link to={`/allWallet/${agentId}`}>
                               View All Transactions 
                             </Link>
                           </h5>                                 
                         </div><br/>
-                        <div className="row" style={{display: 'flex', justifyContent: 'space-between'}}>
-                          <div className="animated bounce delay-2s" id="view-card">
-                            <div style={{display: 'flex', justifyContent:'space-between'}}>
-                              <h6>Trading Wallet</h6>
-                              <Link to={`/tradingWallet/${agentDetails.agentId}`}><button className="btn btn-sm" id="view-btn-1" >View</button></Link>
-                            </div>
-                            <div style={{display: 'flex', justifyContent:'space-between'}}>
-                              <h4 style={{fontWeight: 'bold', letterSpacing: '1px'}}>
-                                <sup style={{fontSize: '50%'}}>₦</sup>{tradingWalletDetails.availableBalance}
-                              </h4>
-                              <h6 style={{textAlign: 'right', fontSize: '10px'}}> <b style={{fontSize: '7px'}}>Wallet Number</b> <br/> {agentDetails.walletNumber}</h6>               
-                            </div>
-                          </div>
-                          <div className="animated bounce delay-2s" id="view-card">
-                            <div style={{display: 'flex', justifyContent:'space-between'}}>
-                              <h6>Income Wallet</h6>
-                              <Link to={`/incomeWallet/${agentDetails.agentId}`}><button className="btn btn-sm" id="view-btn-2">View</button></Link>
-                            </div>
-                            <div style={{display: 'flex', justifyContent:'space-between'}}>                                                  
-                              <h4 style={{fontWeight: 'bold', letterSpacing: '1px'}}>
-                                <sup style={{fontSize: '50%'}}>₦</sup>{incomeWalletDetails.availableBalance}                                                    
-                              </h4>
-                              <h6 style={{textAlign: 'right',fontSize: '10px'}}> <b style={{fontSize: '7px'}}>Wallet Number</b> <br/> {agentDetails.incomeWalletNumber}</h6>
-                            </div>
-                          </div>
-                        </div>
                       </div>
-                    <div id="aggregator-container-view" style={{paddingTop: '0px'}}>
+                    <div id="aggregator-container-view">
                       <div className="col-lg-12 col-md-12 col-sm-12" style={{padding: '0'}}>
                         <div className="row" style={{margin: '0px'}}>
                           <div className="row" id="stats-top-most-card" style={{padding: '0'}}>
-                            <div className="row" style={{margin: '0px', padding: '0'}}>
-                              <div className="row" id="stats-top-card">
-                                <h6 className="col-lg-4" style={{ fontSize: '12px', fontWeight: 'bold'}}>Today's Statistics</h6>
-                                <h4 className="col-lg-4" style={{textAlign: 'center', fontSize: '10px', fontWeight: 'bold', color: '#2e5a03'}}>Amount<br/><b style={{fontSize: '12px'}}> ₦ {dailyStats.totals}</b></h4>
-                                <h6 className="col-lg-4" style={{textAlign: 'center', fontSize: '10px', fontWeight: 'bold', color: '#b11d11'}}>Count<br/><b style={{fontSize: '12px'}}> {dailyStats.totalCount} Counts</b></h6>
-                              </div>
-                              <div id="stats-card-row">
-                                <div id="stats-card">
-                                  <h6> Deposit</h6> 
-                                  <h4 id="bold">₦ {dailyStats.deposits}</h4>
-                                  <h6 id="first-aggregator-count" className="yellow">{dailyStats.depositCount} Counts </h6> <img id="aggregator-count-image" alt="" src={require("../../../img/bar_chart_1.svg")} />
-                                </div>
-                                <div id="stats-card">
-                                  <h6> Withdrawal</h6> 
-                                  <h4 id="bold">₦ {dailyStats.withDrawals}</h4>
-                                  <h6 id="first-aggregator-count" className="grey">{dailyStats.withDrawalsCount} Counts </h6> <img id="aggregator-count-image" alt="" src={require("../../../img/bar_chart_3.svg")} />
-                                </div>
-                                <div id="stats-card">
-                                  <h6> Bill Payment</h6> 
-                                  <h4 id="bold">₦ {dailyStats.billPayments}</h4> 
-                                  <h6 id="first-aggregator-count" className="green">{dailyStats.billPaymentsCount} Counts </h6> <img id="aggregator-count-image" alt="" src={require("../../../img/bar_chart_2.svg")} />
-                                </div>
-                              </div>
-                            </div>
+                            <AggregatorStatistics stats={dailyStats} />
                           </div>
                         </div>
 
                         <div className="row" style={{margin: '0px'}}>
                           <div className="row" id="stats-top-most-card" style={{padding: '0'}}>
-                            <div className="row" style={{margin: '0px', padding: '0'}}>
-                              <div className="row" id="stats-top-card">
-                                <h6 className="col-lg-4" style={{ fontSize: '12px', fontWeight: 'bold'}}>Total Statistics</h6>
-                                <h4 className="col-lg-4 " style={{textAlign: 'center', fontSize: '10px', fontWeight: 'bold', color: '#2e5a03'}}>Amount<br/><b style={{fontSize: '12px'}}> ₦{totalStats.totals}</b></h4>
-                                <h6 className="col-lg-4" style={{textAlign: 'center', fontSize: '10px', fontWeight: 'bold', color: '#b11d11'}}>Count<br/><b style={{fontSize: '12px'}}> {totalStats.totalCount} Counts</b></h6>
-                              </div>
-                              <div id="stats-card-row">
-                                <div id="stats-card">
-                                  <h6> Deposit</h6>
-                                  <h4 id="bold">₦ {totalStats.deposits}</h4>
-                                  <h6 id="first-aggregator-count" className="yellow">{totalStats.depositCount} Counts</h6> <img id="aggregator-count-image" alt="" src={require("../../../img/bar_chart_1.svg")} />
-                                </div>
-                                <div id="stats-card">
-                                  <h6> Withdrawal</h6>
-                                  <h4 id="bold">₦ {totalStats.withDrawals}</h4>
-                                  <h6 id="first-aggregator-count" className="grey">{totalStats.withDrawalsCount} Counts</h6> <img id="aggregator-count-image" alt="" src={require("../../../img/bar_chart_3.svg")} />
-                                </div>
-                                <div id="stats-card">
-                                  <h6> Bill Payment</h6>
-                                  <h4 id="bold">₦ {totalStats.billPayments}</h4> 
-                                  <h6 id="first-aggregator-count" className="green">{totalStats.billPaymentsCount} Counts</h6> <img id="aggregator-count-image" alt="" src={require("../../../img/bar_chart_2.svg")} />
-                                </div>
-                              </div>
-                            </div>
+                            <AggregatorStatistics stats={totalStats} />
                           </div>
                         </div>
                       </div>

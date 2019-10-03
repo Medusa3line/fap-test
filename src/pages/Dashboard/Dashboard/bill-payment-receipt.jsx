@@ -1,54 +1,56 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import withTimeout from '../../../Components/HOCs/withTimeout.hoc';
-import { withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import PrintReceipt from '../../../print';
+import ReceiptFooter from '../../../Components/ReceiptFooter/ReceiptFooter.component';
 
-class BillPaymentReceipt extends Component {
-	state = {
+const BillPaymentReceipt = () => {
+	const [ state, setState ] = useState({
 		transaction: {},
 		DTO: {}, 
 		tranDate: '',
 		userDetails: {},
 		electricityToken: ''
-	}
+	})
 
-	componentDidMount = async () => {
-		this._isMounted = true;
-		if (this.props.history.location.state === undefined){
-			this.props.history.push("/dashboard");
-		} else {
-				if (this.props.history.location.state.transaction.transactionType.toLowerCase() === 'deposit'){
-				await this.setState({
-					DTO: this.props.history.location.state.transaction.depositDTO
-				})
-			} else if (this.props.history.location.state.transaction.transactionType.toLowerCase() === 'Bill Payment'){
-				await this.setState({
-					DTO: this.props.history.location.state.transaction.utilityDTO
-				})
-			} 
-			await this.setState({
-				transaction: this.props.history.location.state.transaction, 
-				tranDate: this.props.history.location.state.transaction.tranDate,
-				electricityToken: this.props.history.location.state.transaction.utilityDTO.electricityToken
-			})
+	const history = useHistory()
+	const { agentName, address, agentId } = JSON.parse(sessionStorage.getItem('userDetails'));
 
-			// Getting Agent's Details
-			await sessionStorage.getItem('userDetails') && this.setState ({
-				userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
-			})
+	useEffect(() => {
+		async function getReceiptDetails(){
+			if (history.location.state === undefined){
+				history.push("/dashboard");
+			} else {
+					if (history.location.state.transaction.transactionType.toLowerCase() === 'deposit'){
+					await setState(state => ({
+						...state,
+						DTO: history.location.state.transaction.depositDTO
+					}))
+				} else if (history.location.state.transaction.transactionType.toLowerCase() === 'Bill Payment'){
+					await setState(state => ({
+						...state,
+						DTO: history.location.state.transaction.utilityDTO
+					}))
+				} 
+				await setState( state =>({
+					...state,
+					transaction: history.location.state.transaction, 
+					tranDate: history.location.state.transaction.tranDate,
+					electricityToken: history.location.state.transaction.utilityDTO.electricityToken
+				}))
+			}
 		}
-	}
+		getReceiptDetails()
+	}, [history])
 
-	print = (divName) => {
+	const print = (divName) => {
 	    PrintReceipt(divName);
   	}
 
-	render (){
-		const { transactionType, statusdescription, amount, tranId, transactionTypeDescription, bankTo, beneficiary } = this.state.transaction;
-		const { freedomCharge, transactionRef } = this.state.DTO;
-		const { tranDate, electricityToken } = this.state;
-		const { agentName, address, agentId } = this.state.userDetails;
+		const { transactionType, statusdescription, amount, tranId, transactionTypeDescription, bankTo, beneficiary } = state.transaction;
+		const { freedomCharge, transactionRef } = state.DTO;
+		const { tranDate, electricityToken } = state;
 
 		const statusClass = () => {
 			if(statusdescription === 'SUCCESSFULL' || statusdescription === 'SUCCESSFUL'){
@@ -127,12 +129,12 @@ class BillPaymentReceipt extends Component {
 				
 		        <div className="form-group">
 		            <div className="col-sm-12 col-md-12 col-lg-12">
-		              <h5>Date <span> {this.state.tranDate.substring(0, tranDate.length - 18)} </span></h5>
+		              <h5>Date <span> {state.tranDate.substring(0, tranDate.length - 18)} </span></h5>
 		            </div>
 		        </div>
 		        <div className="form-group">
 		            <div className="col-sm-12 col-md-12 col-lg-12">
-		              <h5>Time <span> {this.state.tranDate.substring(11, tranDate.length - 9)} </span></h5>
+		              <h5>Time <span> {state.tranDate.substring(11, tranDate.length - 9)} </span></h5>
 		            </div>
 		        </div>
 		        <div className="form-group">
@@ -167,24 +169,21 @@ class BillPaymentReceipt extends Component {
 	        <div style={{display: 'flex', justifyContent: 'space-around'}}>        
 	              <button type="submit"
 	                className="btn btn-success btn-xs col-sm-4 col-md-4 col-lg-4"
-	                onClick={() => this.print('deposit-fields-2')}>
+	                onClick={() => print('deposit-fields-2')}>
 	                Print Receipt
 	            </button>
 	              
 	            <button
-	            	onClick={() => this.props.history.goBack()}
+	            	onClick={() => history.goBack()}
 	            	type="submit" 	            	
 	                className="btn btn-xs col-sm-4 col-md-4 col-lg-4">	                
 	                Go Back
 	            </button>
 
 	        </div>  <br />
-			<div style={{display: 'flex', justifyContent: 'center'}}>
-				<h6>Powered by <img src={require("../../../img/3line_logo.png")} style={{marginLeft: '5px'}} alt="3LINE CARD MANAGEMENT LIMITED" /></h6>
-			</div>
+			<ReceiptFooter />
     	</div>
 	)
-	}
 }
 
-export default withTimeout(withRouter(BillPaymentReceipt));
+export default withTimeout(BillPaymentReceipt);

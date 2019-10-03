@@ -5,12 +5,12 @@ import IsLoading from '../../Components/isLoading/isLoading.js';
 import withTimeoutWithoutRestriction from '../../Components/HOCs/withTimeoutWithoutRestriction.hoc';
 import swal from 'sweetalert';
 import LoginError from '../../Components/loginError/LoginError';
+import LoginContainerHeader from '../../Components/LoginContainerHeader/LoginContainerHeader';
 
 class ChangePassword extends Component {
   _isMounted = false;
-    constructor(){
-    super()
-    this.state = {
+
+    state = {
       userDetails : {},
       loggingIn: false,
       loginError: false,
@@ -18,7 +18,6 @@ class ChangePassword extends Component {
       newPassword: '',
       newPasswordAgain: ''
     }
-  }
 
   onChange = (event) => { this.setState({[event.target.name]: event.target.value});}
 
@@ -67,7 +66,7 @@ class ChangePassword extends Component {
     .catch(err => {
       this.setState({loggingIn: false})
       document.getElementById(id).disabled = false;
-      swal('An Error Occured', 'There was an error while processing this request, please try again', 'error')
+      swal('An Error Occured', `${err}`, 'error')
     });
   }
 }
@@ -90,10 +89,7 @@ class ChangePassword extends Component {
             </div>
             <div className="animated zoomIn delay-2s">
               <div id="login-container">
-                <div className="header">
-                  <img src={require("../../img/logo.png")} width="100vw" height="55vh" alt="3LINE LOGO" /> <br /><br /><br />
-                  <p style={{fontSize: '16px', color: '#4d4f5c', fontWeight: 'bolder'}}>Change Password</p>
-                </div><br/>
+                <LoginContainerHeader content={<p>Change Password</p>} /><br/>
 
               {/*-- Agent Setup Form */}
                 <div>

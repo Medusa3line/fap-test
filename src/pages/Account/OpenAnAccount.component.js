@@ -1,22 +1,10 @@
-import React, {useState} from 'react';
-import { withRouter } from 'react-router-dom';
+import React from 'react';
 import withTimeout from '../../Components/HOCs/withTimeout.hoc';
 
 import Header from '../Header/Header';
-import GTBaccount from './GTB/GTBaccount.component';
-import SelectBankAccountToOpen from '../../Components/AccountOpening/SelectBankAccountToOpen.component';
-import FidelityAccount from './Fidelity/FidelityAccount.component';
+import FCMBAccount from './FCMB/FCMBaccount.component';
 
-const OpenAnAccount = () => {
-  const [ bank, setBank ] = useState('');
-  const [showSelectBank, setShowSelectBank] = useState(true) 
-
-  const selectBank = (e) => {
-      setBank(e.target.value);
-  }
-  const toShowSelectBank = (e) => {
-    setShowSelectBank(e);
-  }
+const OpenAnAccount = () => {  
   return (
     <div className="body">
       {/* <!-- Main Wrapper --> */}
@@ -29,30 +17,8 @@ const OpenAnAccount = () => {
                 <h4> Open a Bank Account </h4>
                 <small style={{color: '#ff0014'}}>All fields are required * </small>
               </div>
-              <div className="line"></div><br/> 
-              {
-                showSelectBank ? 
-                  <SelectBankAccountToOpen 
-                    selectBank={selectBank} 
-                    bank={bank}
-                  /> 
-                : null
-              }
-                              
-                {
-                  bank === 'gtb' ? 
-                    <GTBaccount 
-                      selectBank={selectBank}
-                      toShowSelectBank={toShowSelectBank}
-                    /> : (
-                      bank === 'fidelity' ? 
-                        <FidelityAccount 
-                        selectBank={selectBank}
-                        toShowSelectBank={toShowSelectBank}
-                        /> 
-                        : null
-                    )                              
-                }
+              <div className="line"></div><br/>  
+                <FCMBAccount />                              
               </div>
             </div>
           </div>
@@ -60,4 +26,4 @@ const OpenAnAccount = () => {
       </div>
   )
 }
-export default withTimeout(withRouter(OpenAnAccount));
+export default withTimeout(OpenAnAccount);

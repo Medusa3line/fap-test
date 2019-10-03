@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import swal from 'sweetalert';
 
 import withTimeout from '../../../Components/HOCs/withTimeout.hoc';
@@ -8,14 +8,14 @@ import baseUrl from '../../../baseUrl';
 import PrintReceipt from '../../../print';
 
 import Header from '../../Header/Header';
-import Wallets from './Wallet';
+import Wallets from './Wallet/Wallet';
 import Table from './Table';
 
-class Dashboard extends Component {
-  _isMounted = false;
-  constructor(){
-    super()
-    this.state = {
+const Dashboard = () => {
+  //Get User Information
+  const { auth_token, userName } = JSON.parse(sessionStorage.getItem('userDetails'));
+
+    const [state, setState] = useState({
       userDetails : {},
       balance: {},
       route: 'dashboard',
@@ -28,19 +28,11 @@ class Dashboard extends Component {
       fromDate: '',
       toDate: '',
       finishedLoading: false
-    }
-  }
-
-  componentDidMount = async () => {
-
-    //Get User Information
-    await sessionStorage.getItem('userDetails') && this.setState ({
-      userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
-    }) 
-
+    })
+  
+  useEffect(() => {
     //Fetching Balance for Dashboard
-    const auth_token = this.state.userDetails.auth_token;
-    await fetch(`${baseUrl}/agents/fetchprofile`, {
+    fetch(`${baseUrl}/agents/fetchprofile`, {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -49,7 +41,10 @@ class Dashboard extends Component {
       body: JSON.stringify({})
     }).then(response => response.json())
       .then(result => {
-        this.setState({balance: result.respBody})
+        setState( state =>({
+          ...state,
+          balance: result.respBody
+        }))
       })
       .catch(err => {
         swal('An Error Occured', `${err}`, 'info')
@@ -57,20 +52,22 @@ class Dashboard extends Component {
 
     // Fetch Transactions History
     if (sessionStorage.getItem('userDetails')){
-      this.fetchTransactions();
+      fetchTransactions();
     }
-  } //End of ComponentDidMount
+  }, [fetchTransactions, auth_token]) //End of ComponentDidMount
 
-  fetchTransactions = async () => {
+  const fetchTransactions = useCallback( async () => {
     //Fetch Transaction History
-    this.setState({ finishedLoading: false})
-    let auth_token = this.state.userDetails.auth_token; 
+    setState(state => ({ 
+      ...state, 
+      finishedLoading: false
+    }))
     let historyBody = {
-      agentName: this.state.userDetails.userName,
-      fromDate: this.state.fromDate,
-      toDate: this.state.toDate,
-      page: this.state.page,
-      size: this.state.size
+      agentName: userName,
+      fromDate: state.fromDate,
+      toDate: state.toDate,
+      page: state.page,
+      size: state.size
     };
 
       await fetch(`${baseUrl}/transactions/agenttransactions`, {
@@ -83,64 +80,84 @@ class Dashboard extends Component {
     }).then(response => response.json())
       .then(transactions => {
         if(transactions.respBody.transactions){
-          this.setState({
+          setState(state => ({
+            ...state,
             transactions: transactions.respBody.transactions, 
             totalCount: transactions.respBody.totalCount, 
             hasNextRecord: transactions.respBody.hasNextRecord
-          })
+          }))
         } else {
-          this.setState({transactions: [], totalCount: 1, hasNextRecord: false})
+          setState(state => ({
+            ...state,
+            transactions: [], 
+            totalCount: 1, 
+            hasNextRecord: false
+          }))
         }
       })
       .catch(err => {
-        swal('Connection Problem', 'There was an error while fetching transactions, please check your network connection', 'info')
+        swal('Connection Problem', `${err}`, 'info')
       });
 
-    this.setState({ finishedLoading: true})
-  }
+    setState(state =>({
+      ...state,
+      finishedLoading: true
+    }))
+  }, [auth_token, userName, state])
 
-  fromDate = async (event) => { 
+  const fromDate = async (event) => { 
     let date = event.target.value;
     let day = date.slice (8);
     let month = date.slice(5,7);
     let year = date.slice(0,4);
     let fromdate = `${day}-${month}-${year}`;
-    await this.setState({fromDate: fromdate})
+    await setState({
+      ...state,
+      fromDate: fromdate
+    })
   }
 
-  toDate = async (event) => { 
+  const toDate = async (event) => { 
     let date = event.target.value;
     let day = date.slice (8);
     let month = date.slice(5,7);
     let year = date.slice(0,4);
     let todate = `${day}-${month}-${year}`;
-    await this.setState({toDate: todate, page: 0})
+    await setState({toDate: todate, page: 0})
   }
 
-  showLess = async () => {
-    if(this.state.page > 0){
-      await this.setState({page: this.state.page - 1});
-      this.fetchTransactions();
+  const showLess = async () => {
+    if(state.page > 0){
+      await setState({
+        ...state,
+        page: state.page - 1
+      });
+      fetchTransactions();
     }
   }
 
-  showMore = async() => {
-    if (this.state.transactions.length === this.state.size){
-      await this.setState({page: this.state.page + 1});
-      this.fetchTransactions();
+  const showMore = async() => {
+    if (state.transactions.length === state.size){
+      await setState({
+        ...state,
+        page: state.page + 1
+      });
+      fetchTransactions();
     }
   }
 
-  searchTransactions = async (event) => { await this.setState({searchField: event.target.value}) }
+  const searchTransactions = async (event) => { await setState({
+    ...state,
+    searchField: event.target.value
+  }) }
 
-  print = (divName) => {
+  const print = (divName) => {
     PrintReceipt(divName);
   }
 
-  render() {
-    const { page, size, finishedLoading, balance, totalCount, hasNextRecord } = this.state;
-    const transactions = this.state.transactions.filter(transaction => {
-      return (transaction.transactionType.toLowerCase()).includes(this.state.searchField.toLowerCase())
+    const { page, size, finishedLoading, balance, totalCount, hasNextRecord } = state;
+    const transactions = state.transactions.filter(transaction => {
+      return (transaction.transactionType.toLowerCase()).includes(state.searchField.toLowerCase())
     });
  
     if (!finishedLoading){
@@ -162,12 +179,12 @@ class Dashboard extends Component {
                       <h4 style={{fontWeight: 'bolder'}}> &nbsp; Transactions History</h4>
                     </div>
                     <div>
-                      <h4><button type="button" className="btn" onClick={() => this.print('table')} id="pad-aggregator-items">Print</button></h4>
+                      <h4><button type="button" className="btn" onClick={() => print('table')} id="pad-aggregator-items">Print</button></h4>
                     </div>
                   </div>
                   <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', overflowX: 'auto'}}>
                     <div className="form-group">
-                      <select className="form-control" onChange={this.searchTransactions}  style={{textAlign: 'center'}}>
+                      <select className="form-control" onChange={searchTransactions}  style={{textAlign: 'center'}}>
                         <option value="">All Transactions</option>
                         <option value="deposit">Deposit</option>
                         <option value="recharge">Recharge</option>
@@ -178,16 +195,16 @@ class Dashboard extends Component {
                     <div style={{display: 'flex', justifyContent: 'space-between'}}>
                       <form className="form-inline">
                         <div style={{textAlign: 'center'}}>
-                          From: <input type="date" style={{width: '60%'}} onChange={this.fromDate} className="form-control" id="pad-aggregator-items" />
+                          From: <input type="date" style={{width: '60%'}} onChange={fromDate} className="form-control" id="pad-aggregator-items" />
                         </div>
                       </form>
                       <form className="form-inline">
                         <div style={{textAlign: 'center'}}>
-                          To: <input type="date" style={{width: '60%'}} onChange={this.toDate} className="form-control" id="pad-aggregator-items" />
+                          To: <input type="date" style={{width: '60%'}} onChange={toDate} className="form-control" id="pad-aggregator-items" />
                         </div>
                       </form>
                       <div style={{textAlign: 'center'}}>
-                        <h4><button type="button" className="btn btn-success btn-sm" onClick={this.fetchTransactions}>Filter</button></h4>
+                        <h4><button type="button" className="btn btn-success btn-sm" onClick={fetchTransactions}>Filter</button></h4>
                       </div>
                     </div>
                   </div>
@@ -195,8 +212,8 @@ class Dashboard extends Component {
                   <div id="table">
                     <Table 
                       transactions={transactions} 
-                      showMore={this.showMore} 
-                      showLess={this.showLess} 
+                      showMore={showMore} 
+                      showLess={showLess} 
                       page={page} 
                       size={size} 
                       totalCount={totalCount}
@@ -208,8 +225,6 @@ class Dashboard extends Component {
           </div>
         </div>
       );
-      }
-     
-  }
+    } 
 }
 export default withTimeout(Dashboard);

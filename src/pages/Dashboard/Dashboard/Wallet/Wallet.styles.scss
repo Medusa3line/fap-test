@@ -1,0 +1,15 @@
+.middle-panel{
+    padding: 20px 0 0 0;
+
+    #dashboard-card{
+        background-color: white; 
+        border-radius: 3px;
+        box-sizing: border-box; 
+        padding: 10px 20px; 
+        box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
+        overflow: auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+}

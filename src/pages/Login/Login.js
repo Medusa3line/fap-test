@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import IsLoading from '../../Components/isLoading/isLoading.js';
 import LoginError from '../../Components/loginError/LoginError';
+import LoginContainerHeader from '../../Components/LoginContainerHeader/LoginContainerHeader.jsx';
+import Footer from '../../Components/Footer/Footer.component.jsx';
 
 const Login = ({ onChange, loginButtonClick, loggingIn, loginError }) => {
 	return (
@@ -13,10 +15,7 @@ const Login = ({ onChange, loginButtonClick, loggingIn, loginError }) => {
               </div>
               <div className="animated zoomIn delay-2s">
                 <div id="login-container">
-                  <div className="header">
-                    <img src={require("../../img/logo.png")} width="25%" height="25%" alt="3LINE LOGO" /> <br /><br /><br/>
-                    <p style={{fontSize: '16px', color: '#4d4f5c', fontWeight: 'bolder'}}>Welcome back! <br/> Please login to your account </p>
-                  </div><br/>
+                  <LoginContainerHeader content={<p>Welcome back! <br/> Please login to your account </p>} /> <br/>
                   <form onSubmit={loginButtonClick}>
                     <div className="form-group">
                       <div className="col-sm-12 col-md-8 col-lg-8" style={{padding: '0'}}>
@@ -61,17 +60,14 @@ const Login = ({ onChange, loginButtonClick, loggingIn, loginError }) => {
                     </div>
                   </form>
 
-                    <div className="col-sm-12 col-md-12 col-lg-12">
+                  
                       <div>
                         <h6>Forgot your password? <Link to="/resetPassword" style={{color: '#ff0014'}}>Reset It</Link></h6> 
                       </div>
-                    </div>
                     {
                       loginError ? <LoginError /> : null
                     }
-                <footer>
-                  <p className="text-center" style={{fontSize: '11px'}}>Powered by <img src={require("../../img/3line_logo.png")} style={{marginLeft: '5px'}} alt="3LINE CARD MANAGEMENT LIMITED" /> </p>
-                </footer>
+                  <Footer />
                 </div>
               </div>
             </div> 

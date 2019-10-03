@@ -71,7 +71,7 @@ AgentSetupButton = (e) => {
         loggingIn: false
       })
       document.getElementById(id).disabled = false;
-      swal('An Error Occured', 'There was an error while processing this request, please try again', 'error')
+      swal('An Error Occured', `${err}`, 'error')
     });
   }
 }
@@ -90,10 +90,11 @@ pinValidation = (e) => {
         loggingIn: true
       })
     document.getElementById(id).disabled = true;
+    const { username, password, pin } = this.state;
     let reqBody = {
-      username: this.state.username,
-      password: this.state.password,
-      pin: this.state.pin
+      username,
+      password,
+      pin
     };
     fetch(`${baseUrl}/oauth/logon`, {
       method: 'post',
@@ -104,17 +105,7 @@ pinValidation = (e) => {
         if(user.respCode === '00'){
           sessionStorage.setItem('userDetails', JSON.stringify(user.respBody));
           document.getElementById(id).disabled = false;
-          
-          // Redirect to Dashboard
-          let { userType } = user.respBody;    
-          userType = userType.toLowerCase();       
-          if (userType === 'aggregator' || userType  === 'subaggregator') {
-            this.props.history.push("/aggregator");
-            } else if (userType  === 'sub agent' || userType  === 'sub-agent' || userType === 'subagent' || userType  === 'sole' || userType === 'sub_agent'){
-              this.props.history.push("/dashboard");
-            } else {
-              swal("Login Failed", 'User type unknown', 'error')              
-            } 
+          this.redirectToDashboard(user.respBody.userType) 
         } else {
             this.setState({
               loggingIn: false, 
@@ -128,7 +119,7 @@ pinValidation = (e) => {
           loggingIn: false
         })
         document.getElementById(id).disabled = false;
-        swal('An Error Occured', 'There was an error while processing this request, please try again', 'info')
+        swal('An Error Occured', `${err}`, 'info')
       })
   }
   ;
@@ -145,10 +136,11 @@ loginButtonClick = (e) => {
   this.setState({
     loginError: false
   })
+  const { username, password, pin } = this.state;
   let reqBody = {
-    username: this.state.username,
-    password: this.state.password,
-    pin: this.state.pin
+    username,
+    password,
+    pin
   };
 
     if(reqBody.username === '' || reqBody.password === ''){
@@ -180,25 +172,10 @@ loginButtonClick = (e) => {
           })
         } else if (user.respBody.isFirstTime === 'false' && user.respBody.isNewDevice === 'false'){          
           sessionStorage.setItem('userDetails', JSON.stringify(user.respBody)); 
-          document.getElementById(id).disabled = false;
-
-          // Redirect to Dashboard
-          let { userType } = user.respBody;    
-          userType = userType.toLowerCase();       
-          if (userType === 'aggregator' || userType  === 'subaggregator') {
-            this.props.history.push("/aggregator");
-            } else if (userType  === 'sub agent' || userType  === 'sub-agent' || userType === 'subagent' || userType  === 'sole' || userType === 'sub_agent'){
-              this.props.history.push("/dashboard");
-            } else {
-              swal("Login Failed", 'User type unknown', 'error')              
-            }        
+          document.getElementById(id).disabled = false;   
+          this.redirectToDashboard(user.respBody.userType)    
       }
-    } else if(user.respCode === '96'){
-        this.setState({
-          route: 'login', 
-          loginError: true
-        })
-      } else {
+    } else {
         this.setState({
           route: 'login', 
           loginError: true
@@ -211,11 +188,24 @@ loginButtonClick = (e) => {
       })
       swal("Login Failed", `${err}`, 'error')
     })
-    }
+  }
 }
 routeChange = (route) => this.setState({
   route: route
 })
+
+redirectToDashboard = (userType) => {
+  // Redirect to Dashboard    
+  userType = userType.toLowerCase(); 
+  const { history } = this.props;      
+  if (userType === 'aggregator' || userType  === 'subaggregator') {
+    history.push("/aggregator")
+    } else if (userType  === 'sub agent' || userType  === 'sub-agent' || userType === 'subagent' || userType  === 'sole' || userType === 'sub_agent'){
+      history.push("/dashboard")
+    } else {
+      swal("Login Failed", 'User type unknown', 'error')              
+    } 
+}
 
 // Manipulate Number input fields and Password fields for Pin to not accept anything other than numbers
 manipulateNumber = (e) => {

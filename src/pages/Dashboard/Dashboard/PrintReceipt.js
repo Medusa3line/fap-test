@@ -3,6 +3,7 @@ import withTimeout from '../../../Components/HOCs/withTimeout.hoc';
 import { withRouter } from 'react-router-dom';
 
 import PrintReceipt from '../../../print';
+import ReceiptFooter from '../../../Components/ReceiptFooter/ReceiptFooter.component';
 
 class Receipt extends Component {
 	state = {
@@ -168,9 +169,7 @@ class Receipt extends Component {
 	            </button>
 
 	        </div>  <br />
-			<div style={{display: 'flex', justifyContent: 'center'}}>
-				<h6>Powered by <img src={require("../../../img/3line_logo.png")} style={{marginLeft: '5px'}} alt="3LINE CARD MANAGEMENT LIMITED" /></h6>
-			</div>
+			<ReceiptFooter />
     	</div>
 	)
 	}
