@@ -10,8 +10,13 @@ export const manipulateNumber = (e) => {
   }
 }
 
-// export const formatNumber = new Intl.NumberFormat('en-US', {
-//   style: 'currency',
-//   currency: 'NGN',
-//   minimumFractionDigits: 2
-// })
+export const manipulateAmount = (e) => {
+  var inputKeyCode = e.keyCode ? e.keyCode : e.which;
+  if (((inputKeyCode >= 48 && inputKeyCode <= 57) || (inputKeyCode >= 97 && inputKeyCode <= 105)) && (inputKeyCode != null)){
+      if((e.target.value.length === e.target.maxLength) && (inputKeyCode === 45)){
+      e.preventDefault();
+    }
+  } else {
+    e.preventDefault();
+  }
+}

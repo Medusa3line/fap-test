@@ -4,30 +4,21 @@ import swal from 'sweetalert';
 import baseUrl from '../../baseUrl';
 import withTimeout from '../../Components/HOCs/withTimeout.hoc';
 
-import Header from '../Header/Header';
 import CreditRequest from './CreditRequest';
+import Layout from '../../Components/Layout/Layout.component';
+
+const { auth_token } = JSON.parse(sessionStorage.getItem('userDetails'));
 
 class FundWallet extends Component {
   _isMounted = false;
-  constructor(){
-    super()
-    this.state = {
-      userDetails : {},
-      route: 'dashboard',
-      bank: '',
-      amount: '',
-      depositorsName:'',
-      makingPayment: false
-    }
+  state = {
+    userDetails : {},
+    route: 'dashboard',
+    bank: '',
+    amount: '',
+    depositorsName:'',
+    makingPayment: false
   }
-
-  componentDidMount = async () => {
-    //Get User Information
-    await sessionStorage.getItem('userDetails') && this.setState ({
-      userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
-    })    
-  } //End of ComponentDidMount
-
 
   creditRequest = () => { this.setState({route: 'creditRequest'}) }
 
@@ -43,7 +34,6 @@ class FundWallet extends Component {
     amount: this.state.amount,
     depositorsName: this.state.depositorsName
     };
-    let auth_token = this.state.userDetails.auth_token;
 
     if(reqBody.bank === '' || reqBody.amount === '' || reqBody.depositorsName === ''){
       swal("Failed Operation", "All fields are required", "error")
@@ -71,40 +61,29 @@ class FundWallet extends Component {
         }
       })
       .catch(err => {
-        swal("Failed Operation", "An error occured while performing this operation, please try again later.", "info");
+        swal("Failed Operation", `${err}`, "info");
         document.getElementById(id).disabled = false;
         this.setState({makingPayment: false});
       });
     }
   }
 
-
   render() { 
     return (
-	    <div className="body">  
-	        <div className="container-fluid" style={{padding: '0'}}>  
-	          <Header />
-	            <div className="container-fluid" id="bottom-content">
-	              <div id="main">
-	                <div id="container">
-	                  <div id="panel">
-	                    <h4> Credit Request </h4>
-                      <h6> Request for your account to be credited. </h6>
-                    </div>
-                    <div className="line"></div><br/>
-	                  <CreditRequest 
-	                    creditRequestApprove={this.creditRequestApprove}
-	                    bankName={this.bankName}
-	                    amount={this.amount} 
-	                    depositorsName={this.depositorsName}
-	                    makingPayment = {this.state.makingPayment}
-	                  />
-	                </div>
-	              </div> 
-	        	</div>
-	      	</div>
-	    </div>
-
+	    <Layout>
+        <div id="panel">
+          <h4> Credit Request </h4>
+          <h6> Request for your account to be credited. </h6>
+        </div>
+        <div className="line"></div><br/>
+        <CreditRequest 
+          creditRequestApprove={this.creditRequestApprove}
+          bankName={this.bankName}
+          amount={this.amount} 
+          depositorsName={this.depositorsName}
+          makingPayment = {this.state.makingPayment}
+        />
+      </Layout>
     ); 
   }
 }

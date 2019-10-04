@@ -10,42 +10,37 @@ import withTimeout from '../../../Components/HOCs/withTimeoutAggregator.hoc';
 import Spinner from '../../../Components/PreLoader/preLoader';
 import {Link} from 'react-router-dom';
 import baseUrl from '../../../baseUrl';
-import PrintReceipt from '../../../print';
+import PrintReceipt from '../../../Utils/print';
 import SwitchButton from '../Components/SwitchButton/SwitchButton';
 import AggregatorHeader from '../AggregatorHeader/AggregatorHeader';
 import AggregatorStatistics from '../Components/AggregatorStatistics/AggregatorStatistics';
 
-class AggregatorDashboard extends Component{
-    _isMounted = false;
-    today = new Date();
-    todaysDate = this.today.getDate()+'-'+(this.today.getMonth()+1).toString().padStart(2, '0')+'-'+this.today.getFullYear();
-    constructor(){
-    super()
-    this.state = {
-      userDetails : {},
-      dailyStats: {},
-      totalStats: {},
-      page: 0,
-      size: 20,
-      fromDate: '01-01-2012',
-      fromDateTransactions: '01-01-2012', 
-      toDate: this.todaysDate,
-      toDateTransactions: this.todaysDate,
-      transactions: [],
-      transactionsCount: '',
-      hasNextRecord: false,
-      performance: [],
-      searchField: '',
-      searchFieldTransactions: '',
-      showMore: true,
-      finishedLoading: false,
-      agentsPerformanceTitle: true,
-      showAgentsPerformance: true
-    }
-  }
+const { auth_token } = JSON.parse(sessionStorage.getItem('userDetails'));
+const today = new Date();
+const todaysDate = today.getDate()+'-'+(today.getMonth()+1).toString().padStart(2, '0')+'-'+today.getFullYear();
 
-print = (divName) => {
-    PrintReceipt(divName);
+class AggregatorDashboard extends Component{
+  _isMounted = false;
+
+  state = {
+    dailyStats: {},
+    totalStats: {},
+    page: 0,
+    size: 20,
+    fromDate: '01-01-2012',
+    fromDateTransactions: '01-01-2012', 
+    toDate: todaysDate,
+    toDateTransactions: todaysDate,
+    transactions: [],
+    transactionsCount: '',
+    hasNextRecord: false,
+    performance: [],
+    searchField: '',
+    searchFieldTransactions: '',
+    showMore: true,
+    finishedLoading: false,
+    agentsPerformanceTitle: true,
+    showAgentsPerformance: true
   }
 
   fromDate = async (event) => { 
@@ -79,12 +74,13 @@ print = (divName) => {
   filterPerformance = async () => {
     const { fromDate, toDate } = this.state;
     if(fromDate === '' || toDate === ''){
-      swal('Select Valid Date Range', 'Select the appropriate date range', 'info')
+      swal('Select Valid Date Range', 'Select a valid date range', 'info')
     } else {
       this.getPerformance()
     }
 }
 
+// Fetch Transactions
 getTransactions = async() => {
   const { page, size, toDateTransactions, fromDateTransactions } = this.state;
   let reqBody = {
@@ -95,8 +91,6 @@ getTransactions = async() => {
     toDate: toDateTransactions,
     tranType: ""
   }
-  
-  let auth_token = this.state.userDetails.auth_token;
   await fetch(`${baseUrl}/transactions/agenttransactions/`, {
     method: 'post',
     headers: {
@@ -128,7 +122,6 @@ getPerformance = async () => {
     from: fromDate,
     to: toDate
   }
-  const auth_token = this.state.userDetails.auth_token;
 
   await fetch(`${baseUrl}/aggregator/agent_performance/`, {
     method: 'post',
@@ -146,62 +139,52 @@ getPerformance = async () => {
     });
 }
 
-  filterTransactions = async () => {
-    const { fromDateTransactions, toDateTransactions, } = this.state;
-    if(fromDateTransactions === '' || toDateTransactions === ''){
-      swal('Select Valid Date Range', 'Select the appropriate date range', 'info')
-    } else {
-      this.getTransactions()
+filterTransactions = async () => {
+  const { fromDateTransactions, toDateTransactions, } = this.state;
+  if(fromDateTransactions === '' || toDateTransactions === ''){
+    swal('Select Valid Date Range', 'Select the appropriate date range', 'info')
+  } else {
+    this.getTransactions()
   }
-}
-
-// Fetch All Agents Transactions
-fetchTransactions = async () => {
-  this.getTransactions()
 } 
 
 showMore = () => {this.setState({showMore: !this.state.showMore})}
 
 componentDidMount = async () => {
     this._isMounted = true;
-        await sessionStorage.getItem('userDetails') && this.setState ({
-      userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
-    }) 
 
     if (this._isMounted){
       let reqBody = { }
-      let auth_token = this.state.userDetails.auth_token;
-
       this.setState({ finishedLoading: false})
 
   // Fetch Dashboard Statistics
-      await fetch(`${baseUrl}/aggregator/dashboard`, {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${auth_token}`
-        },
-        body: JSON.stringify(reqBody)
-        }).then(response => response.json())
-          .then(aggregatorDetails => {
-            this.setState({dailyStats: aggregatorDetails.currentStats})
-            this.setState({totalStats: aggregatorDetails.totalDaysStats})
-            this.setState({agentsList: aggregatorDetails.agentPerformances})
+    await fetch(`${baseUrl}/aggregator/dashboard`, {
+      method: 'post',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${auth_token}`
+      },
+      body: JSON.stringify(reqBody)
+      }).then(response => response.json())
+        .then(aggregatorDetails => {
+          const { currentStats, totalDaysStats, agentPerformances } = aggregatorDetails;
+          this.setState({
+            dailyStats: currentStats,
+            totalStats: totalDaysStats,
+            agentsList: agentPerformances
           })
-          .catch(err => {
-            swal('Error', 'An Error Occured while fetching dashboard details, please try again', 'info')
-          });
-        
-        //Fetch Agent Performance
-        this.getPerformance();
-
-        //Fetch Transactions as well
-        this.fetchTransactions();
-        
-        this.setState({ finishedLoading: true})
-    }
-
-    
+        })
+        .catch(err => {
+          swal('Error', `${err}`, 'info')
+        });
+      
+      //Fetch Agent Performance
+      this.getPerformance();
+      //Fetch Transactions as well
+      this.getTransactions();
+      
+      this.setState({ finishedLoading: true})
+  }   
 } // End of componentDidMount
 
   searchAgents = (event) => { this.setState({searchField: event.target.value}) }
@@ -210,21 +193,21 @@ componentDidMount = async () => {
   showAgentsPerformance = async (value) => {
     await this.setState({showAgentsPerformance: value, agentsPerformanceTitle: value})
     if(value !== this.state.showAgentsPerformance){
-      await this.setState({fromDate: '01-01-2012', toDate: this.todaysDate, searchField: ''})
+      await this.setState({fromDate: '01-01-2012', toDate: todaysDate, searchField: ''})
     }
   }
 
   showLessTransactions = async () => {
     if(this.state.page > 0){
       await this.setState({page: this.state.page - 1});
-      this.fetchTransactions();
+      this.getTransactions();
     }
   }
 
   showMoreTransactions = async() => {
     if (this.state.transactions.length === this.state.size){
       await this.setState({page: this.state.page + 1});
-      this.fetchTransactions();
+      this.getTransactions();
     }
   }
 
@@ -262,7 +245,7 @@ componentDidMount = async () => {
                             !agentsPerformanceTitle ? 
                               <button className="btn btn-xs btn-primary" onClick={() => this.showAgentsPerformance(true)}>Show Agents Performance</button> 
                               : 
-                              <button className="btn btn-xs btn-primary" onClick={() => {this.showAgentsPerformance(false); this.fetchTransactions()}}>
+                              <button className="btn btn-xs btn-primary" onClick={() => {this.showAgentsPerformance(false); this.getTransactions()}}>
                                 Show My Transactions
                               </button>
                           }                                  
@@ -272,7 +255,7 @@ componentDidMount = async () => {
                           <div className="dropdown" style={{textAlign: 'right'}}>
                               <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" id="pad-aggregator-items">Export <span style={{fontSize: '8px'}} className="fa fa-chevron-down"></span></button>
                               <ul className="dropdown-menu dropdown">
-                                <li onClick={() => this.print('right-aggregator-view')}><Link to="#">PDF</Link></li>
+                                <li onClick={() => PrintReceipt('right-aggregator-view')}><Link to="#">PDF</Link></li>
                                 <ExportToExcel />
                               </ul>
                           </div>

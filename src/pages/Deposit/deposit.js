@@ -4,42 +4,36 @@ import swal from 'sweetalert';
 import withTimeout from '../../Components/HOCs/withTimeout.hoc';
 import baseUrl from '../../baseUrl';
 
-import Header from '../Header/Header';
 import Balance from '../../Components/Balance/Balance';
 import DepositFields from './DepositFields';
 import DepositFields2 from './DepositFields2';
 import DepositReceipt from './DepositReceipt';
+import Layout from '../../Components/Layout/Layout.component';
+
+const { auth_token } = JSON.parse(sessionStorage.getItem('userDetails'));
 
 class deposit extends Component {
   _isMounted = false;
-    constructor(){
-      super()
-      this.state = {
-        route: 'deposit', //Change back to deposit
-        userDetails: {},
-        transactionType: 'SAVING',
-        amount: '',
-        depositorName: '',
-        depositorNumber: '',
-        description: '',
-        commission: '',
-        pin: '',
-        makingPayment: false,
-        validAcct: false,
-        validatedButton: false,
-        bank: '',
-        acctNumber: '',
-        acctName: '',
-        nameValidation: false,
-        refNumber: '',
-        showReadOnlyAccountName: true
-      }
-    }
-
-  componentDidMount = async () => {
-    await sessionStorage.getItem('userDetails') && this.setState ({
-      userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
-    })
+    
+  state = {
+    route: 'deposit', //Change back to deposit
+    userDetails: {},
+    transactionType: 'SAVING',
+    amount: '',
+    depositorName: '',
+    depositorNumber: '',
+    description: '',
+    commission: '',
+    pin: '',
+    makingPayment: false,
+    validAcct: false,
+    validatedButton: false,
+    bank: '',
+    acctNumber: '',
+    acctName: '',
+    nameValidation: false,
+    refNumber: '',
+    showReadOnlyAccountName: true
   }
 
   changeBank = async (event) => {
@@ -53,45 +47,43 @@ class deposit extends Component {
     })
   }
 
-    depositInitial = (e) => {
-      const { amount, depositorName, depositorNumber, description, acctName } = this.state;
-      if ( amount === '' || depositorName === '' || depositorNumber === '' || description === '' || acctName === ''){
-          swal("Failed Operation", "Fill all fields", "info")
-      } else {
-        let id = e.target.id;
-        document.getElementById(id).disabled = true;
-        this.setState({makingPayment: true})
-        let reqBody = {
-          transactionType: this.state.transactionType,
-          amount: this.state.amount
-          };
+  depositInitial = (e) => {
+    const { amount, depositorName, depositorNumber, description, acctName } = this.state;
+    if ( amount === '' || depositorName === '' || depositorNumber === '' || description === '' || acctName === ''){
+        swal("Failed Operation", "Fill all fields", "info")
+    } else {
+      let id = e.target.id;
+      document.getElementById(id).disabled = true;
+      this.setState({makingPayment: true})
+      let reqBody = {
+        transactionType: this.state.transactionType,
+        amount: this.state.amount
+        };
 
-          let auth_token = this.state.userDetails.auth_token;
-
-          fetch(`${baseUrl}/commission/getCommissionFee`, {
-            method: 'post',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${auth_token}`
-            },
-            body: JSON.stringify(reqBody)
-          }).then(response => response.json())
-            .then(commission => {
-              this.setState({makingPayment: false});
-              document.getElementById(id).disabled = false;
-              if(commission.respCode === '00'){
-                this.setState({commission: commission.respBody.fee, route: 'deposit_1'})
-              } else {
-                swal("Failed Operation", `${commission.respDescription}`, "error")
-              }
-            })
-            .catch(err => {
-              document.getElementById(id).disabled = false;
-              this.setState({makingPayment: false})
-              swal('An Error Occured', 'There was an error while processing this request, please try again', 'info')
-            });
-        }
-    }
+        fetch(`${baseUrl}/commission/getCommissionFee`, {
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${auth_token}`
+          },
+          body: JSON.stringify(reqBody)
+        }).then(response => response.json())
+          .then(commission => {
+            this.setState({makingPayment: false});
+            document.getElementById(id).disabled = false;
+            if(commission.respCode === '00'){
+              this.setState({commission: commission.respBody.fee, route: 'deposit_1'})
+            } else {
+              swal("Failed Operation", `${commission.respDescription}`, "error")
+            }
+          })
+          .catch(err => {
+            document.getElementById(id).disabled = false;
+            this.setState({makingPayment: false})
+            swal('An Error Occured', 'There was an error while processing this request, please try again', 'info')
+          });
+      }
+  }
 
   validateButton = () => {
     let id = 'validateButton';
@@ -101,8 +93,6 @@ class deposit extends Component {
       accountNumber: this.state.acctNumber,
       bankCode: this.state.bank
     };
-
-    let auth_token = this.state.userDetails.auth_token;
 
     this.setState({nameValidation: true})
 
@@ -179,7 +169,6 @@ class deposit extends Component {
           totalAmount: ''
         };
 
-          let auth_token = this.state.userDetails.auth_token;
           fetch(`${baseUrl}/transactions/savings`, {
             method: 'post',
             headers: {
@@ -229,10 +218,11 @@ class deposit extends Component {
     showReadOnlyAccountName,
     depositorNumber,
     depositorName,
-    description 
+    description,
+    route
   } = this.state;
 
-  if (this.state.route === 'DepositReceipt') {
+  if (route === 'DepositReceipt') {
     return <DepositReceipt 
       amount={amount}
       commission={commission}
@@ -243,63 +233,54 @@ class deposit extends Component {
     />
   } else {
     return (
-    <div className="body">
-      {/* <!-- Main Wrapper --> */}
-      <div className="container-fluid" style={{padding: '0'}}>
-        <Header />
-          <div className="container-fluid" id="bottom-content">
-            <div id="main">   
-              <div id="container">
-                <div id="panel">
-                  <h4> Deposit</h4>
-                  <h6> Send money into customer's account </h6>
-                </div>
-                <div className="line"></div><br/>
-                {
-                  this.state.route === 'deposit' ?
-                    <div>
-                      <Balance /> 
-                      <DepositFields 
-                        depositInitial={this.depositInitial} 
-                        onChange={this.onChange}
-                        makingPayment={makingPayment}
-                        changeBank={this.changeBank}
-                        bank={bank}
-                        acctName={acctName}
-                        nameValidation={nameValidation} 
-                        validateButton={this.validateButton}
-                        validAcct={validAcct}
-                        accountNumber={this.accountNumber}
-                        acctNumber={acctNumber}
-                        validatedButton={validatedButton}
-                        manualValidation={this.manualValidation}
-                        showReadOnlyAccountName={showReadOnlyAccountName}
-                        amount={amount}
-                        depositorNumber={depositorNumber}
-                        depositorName={depositorName}
-                        description={description}
-                      />
-                    </div> : (
-                      this.state.route === 'deposit_1' ?
-                        <DepositFields2 
-                          amount={amount}
-                          onChange={this.onChange}
-                          commission={commission}
-                          validation={this.validation}
-                          makingPayment={makingPayment}
-                          acctNumber={acctNumber}
-                          bank={bank}
-                          acctName={acctName}
-                          goBack={this.goBack}
-                        /> : 
-                        null
-                    )                        
-                }            
-              </div>
-          </div>
+      <Layout>
+        <div id="panel">
+          <h4> Deposit</h4>
+          <h6> Send money into customer's account </h6>
         </div>
-    </div>
-  </div>
+        <div className="line"></div><br/>
+        {
+          route === 'deposit' ?
+            <div>
+              <Balance /> 
+              <DepositFields 
+                depositInitial={this.depositInitial} 
+                onChange={this.onChange}
+                makingPayment={makingPayment}
+                changeBank={this.changeBank}
+                bank={bank}
+                acctName={acctName}
+                nameValidation={nameValidation} 
+                validateButton={this.validateButton}
+                validAcct={validAcct}
+                accountNumber={this.accountNumber}
+                acctNumber={acctNumber}
+                validatedButton={validatedButton}
+                manualValidation={this.manualValidation}
+                showReadOnlyAccountName={showReadOnlyAccountName}
+                amount={amount}
+                depositorNumber={depositorNumber}
+                depositorName={depositorName}
+                description={description}
+              />
+            </div> : (
+              route === 'deposit_1' ?
+                <DepositFields2 
+                  amount={amount}
+                  onChange={this.onChange}
+                  commission={commission}
+                  validation={this.validation}
+                  makingPayment={makingPayment}
+                  acctNumber={acctNumber}
+                  bank={bank}
+                  acctName={acctName}
+                  goBack={this.goBack}
+                /> : 
+                null
+            )                        
+        } 
+      </Layout>           
+              
   )
   }
     

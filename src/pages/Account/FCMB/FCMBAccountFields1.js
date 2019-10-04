@@ -1,5 +1,5 @@
 import React from 'react';
-import { manipulateNumber } from '../../../manipulateNumber';
+import { manipulateNumber } from '../../../Utils/manipulateNumber';
 
 const AccountFields1 = ({bvn, onChangeBVN, showValidateBVNButton, firstName, lastName, dob, gender, mothersMaidenName,  onChange, onSubmit, isThereBvn, hasBVN, showAccountOpeningFields, validateBvn }) => {
     return (

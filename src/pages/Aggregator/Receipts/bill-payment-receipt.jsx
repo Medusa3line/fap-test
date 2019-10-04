@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import withTimeout from '../../../Components/HOCs/withTimeoutAggregator.hoc';
 import { withRouter } from 'react-router-dom';
 
-import PrintReceipt from '../../../print';
+import PrintReceipt from '../../../Utils/print';
 
 class BillPaymentReceipt extends Component {
 	state = {

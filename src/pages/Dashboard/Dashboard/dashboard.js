@@ -5,7 +5,7 @@ import withTimeout from '../../../Components/HOCs/withTimeout.hoc';
 
 import Spinner from '../../../Components/PreLoader/preLoader';
 import baseUrl from '../../../baseUrl';
-import PrintReceipt from '../../../print';
+import PrintReceipt from '../../../Utils/print';
 
 import Header from '../../Header/Header';
 import Wallets from './Wallet/Wallet';
@@ -56,7 +56,7 @@ const Dashboard = () => {
     }
   }, [fetchTransactions, auth_token]) //End of ComponentDidMount
 
-  const fetchTransactions = useCallback( async () => {
+  const fetchTransactions = useCallback(async() =>{
     //Fetch Transaction History
     setState(state => ({ 
       ...state, 
@@ -106,24 +106,29 @@ const Dashboard = () => {
   }, [auth_token, userName, state])
 
   const fromDate = async (event) => { 
-    let date = event.target.value;
-    let day = date.slice (8);
-    let month = date.slice(5,7);
-    let year = date.slice(0,4);
-    let fromdate = `${day}-${month}-${year}`;
+    const { fromdate } = dateModifier(event) 
     await setState({
       ...state,
       fromDate: fromdate
     })
   }
 
-  const toDate = async (event) => { 
+  const dateModifier = (event) => {
     let date = event.target.value;
     let day = date.slice (8);
     let month = date.slice(5,7);
     let year = date.slice(0,4);
     let todate = `${day}-${month}-${year}`;
-    await setState({toDate: todate, page: 0})
+    let fromdate = `${day}-${month}-${year}`;
+    return{todate, fromdate}
+  }
+
+  const toDate = async (event) => { 
+    const { todate } =dateModifier(event) 
+    await setState({
+      ...state,
+      toDate: todate, page: 0
+    })
   }
 
   const showLess = async () => {

@@ -21,8 +21,6 @@ import Spinner from './Components/PreLoader/preLoader';
 // Routes for Aggregator Portal
 const Aggregator = lazy(() => import('./pages/Aggregator/AggregatorDashboard/AggregatorDashboard')) ;
 const AggregatorView = lazy(() => import('./pages/Aggregator/AggregatorViewAgent/AggregatorView'));
-const AggregatorIncomeWallet = lazy(() => import('./pages/Aggregator/AggregatorIncomeWallet/AggregatorIncomeWallet'));
-const AggregatorTradingWallet = lazy(() => import('./pages/Aggregator/AggregatorTradingWallet/AggregatorTradingWallet'));
 const AggregatorAllAgentTransactions = lazy(() => import('./pages/Aggregator/AggregatorAllTransactions/AggregatorAllAgentTransactions'));
 const AggregatorReceipt = lazy(() => import('./pages/Aggregator/Receipts/PrintReceipt')) ;
 const AggregatorBillPaymentReceipt = lazy(() => import('./pages/Aggregator/Receipts/bill-payment-receipt'));
@@ -63,8 +61,6 @@ class App extends Component {
 
               <Route exact path="/aggregator" component={Aggregator} />
               <Route exact path={"/viewAgent/:agentId"} component={AggregatorView} />
-              <Route exact path={"/incomeWallet/:agentId"} component={AggregatorIncomeWallet} />
-              <Route exact path="/tradingWallet/:agentId" component={AggregatorTradingWallet} />
               <Route exact path={"/allWallet/:agentId"} component={AggregatorAllAgentTransactions} />
               <Route exact path='/aggregator-receipt/:transId' component={AggregatorReceipt} />
               <Route exact path="/aggregator-bill-payment-receipt/:transId" component={AggregatorBillPaymentReceipt} />

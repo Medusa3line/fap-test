@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import withTimeout from '../../../Components/HOCs/withTimeout.hoc';
 import { useHistory } from 'react-router-dom';
 
-import PrintReceipt from '../../../print';
+import PrintReceipt from '../../../Utils/print';
 import ReceiptFooter from '../../../Components/ReceiptFooter/ReceiptFooter.component';
 
 const BillPaymentReceipt = () => {

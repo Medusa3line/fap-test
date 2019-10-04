@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import PrintReceipt from '../../print';
+import PrintReceipt from '../../Utils/print';
 
 class DepositReceipt extends Component {
   print = (divName) => {

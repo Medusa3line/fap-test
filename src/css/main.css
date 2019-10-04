@@ -61,11 +61,6 @@ input.form-control:read-only {
   border-color: #ebebeb;
   box-shadow: inset 0 0px 0px #000, 0 0 0px #000;
 }
-.btn:hover {
-	opacity: 0.9;
-	color: #fff;
-	background-color: #FBB700;
-}
 .header{
 	text-align: center;
 }
@@ -90,33 +85,10 @@ input[type="text"]{
 	display: flex;
 	justify-content: center;
 }
-#thrift-main {
-	width: 100%;
-	margin-bottom: 2%;
-	position: relative;
-	display: flex;
-	justify-content: center;
-}
 .underline-thrift-panel{
 	border-bottom: 2px solid #c60115;
 	color: #5C2584;
 	font-weight: bolder;
-}
-#thrift-panel {
-	display: flex;
-	flex-wrap: wrap;
-	box-sizing: border-box;
-	justify-content: space-evenly;
-	border-bottom: .5px solid #f3f3f3;
-	padding: 10px;
-}
-#thrift-panel>h5{
-	font-weight: bolder;
-}
-#thrift-panel>h5:hover{
-	color:#5C2584;
-	font-weight: bolder;
-	cursor: pointer;
 }
 #container{
 	margin-top: 5vh;
@@ -129,13 +101,6 @@ input[type="text"]{
 	background-color: #ffffff;
 	box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
 }
-
-#thrift-acct-container{
-	top: 2vh;
-	position: relative;
-	margin-bottom: 2vh;
-	background-color: #ffffff;
-}
 #back-button {
 	margin: 15px;
 }
@@ -147,9 +112,6 @@ input[type="text"]{
 #panel-bottom{
 	text-align: left;
 	padding: 2vh 6vh;
-}
-#bill-form{
-	left: 0%;
 }
 .form-horizontal{
 	width: 80%;
@@ -170,48 +132,7 @@ input[type="text"]{
 #transferDetails span{
 	font-weight: bold;
 }
-#icon-style{
-	border: 1px solid #000;
-	border-radius: .75vw;
-    width: 100%;
-    font-size: 1.75em;
-    opacity: 0.5;
-    padding: 0;
-    color: #000;
-    background-color: white;
-}
-/* #inner-items{
-	background-color: #ffffff;
-	padding: 2%;
-	margin: 2%;
-	border: .5px solid #000;
-	width: 150px;
-} */
-#thrift-layout{
-	display: flex;
-	flex-wrap: wrap;
-	text-align: center;
-	align-items: center;
-	margin: 0px;
-	box-sizing: border-box;
-	justify-content: center;
-	overflow-x: auto;
-}
-/* #inner-items>img{
-	width: 7.5vh;
-	height: 7.5vh;
-}
-#inner-items:hover #icon-style{
-	border: 1px solid white;
-	color: #5C2584;
-	font-weight: bolder;
-	font-size: 180%;
-}
-#inner-items:hover{
-	color: #FFF;
-	background: linear-gradient(145deg, #FBB700, #FF0014);
-	border: 1px solid white;
-} */
+
 #bill-list>li{
 	padding: 2.5%;
 	list-style: none;
@@ -329,7 +250,7 @@ span img{
 	width: 2.5em;
 }
 
-#panel1, #panel2{
+#panel1 {
 	margin: 4vh 2vw 4vh 0vw;
 }
 #credit_request_arrow{
@@ -432,6 +353,11 @@ tbody tr{
 	text-transform: none; 
 }
 .btn-sm{ text-transform: none; }
+.btn:hover {
+	opacity: 0.9;
+	color: #fff;
+	background-color: #FBB700;
+}
 
 /* Deposit.css */
 #panel{
@@ -457,16 +383,6 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
   margin: 0; 
 }
 #aggregator-card{ width: 20%; display: inline-block; padding: 1%; box-sizing: border-box; border: 2px solid red; }
-#first-aggregator-card{
-	color: #000;
-	border: 2px solid red;
-	width: 100%;
-	display: inline-block;
-	padding: 1%;
-	box-sizing: border-box;
-	background-color: #ffffff;
-	border-radius: 3px;
-}
 #first-aggregator-count {
 	display:inline-block; justify-content: space-between; padding-bottom: 0px; padding-top: 0px;
 }
@@ -485,7 +401,6 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 #aggregator-count, #aggregator-count{ color: #ff0014; }
 #aggregator-card>h5>span>img{ width: 12.5px; height:12.5px; }
 #aggregator-card>h4{ font-weight: bold; }
-#first-aggregator-card>h4 #second-aggregator-card>h4{ font-weight: bold; }
 #right-aggregator-view{ background-color: #ffffff; padding: 2.5px; margin-top: 2%; }
 #right-aggregator-view table th{ font-size: 11px; text-align: left; color: #4d4f5c; }
 #right-aggregator-view table td{ font-size: 13px; text-align: left; }
@@ -541,9 +456,6 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 	border-radius: .5vh;
 	display: inline-block;
 }
-#income-wallet-table{
-	margin-top: 2%;
-}
 #print-receipt {
 	width: 50%;
 	left: 25%;
@@ -559,6 +471,12 @@ input[type="date"]::-webkit-inner-spin-button {
 @media only screen and (max-width: 960px) {
 	#fit-image { 
 		display: none; 
+	}
+	#login-layout{ 
+		grid-template-columns: 1fr;
+	}
+	#login-container input{
+		width: 100%;
 	}
 	#print-receipt { 
 		left: 2%; 

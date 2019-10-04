@@ -5,44 +5,24 @@ import swal from 'sweetalert';
 import baseUrl from '../../baseUrl';
 import NetworkOptions from './NetworkOptions';
 import MakingPayment from '../../Components/makingPayment/makingPayment';
-import { manipulateNumber } from '../../manipulateNumber';
+import { manipulateNumber } from '../../Utils/manipulateNumber';
+
+const { auth_token } = JSON.parse(sessionStorage.getItem('userDetails'));
 
 class InternetServices extends Component {
-
-    constructor(){
-    super()
-    this.state = {
-      serviceNames: 'Select Network',
-      serviceID: [],
-      options: [],
-      optionName: 'Select Option',
-      id: '',
-      code: '',
-      amount: '',
-      deviceNumber: '',
-      agentPin:'',
-      customerPhoneNumber: '',
-      makingPayment: false
-    }
+  state = {
+    serviceNames: 'Select Network',
+    serviceID: [],
+    options: [],
+    optionName: 'Select Option',
+    id: '',
+    code: '',
+    amount: '',
+    deviceNumber: '',
+    agentPin:'',
+    customerPhoneNumber: '',
+    makingPayment: false
   }
-
-  componentDidMount = async () => {
-    await sessionStorage.getItem('userDetails') && this.setState ({
-      userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
-    })
-}
-
-// Manipulate Number input fields and Password fields for Pin to not accept anything other than numbers
-manipulateNumber = (e) => {
-  var inputKeyCode = e.keyCode ? e.keyCode : e.which;
-  if (((inputKeyCode >= 48 && inputKeyCode <= 57) || (inputKeyCode >= 97 && inputKeyCode <= 105)) && (inputKeyCode != null)){
-      if((e.target.value.length === e.target.maxLength) && (inputKeyCode === 45)){
-      e.preventDefault();
-    }
-  } else {
-    e.preventDefault();
-  }
-}
 
   getServiceAmount = async (amount, optionName) => {
     await this.setState({amount: amount, optionName: optionName})
@@ -69,8 +49,6 @@ manipulateNumber = (e) => {
     //End of Unique ID generation
 
     //Get Service Code for each ID
-    let auth_token = this.state.userDetails.auth_token;
-
     await fetch(`${baseUrl}/bills/category/service/${this.state.id}/options`, {
       method: 'post',
       headers: {
@@ -84,7 +62,7 @@ manipulateNumber = (e) => {
         result.respBody.map((code) => this.setState({code: code.code} ))
     })
       .catch(err => {
-        swal('Error', 'An Error Occured', 'info')
+        swal('Error', `${err}`, 'error')
       });
   //End of Get Service Code for each ID
   }
@@ -102,8 +80,7 @@ manipulateNumber = (e) => {
       swal("Missing Field", "Select a Network", "info")
     } else {
         document.getElementById(id).disabled = true;
-
-        let auth_token = this.state.userDetails.auth_token;
+        this.setState({makingPayment: true})
         let reqBody = {
             customerId: this.state.deviceNumber,
             amount: this.state.amount,
@@ -111,8 +88,6 @@ manipulateNumber = (e) => {
             paymentCode: this.state.code,
             phoneNumber: this.state.customerPhoneNumber
           };
-
-            this.setState({makingPayment: true})
 
         await fetch(`${baseUrl}/bills/pay`, {
           method: 'post',

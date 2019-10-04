@@ -1,6 +1,6 @@
 import React from 'react';
 import MakingPayment from '../../../Components/makingPayment/makingPayment';
-import { manipulateNumber } from '../../../manipulateNumber';
+import { manipulateNumber } from '../../../Utils/manipulateNumber';
 
 const AccountFields2 = ({phoneNumber, email, address, openAccount, onChange, makingPayment, goBack}) => {
 	return (

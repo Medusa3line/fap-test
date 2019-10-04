@@ -1,9 +1,10 @@
 import React from 'react';
-import IsLoading from '../../Components/isLoading/isLoading.js';
 import LoginError from '../../Components/loginError/LoginError';
 import LoginContainerHeader from '../../Components/LoginContainerHeader/LoginContainerHeader.jsx';
+import { manipulateNumber } from '../../Utils/manipulateNumber';
+import CustomButton from '../../Components/CustomButton/CustomButton.component.jsx';
 
-const AgentSetup = ({ onChange, AgentSetupButton, loggingIn, loginError, manipulateNumber }) => {
+const AgentSetup = ({ onChange, AgentSetupButton, loggingIn, loginError }) => {
 	return (
 		<div className="body">
           <div id="login-layout">
@@ -17,7 +18,7 @@ const AgentSetup = ({ onChange, AgentSetupButton, loggingIn, loginError, manipul
                   <div>
                     <form onSubmit={AgentSetupButton}>
                       <div className="form-group">
-                        <div className="col-sm-12 col-md-8 col-lg-8" style={{padding: '0'}}>
+                        <div className="col-md-9" >
                           <input 
                             type="password" 
                             className="form-control" 
@@ -31,7 +32,7 @@ const AgentSetup = ({ onChange, AgentSetupButton, loggingIn, loginError, manipul
                       </div>
 
                       <div className="form-group">
-                        <div className="col-sm-12 col-md-8 col-lg-8" style={{padding: '0'}}>          
+                        <div className="col-md-9" >          
                           <input 
                             type="password" 
                             className="form-control" 
@@ -43,7 +44,7 @@ const AgentSetup = ({ onChange, AgentSetupButton, loggingIn, loginError, manipul
                         </div>
                       </div> 
                       <div className="form-group">
-                        <div className="col-sm-12 col-md-8 col-lg-8" style={{padding: '0'}}>          
+                        <div className="col-md-9" >          
                           <input 
                             type="password" 
                             className="form-control" 
@@ -59,7 +60,7 @@ const AgentSetup = ({ onChange, AgentSetupButton, loggingIn, loginError, manipul
                       </div> 
 
                       <div className="form-group">
-                        <div className="col-sm-12 col-md-8 col-lg-8" style={{padding: '0'}}>          
+                        <div className="col-md-9" >          
                           <input 
                             type="password" 
                             className="form-control" 
@@ -74,19 +75,10 @@ const AgentSetup = ({ onChange, AgentSetupButton, loggingIn, loginError, manipul
                         </div>
                       </div> <br/>
         
-                      <div className="form-group">
-                        <button 
-                          type="submit" 
-                          className="btn"
-                          style={{width: '66.67%'}}
-                          id="login_button" 
-                          onClick={AgentSetupButton}>
-                          {
-                            loggingIn ? <IsLoading />
-                            : 'Proceed'
-                          }
-                        </button>
-                      </div>
+                      <CustomButton 
+                        loggingIn={loggingIn} 
+                        buttonClick={AgentSetupButton}
+                      />
                     </form>
                       {
                         loginError ? <LoginError /> : null

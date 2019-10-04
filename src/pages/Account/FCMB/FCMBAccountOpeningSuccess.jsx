@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import PrintReceipt from '../../../print';
+import PrintReceipt from '../../../Utils/print';
 
 const print = (divName) => {
     document.getElementById("panel").style.display = "none";

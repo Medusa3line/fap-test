@@ -1,13 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import MakingPayment from '../../Components/makingPayment/makingPayment';
-import { manipulateNumber } from '../../manipulateNumber';
+import { manipulateNumber } from '../../Utils/manipulateNumber';
 
-class CreditRequest extends Component {
-
-  render(){
-    const { creditRequestApprove, bankName, amount, depositorsName, makingPayment } = this.props;
-
-    return (
+const CreditRequest = () => {
+  const { creditRequestApprove, bankName, amount, depositorsName, makingPayment } = this.props;
+  return (
     <div>
       <form onSubmit={creditRequestApprove}>
         <div className="form-horizontal">
@@ -65,8 +62,6 @@ class CreditRequest extends Component {
         </div>
       </form>
     </div>
-    );
-  }
+  );
 }
-
 export default CreditRequest;

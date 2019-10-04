@@ -5,47 +5,28 @@ import NetworkOptions from './NetworkOptions';
 import swal from 'sweetalert';
 import baseUrl from '../../baseUrl';
 import MakingPayment from '../../Components/makingPayment/makingPayment';
-import { manipulateNumber } from '../../manipulateNumber';
+import { manipulateNumber } from '../../Utils/manipulateNumber';
+
+const { auth_token } = JSON.parse(sessionStorage.getItem('userDetails'));
  
 class CableTv extends Component {
-    constructor(){
-    super()
-    this.state = {
-      serviceNames: 'Select Cable Subscription',
-      serviceID: [],
-      options: [],
-      id: '',
-      code: '',
-      optionName: 'Select Option',
-      amount: '',
-      charge: '',
-      deviceNumber: '',
-      agentPin:'',
-      makingPayment: false, 
-      validDeviceNumber: false,
-      customerName: '',
-      customerPhoneNumber: '',
-      payload: {}
-    }
+  state = {
+    serviceNames: 'Select Cable Subscription',
+    serviceID: [],
+    options: [],
+    id: '',
+    code: '',
+    optionName: 'Select Option',
+    amount: '',
+    charge: '',
+    deviceNumber: '',
+    agentPin:'',
+    makingPayment: false, 
+    validDeviceNumber: false,
+    customerName: '',
+    customerPhoneNumber: '',
+    payload: {}
   }
-
-  componentDidMount = async () => {
-    await sessionStorage.getItem('userDetails') && this.setState ({
-      userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
-    }) 
-}
-
-// Manipulate Number input fields and Password fields for Pin to not accept anything other than numbers
-manipulateNumber = (e) => {
-  var inputKeyCode = e.keyCode ? e.keyCode : e.which;
-  if (((inputKeyCode >= 48 && inputKeyCode <= 57) || (inputKeyCode >= 97 && inputKeyCode <= 105)) && (inputKeyCode != null)){
-      if((e.target.value.length === e.target.maxLength) && (inputKeyCode === 45)){
-      e.preventDefault();
-    }
-  } else {
-    e.preventDefault();
-  }
-}
 
 validateDeviceNumber = async(e) => {
   let id = e.target.id;
@@ -56,13 +37,12 @@ validateDeviceNumber = async(e) => {
     swal("Missing Field", "Select a Network", "info")
   } else {
       document.getElementById(id).disabled = true;
-      let auth_token = this.state.userDetails.auth_token;
+      this.setState({makingPayment: true})
       let reqBody = {
           customerId: this.state.deviceNumber,
           amount: this.state.amount,
           paymentCode: this.state.code
         };
-      this.setState({makingPayment: true})
 
       await fetch(`${baseUrl}/bills/validate`, {
         method: 'post',
@@ -86,7 +66,7 @@ validateDeviceNumber = async(e) => {
             swal("Failed Operation", `${result.respDescription}`, "error");
           }   
     }).catch(err => {
-          swal("Failed Operation", "An Error Occurred, Please try again", "error");
+          swal("Failed Operation",`${err}`, "error");
           document.getElementById(id).disabled = false;
           this.setState({makingPayment: false, validDeviceNumber: false})
         })
@@ -116,8 +96,6 @@ getServiceAmount = async (amount, optionName) => {
     //End of Unique ID generation
 
     //Get Service Code for each ID
-    let auth_token = this.state.userDetails.auth_token;
-
     await fetch(`${baseUrl}/bills/category/service/${this.state.id}/options`, {
       method: 'post',
       headers: {
@@ -131,7 +109,7 @@ getServiceAmount = async (amount, optionName) => {
         result.respBody.map((code) => this.setState({code: code.code} ))
     })
       .catch(err => {
-        swal('Error', 'An Error Occured', 'info')
+        swal('Error', `${err}`, 'error')
       });
   //End of Get Service Code for each ID
   }
@@ -154,17 +132,14 @@ getServiceAmount = async (amount, optionName) => {
       swal("Missing Field", "Select a Network", "info")
     } else {
         document.getElementById(id).disabled = true;
-
-        let auth_token = this.state.userDetails.auth_token;
+        this.setState({makingPayment: true})
         let reqBody = {
-            customerId: this.state.deviceNumber,
-            amount: this.state.amount,
-            pin: this.state.agentPin,
-            paymentCode: this.state.code,
-            phoneNumber: this.state.customerPhoneNumber
+          customerId: this.state.deviceNumber,
+          amount: this.state.amount,
+          pin: this.state.agentPin,
+          paymentCode: this.state.code,
+          phoneNumber: this.state.customerPhoneNumber
         };
-
-            this.setState({makingPayment: true})
 
         await fetch(`${baseUrl}/bills/pay`, {
           method: 'post',
@@ -184,7 +159,7 @@ getServiceAmount = async (amount, optionName) => {
               swal("Failed Operation", `${paymentResponse.respDescription}`, "error");
             }     
       }).catch(err => {
-            swal("Failed Operation", "An Error Occurred, Please try again", "error");
+            swal("Failed Operation",`${err}`, "error");
             document.getElementById(id).disabled = false;
             this.setState({makingPayment: false});
             this.props.history.push('/dashboard');

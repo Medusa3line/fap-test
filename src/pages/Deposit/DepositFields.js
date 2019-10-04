@@ -1,6 +1,6 @@
 import React from 'react';
 import MakingPayment from '../../Components/makingPayment/makingPayment';
-import { manipulateNumber } from '../../manipulateNumber';
+import { manipulateNumber } from '../../Utils/manipulateNumber';
 
 const DepositFields = ({ depositInitial, onChange, makingPayment, bank, acctName, nameValidation, validatedButton, validAcct, changeBank, acctNumber, accountNumber, manualValidation, showReadOnlyAccountName, depositorName, depositorNumber, description, amount }) => {
   return (

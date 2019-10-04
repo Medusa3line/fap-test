@@ -6,42 +6,28 @@ import swal from 'sweetalert';
 import baseUrl from '../../baseUrl';
 import NetworkOptions from './NetworkOptions';
 import MakingPayment from '../../Components/makingPayment/makingPayment';
-import { manipulateNumber } from '../../manipulateNumber';
+import { manipulateNumber } from '../../Utils/manipulateNumber';
+
+const { auth_token } = JSON.parse(sessionStorage.getItem('userDetails'));
 
 class UtilityBills extends Component {
-
-    constructor(){
-    super()
-    this.state = {
-      serviceNames: 'Select Utility Bill',
-      serviceID: [],
-      options: [],
-      optionName: 'Select Option',
-      receipt: false,
-      id: '',
-      code: '',
-      amount: '',
-      charge: '',
-      deviceNumber: '',
-      agentPin:'',
-      makingPayment: false,
-      validDeviceNumber: false,
-      customerPhoneNumber: '',
-      customerName: ''
-    }
+  state = {
+    serviceNames: 'Select Utility Bill',
+    serviceID: [],
+    options: [],
+    optionName: 'Select Option',
+    receipt: false,
+    id: '',
+    code: '',
+    amount: '',
+    charge: '',
+    deviceNumber: '',
+    agentPin:'',
+    makingPayment: false,
+    validDeviceNumber: false,
+    customerPhoneNumber: '',
+    customerName: ''
   }
-
-// Manipulate Number input fields and Password fields for Pin to not accept anything other than numbers
-manipulateNumber = (e) => {
-  var inputKeyCode = e.keyCode ? e.keyCode : e.which;
-  if (((inputKeyCode >= 48 && inputKeyCode <= 57) || (inputKeyCode >= 97 && inputKeyCode <= 105)) && (inputKeyCode != null)){
-      if((e.target.value.length === e.target.maxLength) && (inputKeyCode === 45)){
-      e.preventDefault();
-    }
-  } else {
-    e.preventDefault();
-  }
-}
 
   validateDeviceNumber = async(e) => {
     let id = e.target.id;
@@ -51,13 +37,12 @@ manipulateNumber = (e) => {
       swal("Missing Field", "Select a Network", "info")
     } else {
         document.getElementById(id).disabled = true;
-        let auth_token = this.state.userDetails.auth_token;
+        this.setState({makingPayment: true})
         let reqBody = {
             customerId: this.state.deviceNumber,
             amount: this.state.amount,
             paymentCode: this.state.code
           };
-        this.setState({makingPayment: true})
 
         await fetch(`${baseUrl}/bills/validate`, {
           method: 'post',
@@ -81,7 +66,7 @@ manipulateNumber = (e) => {
               swal("Failed Operation", `${result.respDescription}`, "error");
             }   
       }).catch(err => {
-            swal("Failed Operation", "An Error Occurred, Please try again", "error");
+            swal("Failed Operation", `${err}`, "error");
             document.getElementById(id).disabled = false;
             this.setState({makingPayment: false, validDeviceNumber: false})
           })
@@ -111,9 +96,7 @@ manipulateNumber = (e) => {
 
     //End of Unique ID generation
 
-    //Get Service Code for each ID
-    let auth_token = this.state.userDetails.auth_token;
-
+  //Get Service Code for each ID
     await fetch(`${baseUrl}/bills/category/service/${this.state.id}/options`, {
       method: 'post',
       headers: {
@@ -127,7 +110,7 @@ manipulateNumber = (e) => {
         result.respBody.map((code) => this.setState({code: code.code} ))
     })
       .catch(err => {
-        swal('Error', 'An Error Occured', 'info')
+        swal('Error', `${err}`, 'info')
       });
   //End of Get Service Code for each ID
 
@@ -151,8 +134,6 @@ manipulateNumber = (e) => {
       swal("Missing Field", "Select a Network", "info")
     } else {
         document.getElementById(id).disabled = true;
-
-        let auth_token = this.state.userDetails.auth_token;
         let reqBody = {
             customerId: this.state.deviceNumber,
             amount: this.state.amount,
@@ -184,7 +165,7 @@ manipulateNumber = (e) => {
               swal("Failed Operation", `${paymentResponse.respDescription}`, "error");
             }   
       }).catch(err => {
-            swal("Failed Operation", "An Error Occurred, Please try again", "error");
+            swal("Failed Operation", `${err}`, "error");
             document.getElementById(id).disabled = false;
             this.setState({makingPayment: false});
             this.props.history.push('/dashboard');
@@ -193,17 +174,11 @@ manipulateNumber = (e) => {
     
 }
 
-  componentDidMount = async () => {
-    await sessionStorage.getItem('userDetails') && this.setState ({
-      userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
-    })
-}
-
   render() {
     const serviceName = this.props.serviceName;
-    const { options, makingPayment, serviceNames, optionName, validDeviceNumber, customerName, amount, charge, payload } = this.state;
+    const { options, makingPayment, serviceNames, optionName, validDeviceNumber, customerName, amount, charge, payload, receipt } = this.state;
     const totalAmount = Number(amount) + Number(charge);
-    if (this.state.receipt){
+    if (receipt){
       return <PaymentReceipt 
         payload={payload} 
         optionName={optionName}
@@ -212,20 +187,20 @@ manipulateNumber = (e) => {
     } else {
       return (
         <div>
-        <div className="row" style={{display:'flex', justifyContent: 'center', marginBottom:'5%'}}>
-          <ul className="nav navbar-nav">
-            <div className="dropdown">
-              <li className="btn dropdown-toggle" type="button" data-toggle="dropdown" style={{backgroundColor: '#faa831'}}><strong>{serviceNames}</strong> <span className="fa fa-chevron-down"></span></li>
-              <ul className="dropdown-menu dropdown" id="billPaymentOptionsDropdown">
-                {
+          <div className="row" style={{display:'flex', justifyContent: 'center', marginBottom:'5%'}}>
+            <ul className="nav navbar-nav">
+              <div className="dropdown">
+                <li className="btn dropdown-toggle" type="button" data-toggle="dropdown" style={{backgroundColor: '#faa831'}}><strong>{serviceNames}</strong> <span className="fa fa-chevron-down"></span></li>
+                <ul className="dropdown-menu dropdown" id="billPaymentOptionsDropdown">
+                  {
                     serviceName.map((name,i) => {
                       return <NetworkList getServiceNames={() => this.getServiceNames(name.serviceName)} key={i} name={name.serviceName} />
                     })
                   }
-              </ul>
-            </div>
-          </ul>
-        </div>
+                </ul>
+              </div>
+            </ul>
+          </div>
         {
           serviceNames === 'Select Utility Bill' ?
           null :
@@ -247,69 +222,67 @@ manipulateNumber = (e) => {
           </div>
         }       
 
-          <div>
-            {
-              (serviceNames === 'Select Utility Bill' || optionName==='Select Option') ? 
-              null :
-              <React.Fragment>
-                <h4 id="serviceName"> {serviceNames} </h4>
-                <form className="form-horizontal">
-                  <div className="form-group">
-                    <input className="form-control" type="number" name="amount" value={amount} step="0.01" maxLength="10" required="required" placeholder="Enter Amount" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} />
-                  </div>
-                  <div className="form-group">
-                    <input className="form-control" type="number" name="deviceNumber" required="required" placeholder="Enter Meter Number" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} maxLength="25" /> 
-                  </div>
-                  {
-                    validDeviceNumber ?
-                    <React.Fragment> 
-                      <div className="form-group">
-                        <input className="form-control" type="text" value={customerName} readOnly required="required" />
-                      </div>
-                      <div className="form-group">
-                        <input className="form-control" type="number" name="customerPhoneNumber" required="required" placeholder="Enter Customer Phone Number" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} maxLength="11" /> 
-                      </div>
-                      <p>You will be charged <b>₦{charge}</b> for this transaction. Total transaction amount is <b>₦{totalAmount}</b></p>
-                      <div className="form-group">
-                        <input className="form-control" type="password" name="agentPin" required="required" placeholder="Enter Agent PIN" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} maxLength="4" />
-                      </div>
-                    </React.Fragment>
-                    : null
-                  }                  
-                  
-                  <div className="form-group">
-                  {
-                    !validDeviceNumber ? 
-                    <button 
-                      type="submit"
-                      className="btn col-sm-8 col-md-6 col-lg-4" 
-                      id="validateButton"                     
-                      onClick={this.validateDeviceNumber}>
-                      {
-                        makingPayment ? <MakingPayment />
-                        : 'Validate'
-                      }
-                    </button>
-                    :
-                    <button 
-                      type="submit"
-                      className="btn btn-success col-sm-8 col-md-6 col-lg-4" 
-                      id="button"                     
-                      onClick={this.makePayment}>
-                      {
-                        makingPayment ? <MakingPayment />
-                        : 'Proceed'
-                      }
-                    </button>
-                  }
-                  </div>                        
-                </form>
-              </React.Fragment>
-            }
-            
-          </div>      
-      
-        </div>
+        <div>
+          {
+            (serviceNames === 'Select Utility Bill' || optionName==='Select Option') ? 
+            null :
+            <React.Fragment>
+              <h4 id="serviceName"> {serviceNames} </h4>
+              <form className="form-horizontal">
+                <div className="form-group">
+                  <input className="form-control" type="number" name="amount" value={amount} step="0.01" maxLength="10" required="required" placeholder="Enter Amount" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} />
+                </div>
+                <div className="form-group">
+                  <input className="form-control" type="number" name="deviceNumber" required="required" placeholder="Enter Meter Number" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} maxLength="25" /> 
+                </div>
+                {
+                  validDeviceNumber ?
+                  <React.Fragment> 
+                    <div className="form-group">
+                      <input className="form-control" type="text" value={customerName} readOnly required="required" />
+                    </div>
+                    <div className="form-group">
+                      <input className="form-control" type="number" name="customerPhoneNumber" required="required" placeholder="Enter Customer Phone Number" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} maxLength="11" /> 
+                    </div>
+                    <p>You will be charged <b>₦{charge}</b> for this transaction. Total transaction amount is <b>₦{totalAmount}</b></p>
+                    <div className="form-group">
+                      <input className="form-control" type="password" name="agentPin" required="required" placeholder="Enter Agent PIN" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} maxLength="4" />
+                    </div>
+                  </React.Fragment>
+                  : null
+                }                  
+                
+                <div className="form-group">
+                {
+                  !validDeviceNumber ? 
+                  <button 
+                    type="submit"
+                    className="btn col-sm-8 col-md-6 col-lg-4" 
+                    id="validateButton"                     
+                    onClick={this.validateDeviceNumber}>
+                    {
+                      makingPayment ? <MakingPayment />
+                      : 'Validate'
+                    }
+                  </button>
+                  :
+                  <button 
+                    type="submit"
+                    className="btn btn-success col-sm-8 col-md-6 col-lg-4" 
+                    id="button"                     
+                    onClick={this.makePayment}>
+                    {
+                      makingPayment ? <MakingPayment />
+                      : 'Proceed'
+                    }
+                  </button>
+                }
+                </div>                        
+              </form>
+            </React.Fragment>
+          }
+        </div>      
+      </div>
     )
     }
       

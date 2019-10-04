@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom'
 import swal from 'sweetalert';
 import baseUrl from '../../baseUrl';
 import MakingPayment from '../../Components/makingPayment/makingPayment';
-import { manipulateNumber } from '../../manipulateNumber';
+import { manipulateNumber } from '../../Utils/manipulateNumber';
 
 class TransferFields extends Component {
   _isMounted = false;

@@ -9,7 +9,7 @@ import {Link} from 'react-router-dom';
 import Spinner from '../../../Components/PreLoader/preLoader';
 import swal from 'sweetalert';
 import baseUrl from '../../../baseUrl';
-import PrintReceipt from '../../../print';
+import PrintReceipt from '../../../Utils/print';
 import ExportToExcel from '../../../Components/ExportToExcel/ExportToExcel';
 
 class AggregatorAllAgentTransactions extends Component {
@@ -161,7 +161,7 @@ searchAgents = (event) => { this.setState({searchField: event.target.value}) }
                             <div className="col-lg-12 col-sm-12 col-md-12" style={{paddingTop: '2vh'}}>
                                 <div className="row">
                                     <div className="col-lg-6">
-                                        <div><h4><strong>All transactions History of {AgentId}</strong></h4></div>
+                                        <div><h4><strong>Transactions History of {AgentId}</strong></h4></div>
                                     </div>
                                     <div className="dropdown" style={{textAlign: 'right'}}>
                                         <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" id="pad-aggregator-items">Export <span className="fa fa-chevron-down"></span></button>

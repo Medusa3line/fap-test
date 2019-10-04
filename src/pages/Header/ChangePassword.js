@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import baseUrl from '../../baseUrl';
-import IsLoading from '../../Components/isLoading/isLoading.js';
 import withTimeoutWithoutRestriction from '../../Components/HOCs/withTimeoutWithoutRestriction.hoc';
 import swal from 'sweetalert';
 import LoginError from '../../Components/loginError/LoginError';
 import LoginContainerHeader from '../../Components/LoginContainerHeader/LoginContainerHeader';
+import CustomButton from '../../Components/CustomButton/CustomButton.component';
 
 class ChangePassword extends Component {
   _isMounted = false;
@@ -95,7 +95,7 @@ class ChangePassword extends Component {
                 <div>
                     <form onSubmit={this.ChangePassword}>
                       <div className="form-group">
-                        <div className="col-sm-12 col-md-8 col-lg-8" style={{padding: '0'}}>
+                        <div className="col-md-9" >
                           <input 
                             type="password" 
                             className="form-control" 
@@ -108,7 +108,7 @@ class ChangePassword extends Component {
                         </div>
                       </div> 
                       <div className="form-group">
-                        <div className="col-sm-12 col-md-8 col-lg-8" style={{padding: '0'}}>          
+                        <div className="col-md-9" >          
                           <input 
                             type="password" 
                             className="form-control" 
@@ -122,7 +122,7 @@ class ChangePassword extends Component {
                       </div> 
 
                       <div className="form-group">
-                        <div className="col-sm-12 col-md-8 col-lg-8" style={{padding: '0'}}>          
+                        <div className="col-md-9" >          
                           <input 
                             type="password" 
                             className="form-control" 
@@ -135,23 +135,14 @@ class ChangePassword extends Component {
                         </div>
                       </div> <br/>
         
-                        <div className="form-group">
-                          <button 
-                            type="submit" 
-                            className="btn"
-                            style={{width: '66.67%'}}
-                            id="login_button" 
-                            onClick={this.ChangePassword}>
-                            {
-                              loggingIn ? <IsLoading />
-                              : 'Proceed'
-                            }
-                          </button>
-                        </div>
-                      </form>
-                      {
-                        loginError ? <LoginError /> : null
-                      }
+                      <CustomButton 
+                        loggingIn={loggingIn} 
+                        buttonClick={this.ChangePassword}
+                      />
+                    </form>
+                    {
+                      loginError ? <LoginError /> : null
+                    }
                 </div>
               </div>
           </div>

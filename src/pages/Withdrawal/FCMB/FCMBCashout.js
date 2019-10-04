@@ -1,69 +1,59 @@
 import React from 'react';
 import MakingPayment from '../../../Components/makingPayment/makingPayment';
-import { manipulateNumber } from '../../../manipulateNumber';
+import { manipulateNumber } from '../../../Utils/manipulateNumber';
 import { withRouter } from 'react-router-dom';
 import swal from 'sweetalert';
 import baseUrl from '../../../baseUrl';
 
-class FidelityCashout extends React.Component{
-  constructor(){
-    super()
-    this.state = {
-      userDetails : {},
-      acctNumber: '',
-      narration: '',
-      amount: '',
-      agentPin: '',
-      otp: '',
-      isAccountNumberValid: false,
-      validating: false,
-      makingWithdrawal: false,
-      phoneNumber: '',
-      tranRef: ''
-    }
-  }
+const { auth_token } = JSON.parse(sessionStorage.getItem('userDetails'));
 
-  componentDidMount = async () => {
-    await sessionStorage.getItem('userDetails') && this.setState ({
-      userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
-    })
+class GTBCashout extends React.Component{
+ state = {
+    userDetails : {},
+    paymentCode: '',
+    customerName: '',
+    amount: '',
+    agentPin: '',
+    isPaymentCodeValid: false,
+    validating: false,
+    makingWithdrawal: false,
+    phoneNumber: '',
+    tranRef: ''
   }
 
   onChange = async (e) => {
     await this.setState({[e.target.name]: e.target.value})
   }
 
-  onChangeAmount = async (e) => {
-    await this.setState({amount: e.target.value})
-    if(this.state.isAccountNumberValid){
-      this.setState({isAccountNumberValid: false})
+  onChangePhoneNumber = async (e) => {
+    await this.setState({phoneNumber: e.target.value})
+    if(this.state.isPaymentCodeValid){
+      this.setState({isPaymentCodeValid: false})
     }
   }
 
-  onChangeAcctNumber = async (e) => {
-    await this.setState({acctNumber: e.target.value});
-    if(this.state.isAccountNumberValid){
-      this.setState({isAccountNumberValid: false})
+  onChangePaymentCode = async (e) => {
+    await this.setState({paymentCode: e.target.value});
+    if(this.state.isPaymentCodeValid){
+      this.setState({isPaymentCodeValid: false})
     }
   }
 
-  validateAccountNumber = (e) => {
-    const { paymentCode, amount, narration } = this.state;
-    if ( amount === '' || paymentCode === '' || narration === '' ){
+  validatePaymentCode = (e) => {
+    const { paymentCode, phoneNumber } = this.state;
+    if ( phoneNumber === '' || paymentCode === '' ){
       swal("Failed Operation", "Fill all fields", "info")
     } else {
       let id = e.target.id;
       document.getElementById(id).disabled = true;
-
-      let reqBody = {
-        accountNumber: this.state.acctNumber
-      };
-
-      let auth_token = this.state.userDetails.auth_token;
-
       this.setState({validating: true})
 
-      fetch(`${baseUrl}/transactions/fidelity/generate/otp`, {
+      let reqBody = {
+        facCode: this.state.paymentCode,
+        mobileNumber: this.state.phoneNumber
+      };
+
+      fetch(`${baseUrl}/transactions/gtb/validate/fac`, {
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
@@ -76,7 +66,7 @@ class FidelityCashout extends React.Component{
           this.setState({validating: false})
           if(validationStatus.respCode === '00'){
             this.setState({
-              isAccountNumberValid: true
+              isPaymentCodeValid: true
             })          
           } else {
             swal("Failed Operation", `${validationStatus.respDescription}`, "error")
@@ -91,26 +81,24 @@ class FidelityCashout extends React.Component{
     }
   
     withdrawFund = (e) => {
-      const { acctNumber, agentPin, otp, amount, narration } = this.state;
-      if ( acctNumber === '' || agentPin === '' || amount === '' || narration === '' || otp === '' ){
+      const { paymentCode, phoneNumber, agentPin, amount, customerName } = this.state;
+      if ( phoneNumber === '' || paymentCode === '' || agentPin === '' || amount === '' || customerName === '' ){
         swal("Failed Operation", "Fill all fields", "info")
       } else {
         let id = e.target.id;
         document.getElementById(id).disabled = true;
-  
-        let reqBody = {
-          DebitAccountNumber: this.state.acctNumber,
-          agentPin: this.state.agentPin,
-          otp: this.state.otp,
-          Amount: this.state.amount,
-          Narration: this.state.narration,
-        };
-  
-        let auth_token = this.state.userDetails.auth_token;
-  
         this.setState({makingWithdrawal: true})
   
-        fetch(`${baseUrl}/transactions/fidelity/cashout`, {
+        let reqBody = {
+          facCode: this.state.paymentCode,
+          mobileNumber: this.state.phoneNumber,
+          agentPin: this.state.agentPin,
+          amount: this.state.amount,
+          // terminalId: this.state.terminalId,
+          customerName: this.state.customerName,
+        };
+  
+        fetch(`${baseUrl}/transactions/gtb/cashout`, {
           method: 'post',
           headers: {
             'Content-Type': 'application/json',
@@ -139,66 +127,55 @@ class FidelityCashout extends React.Component{
     }
   render(){
     const { 
-      acctNumber, 
-      narration, 
-      agentPin,
-      otp, 
+      paymentCode, 
+      phoneNumber, 
+      customerName, 
+      agentPin, 
       amount, 
-      isAccountNumberValid, 
+      isPaymentCodeValid, 
       validating, 
       makingWithdrawal 
     } = this.state;
     return (
     <div>
-      <div className="form-horizontal">
-        <div className="form-group">
+        <div className="form-horizontal">
+          <div className="form-group">
             <div className="col-sm-12 col-md-12 col-lg-12">
               <input 
                 type="number" 
                 required="required" 
                 className="form-control" 
-                placeholder="Enter Customer's Account Number"
+                placeholder="Enter Payment Code"
                 name="paymentCode"
-                onChange={this.onChangeAcctNumber}
-                value={acctNumber}
+                onChange={this.onChangePaymentCode}
+                value={paymentCode}
               />                     
             </div>
           </div>
-        <div className="form-group">
-          <div className="col-sm-12 col-md-12 col-lg-12">
-            <input 
-              type="number" 
-              className="form-control" 
-              required="required" 
-              placeholder="Amount" 
-              name="amount"
-              onChange={this.onChangeAmount}
-              value={amount}
-            />
+          <div className="form-group">
+            <div className="col-sm-12 col-md-12 col-lg-12">
+              <input 
+                type="number" 
+                required="required"
+                maxLength="11" 
+                className="form-control" 
+                placeholder="Enter Phone Number"
+                name="phoneNumber"
+                onChange={this.onChangePhoneNumber}
+                value={phoneNumber} 
+                onKeyPress={(e) => manipulateNumber(e)}
+              />                     
+            </div>
           </div>
-        </div>
-        <div className="form-group">
-          <div className="col-sm-12 col-md-12 col-lg-12">
-            <input 
-              type="text" 
-              required="required" 
-              className="form-control" 
-              placeholder="Narration"
-              name="narration"
-              onChange={this.onChange}
-              value={narration}
-            />                     
-          </div>
-        </div>
           {
-            !isAccountNumberValid ?
+            !isPaymentCodeValid ?
             <div className="form-group">        
               <div className="col-sm-12 col-md-12 col-lg-12">
                 <button 
                   type="submit"
                   className="btn col-sm-8 col-md-8 col-lg-6" 
                   id="validate_button"                    
-                  onClick={this.validateAccountNumber}>
+                  onClick={this.validatePaymentCode}>
                   {
                     validating ? <MakingPayment />
                     : 'Validate'
@@ -211,18 +188,31 @@ class FidelityCashout extends React.Component{
             <div className="form-group">
               <div className="col-sm-12 col-md-12 col-lg-12">
                 <input 
-                  type="password" 
+                  type="text" 
+                  required="required" 
+                  className="form-control" 
+                  placeholder="Customer Name"
+                  name="customerName"
+                  onChange={this.onChange}
+                  value={customerName}
+                />                     
+              </div>
+            </div>
+
+            <div className="form-group">
+              <div className="col-sm-12 col-md-12 col-lg-12">
+                <input 
+                  type="number" 
                   className="form-control" 
                   required="required" 
-                  placeholder="Enter OTP sent to customer" 
-                  // maxLength="4"
-                  name="otp"
+                  placeholder="Amount" 
+                  name="amount"
                   onChange={this.onChange}
-                  value={otp} 
-                  onKeyPress={(e) => manipulateNumber(e)}
+                  value={amount}
                 />
               </div>
             </div>
+
             <div className="form-group">
               <div className="col-sm-12 col-md-12 col-lg-12">
                 <input 
@@ -261,4 +251,4 @@ class FidelityCashout extends React.Component{
   }
 }
 
-export default withRouter(FidelityCashout);
+export default withRouter(GTBCashout);

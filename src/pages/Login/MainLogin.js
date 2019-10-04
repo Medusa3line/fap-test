@@ -7,9 +7,9 @@ import baseUrl from '../../baseUrl';
 
 class MainLogin extends Component{
   state = {
-    username: "",
-    password: "",
-    pin: "",
+    agentID: '',
+    terminalID: '',
+    pin: '',
     route:"login",
     newPin: "",
     newPinAgain: '',
@@ -29,10 +29,11 @@ AgentSetupButton = (e) => {
   this.setState({
     loginError: false
   })
-  let reqBody = {
-    newPassword: this.state.newPasswordAgain,
-    newPin: this.state.newPinAgain,
-    username: this.state.username
+  const { agentID, terminalID, pin } = this.state;
+    let reqBody = {
+      pin,
+      terminalID,
+      agentID
     };
   if (this.state.newPassword === '' || this.state.newPasswordAgain === '' || this.state.newPin === '' || this.state.newPinAgain === ''){
     swal("Failed Attempt", "Please fill all fields", "error")
@@ -84,17 +85,17 @@ pinValidation = (e) => {
   })
 
   if (this.state.pin === ""){
-    swal("Failed Attempt", "Please fill all fields", "error")
+    swal("Failed Attempt", "Please fill all fields", "info")
   } else {
       this.setState({
         loggingIn: true
       })
     document.getElementById(id).disabled = true;
-    const { username, password, pin } = this.state;
+    const { agentID, terminalID, pin } = this.state;
     let reqBody = {
-      username,
-      password,
-      pin
+      pin,
+      terminalID,
+      agentID
     };
     fetch(`${baseUrl}/oauth/logon`, {
       method: 'post',
@@ -136,15 +137,15 @@ loginButtonClick = (e) => {
   this.setState({
     loginError: false
   })
-  const { username, password, pin } = this.state;
-  let reqBody = {
-    username,
-    password,
-    pin
-  };
+  const { agentID, terminalID, pin } = this.state;
+    let reqBody = {
+      pin,
+      terminalID: '2215FCMB',
+      agentID
+    };
 
-    if(reqBody.username === '' || reqBody.password === ''){
-      swal("Login Failed", "Username and Password Fields cannot empty", "error")
+    if(pin === '' || terminalID === '' || agentID === ''){
+      swal("Wrong Operation", "All Fields are Required", "error")
     } else {
       this.setState({
         loggingIn: true
@@ -198,9 +199,9 @@ redirectToDashboard = (userType) => {
   // Redirect to Dashboard    
   userType = userType.toLowerCase(); 
   const { history } = this.props;      
-  if (userType === 'aggregator' || userType  === 'subaggregator') {
+  if (userType === 'aggregator') {
     history.push("/aggregator")
-    } else if (userType  === 'sub agent' || userType  === 'sub-agent' || userType === 'subagent' || userType  === 'sole' || userType === 'sub_agent'){
+    } else if (userType  === 'operator' || userType  === 'agent'){
       history.push("/dashboard")
     } else {
       swal("Login Failed", 'User type unknown', 'error')              
@@ -240,8 +241,7 @@ manipulateNumber = (e) => {
                     AgentSetupButton={this.AgentSetupButton} 
                     routeChange={this.routeChange}
                     loggingIn = {loggingIn}
-                    loginError = {loginError}
-                    manipulateNumber={this.manipulateNumber} 
+                    loginError = {loginError} 
                   />
                 : (
                     route === 'pin' ?
@@ -250,7 +250,6 @@ manipulateNumber = (e) => {
                         pinValidation={this.pinValidation} 
                         loginError={loginError} 
                         loggingIn={loggingIn} 
-                        manipulateNumber={this.manipulateNumber}
                       />
                     : 
                     route === 'login'

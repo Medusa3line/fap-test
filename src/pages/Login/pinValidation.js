@@ -1,11 +1,12 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import IsLoading from '../../Components/isLoading/isLoading.js';
 import LoginError from '../../Components/loginError/LoginError';
 import LoginContainerHeader from '../../Components/LoginContainerHeader/LoginContainerHeader.jsx';
 import Footer from '../../Components/Footer/Footer.component.jsx';
+import { manipulateNumber } from '../../Utils/manipulateNumber';
+import CustomButton from '../../Components/CustomButton/CustomButton.component.jsx';
 
-const Otp = ({ onChange, pinValidation, loggingIn, loginError, manipulateNumber }) => {
+const Otp = ({ onChange, pinValidation, loggingIn, loginError }) => {
   return (
     <div className="body">
       <div id="login-layout">
@@ -18,7 +19,7 @@ const Otp = ({ onChange, pinValidation, loggingIn, loginError, manipulateNumber 
           {/*-- Login Form */}
                 <form onSubmit={pinValidation}>
                   <div className="form-group">
-                    <div className="col-sm-12 col-md-8 col-lg-8" style={{padding: '0'}}>          
+                    <div className="col-md-9" >          
                       <input 
                         type="password" 
                         className="form-control" 
@@ -34,19 +35,10 @@ const Otp = ({ onChange, pinValidation, loggingIn, loginError, manipulateNumber 
                     </div>
                   </div>
     
-                  <div className="form-group">
-                    <button 
-                      type="submit"
-                      style={{width: '66.67%'}}
-                      className="btn" 
-                      id="login_button" 
-                      onClick={pinValidation}>
-                      {
-                        loggingIn ? <IsLoading />
-                        : 'Proceed'
-                      }
-                    </button>
-                  </div>
+                  <CustomButton 
+                    loggingIn={loggingIn} 
+                    buttonClick={pinValidation}
+                  />
                 </form>
                   
                   <div>
