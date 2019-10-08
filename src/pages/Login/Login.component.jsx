@@ -67,12 +67,10 @@ const Login = ({ onChange, loginButtonClick, loggingIn, loginError }) => {
                       loggingIn={loggingIn} 
                       buttonClick={loginButtonClick} 
                     />
-                  </form>
-
-                  
-                      <div>
-                        <h6>Forgot your password? <Link to="/resetPassword" style={{color: '#ff0014'}}>Reset It</Link></h6> 
-                      </div>
+                  </form>                  
+                    <div>
+                      <h6>Forgot your password? <Link to="/resetPassword" style={{color: '#ff0014'}}>Reset It</Link></h6> 
+                    </div>
                     {
                       loginError ? <LoginError /> : null
                     }

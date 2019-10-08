@@ -1,9 +1,8 @@
 #loginError{
 	padding: 5px;
-	width: 20%;
-	position: fixed;
-	right: 1%;
-	top: 1%; 
+  position: relative; 
+  width: 70%;
+  left: 15%;
 	font-size: 12px;
 }
 

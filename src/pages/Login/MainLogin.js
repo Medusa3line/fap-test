@@ -25,10 +25,6 @@ const onChange = (event) => {
 const loginButtonClick = (e) => {
   e.preventDefault();
   let id = e.target.id;
-  setState({
-    ...state,
-    loginError: false
-  })
   const { agentId, terminalId, pin } = state;
     let reqBody = {
       agentId,
@@ -42,7 +38,8 @@ const loginButtonClick = (e) => {
     } else {
       setState({
         ...state,
-        loggingIn: true
+        loggingIn: true,
+        loginError: false
       });
       document.getElementById(id).disabled = true;
     fetch(`${baseUrl}/login`, {
