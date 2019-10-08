@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import baseUrl from '../../../baseUrl';
-import swal from 'sweetalert';
+import swal from '../../../Utils/alert';
 
 import AccountFields1 from './FCMBAccountFields1';
 import AccountFields2 from './FCMBAccountFields2';

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import NetworkList from './NetworkList';
 import NetworkOptions from './NetworkOptions';
-import swal from 'sweetalert';
+import swal from '../../Utils/alert';
 import baseUrl from '../../baseUrl';
 import MakingPayment from '../../Components/makingPayment/makingPayment';
 import { manipulateNumber } from '../../Utils/manipulateNumber';

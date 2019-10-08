@@ -7,7 +7,7 @@ import SearchComponent from '../Components/SearchComponent';
 import withTimeout from '../../../Components/HOCs/withTimeoutAggregator.hoc';
 import {Link} from 'react-router-dom';
 import Spinner from '../../../Components/PreLoader/preLoader';
-import swal from 'sweetalert';
+import swal from '../../../Utils/alert';
 import baseUrl from '../../../baseUrl';
 import PrintReceipt from '../../../Utils/print';
 import ExportToExcel from '../../../Components/ExportToExcel/ExportToExcel';

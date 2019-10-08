@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import withTimeout from '../../Components/HOCs/withTimeout.hoc';
-import swal from 'sweetalert';
+import swal from '../../Utils/alert';
 import NetworkOptions from '../Bill_Payment/NetworkOptions';
 import NetworkList from '../Bill_Payment/NetworkList'
 import baseUrl from '../../baseUrl';

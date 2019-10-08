@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import swal from 'sweetalert';
+import swal from '../../Utils/alert';
 import baseUrl from '../../baseUrl';
 import withTimeout from '../../Components/HOCs/withTimeout.hoc';
 

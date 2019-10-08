@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import swal from 'sweetalert';
+import swal from '../../../Utils/alert';
 import ExportToExcel from '../../../Components/ExportToExcel/ExportToExcel';
 import AgentsPerformance from './AgentsPerformance';
 import AgentsTransactions from '../Components/AgentsTransactions';

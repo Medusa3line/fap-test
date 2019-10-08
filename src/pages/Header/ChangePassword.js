@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import baseUrl from '../../baseUrl';
 import withTimeoutWithoutRestriction from '../../Components/HOCs/withTimeoutWithoutRestriction.hoc';
-import swal from 'sweetalert';
+import swal from '../../Utils/alert';
 import LoginError from '../../Components/loginError/LoginError';
 import LoginContainerHeader from '../../Components/LoginContainerHeader/LoginContainerHeader';
 import CustomButton from '../../Components/CustomButton/CustomButton.component';

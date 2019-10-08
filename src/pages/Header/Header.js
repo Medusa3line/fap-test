@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
 import './header.scss';
 import HomeIcon from "../../img/home.svg";
@@ -23,14 +22,14 @@ const Header = () => {
     }))
   }, [])
 
-  const { agentName } = state.userDetails;
+  const { fullName } = state.userDetails;
   const active = {
     color: '#5C2584'
   }
   
   return (
   <div>
-    <HeaderComponent agentName={agentName} />
+    <HeaderComponent agentName={fullName} />
     <nav className="navbar navbar-default container-fluid">
       <div>
         <div className="navbar navbar-header">
@@ -106,4 +105,4 @@ const Header = () => {
   );	
 }
 
-export default withRouter(Header);
+export default Header;

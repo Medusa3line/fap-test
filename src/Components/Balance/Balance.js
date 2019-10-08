@@ -1,6 +1,6 @@
 import React, { memo, useState, useEffect, useRef } from 'react';
 import baseUrl from '../../baseUrl';
-import swal from 'sweetalert';
+import swal from '../../Utils/alert';
 import './balance.scss';
 
 const Balance = () => {

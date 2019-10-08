@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import swal from 'sweetalert';
+import swal from '../../../Utils/alert';
 
 import withTimeout from '../../../Components/HOCs/withTimeout.hoc';
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {TimeOut} from './timeOut';
-import MainLogin  from '../../pages/Login/MainLogin';
+import { Redirect } from 'react-router-dom';
 
 const withTimeout = (WrappedComponent) => {
     return class WithTimeOut extends Component {
@@ -49,12 +49,12 @@ const withTimeout = (WrappedComponent) => {
         render(){
             //Checking to see if the user has access to view agent portal
             if(!sessionStorage.getItem('userDetails')){
-                this.props.history.push('/');
+                return <Redirect to="/" />
             } else {
                 const userDetails = JSON.parse(sessionStorage.getItem('userDetails'));
                 const userType = userDetails.userType.toLowerCase();
                 var userExists;
-                if (userType.includes('sole') || userType.includes('agent')){
+                if (userType.includes('operator') || userType.includes('agent')){
                     userExists = true;
                 } else {
                     userExists = false;
@@ -66,9 +66,7 @@ const withTimeout = (WrappedComponent) => {
                     <WrappedComponent />
                 ) 
             } else {
-                return (
-                    <MainLogin />
-                )
+                return <Redirect to="/" />
             }
         }
     }

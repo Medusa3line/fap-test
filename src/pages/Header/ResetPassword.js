@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import baseUrl from '../../baseUrl';
-import swal from 'sweetalert';
+import swal from '../../Utils/alert';
 import LoginError from '../../Components/loginError/LoginError';
 import LoginContainerHeader from '../../Components/LoginContainerHeader/LoginContainerHeader';
 import CustomButton from '../../Components/CustomButton/CustomButton.component';

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import NetworkList from './NetworkList';
-import swal from 'sweetalert';
+import swal from '../../Utils/alert';
 import baseUrl from '../../baseUrl';
 import NetworkOptions from './NetworkOptions';
 import MakingPayment from '../../Components/makingPayment/makingPayment';

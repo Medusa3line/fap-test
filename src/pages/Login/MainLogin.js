@@ -1,157 +1,51 @@
-import React, { Component } from 'react';
-import swal from 'sweetalert';
-import Login from './Login';
-import AgentSetup from './AgentSetup';
-import PinCheck from './pinValidation';
+import React, { useState, useEffect } from 'react';
+import swal from '../../Utils/alert';
+import Login from './Login.component';
 import baseUrl from '../../baseUrl';
 
-class MainLogin extends Component{
-  state = {
-    agentID: '',
-    terminalID: '',
+const MainLogin = ({history}) => {
+  const [state, setState] = useState({
+    agentId: '',
+    terminalId: '',
     pin: '',
-    route:"login",
-    newPin: "",
-    newPinAgain: '',
-    newPassword: '',
-    newPasswordAgain: '',
     loggingIn: false,
     loginError: false
-  }    
+  })   
 
-  componentDidMount(){
+  useEffect(() => {
     sessionStorage.clear();
-  }
+  }, [])
 
-AgentSetupButton = (e) => {
-  e.preventDefault();
-  let id = e.target.id;
-  this.setState({
-    loginError: false
-  })
-  const { agentID, terminalID, pin } = this.state;
-    let reqBody = {
-      pin,
-      terminalID,
-      agentID
-    };
-  if (this.state.newPassword === '' || this.state.newPasswordAgain === '' || this.state.newPin === '' || this.state.newPinAgain === ''){
-    swal("Failed Attempt", "Please fill all fields", "error")
-  } else if ((this.state.newPassword !== this.state.newPasswordAgain) || (this.state.newPin !== this.state.newPinAgain)) {
-    swal("Failed Attempt", "Passwords or Pins do not match", "error")
-  } else if ((this.state.newPassword === this.state.newPasswordAgain) && (this.state.newPin === this.state.newPinAgain)) {
-    document.getElementById(id).disabled = true;
-    this.setState({
-      loggingIn: true
-    })
-    fetch (`${baseUrl}/oauth/agentSetup`, {
-      method: 'post',
-      headers: {'Content-Type' : 'application/json'}, 
-      body: JSON.stringify(reqBody)
-    }).then (response => response.json())
-    .then(
-      setupInformation => {
-      if (setupInformation.respCode === "00") {
-        swal("Successful Operation", "New Password and Pin have been set", "success")
-        this.setState({
-          route: 'login', 
-          loggingIn: false
-        })
-        document.getElementById(id).disabled = false;
-      } else {
-        this.setState({
-          route: 'AgentSetup', 
-          loggingIn: false, 
-          loginError: true
-        })
-        document.getElementById(id).disabled = false;
-      }
-    })
-    .catch(err => {
-      this.setState({
-        loggingIn: false
-      })
-      document.getElementById(id).disabled = false;
-      swal('An Error Occured', `${err}`, 'error')
-    });
-  }
-}
-
-pinValidation = (e) => {
-  e.preventDefault();
-  let id = e.target.id;
-  this.setState({
-    loginError: false
-  })
-
-  if (this.state.pin === ""){
-    swal("Failed Attempt", "Please fill all fields", "info")
-  } else {
-      this.setState({
-        loggingIn: true
-      })
-    document.getElementById(id).disabled = true;
-    const { agentID, terminalID, pin } = this.state;
-    let reqBody = {
-      pin,
-      terminalID,
-      agentID
-    };
-    fetch(`${baseUrl}/oauth/logon`, {
-      method: 'post',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(reqBody)
-    }).then(response => response.json())
-      .then(user => {       
-        if(user.respCode === '00'){
-          sessionStorage.setItem('userDetails', JSON.stringify(user.respBody));
-          document.getElementById(id).disabled = false;
-          this.redirectToDashboard(user.respBody.userType) 
-        } else {
-            this.setState({
-              loggingIn: false, 
-              loginError: true
-            })
-            document.getElementById(id).disabled = false;
-          }
-      })
-      .catch(err => {
-        this.setState({
-          loggingIn: false
-        })
-        document.getElementById(id).disabled = false;
-        swal('An Error Occured', `${err}`, 'info')
-      })
-  }
-  ;
-}
-
-onChange = (event) => {
-  this.setState({
+const onChange = (event) => {
+  setState({
+    ...state,
   [event.target.name]: event.target.value
 })}
 
-loginButtonClick = (e) => {
+const loginButtonClick = (e) => {
   e.preventDefault();
   let id = e.target.id;
-  this.setState({
+  setState({
+    ...state,
     loginError: false
   })
-  const { agentID, terminalID, pin } = this.state;
+  const { agentId, terminalId, pin } = state;
     let reqBody = {
+      agentId,
+      deviceId: terminalId,
       pin,
-      terminalID: '2215FCMB',
-      agentID
+      terminalId
     };
 
-    if(pin === '' || terminalID === '' || agentID === ''){
+    if(pin === '' || terminalId === '' || agentId === ''){
       swal("Wrong Operation", "All Fields are Required", "error")
     } else {
-      this.setState({
+      setState({
+        ...state,
         loggingIn: true
       });
       document.getElementById(id).disabled = true;
-    fetch(`${baseUrl}/oauth/logon`, {
+    fetch(`${baseUrl}/login`, {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(reqBody)
@@ -159,46 +53,34 @@ loginButtonClick = (e) => {
     .then(response => response.json())
     .then(user => {
       document.getElementById(id).disabled = false;
-      this.setState({
+      setState({
+        ...state,
         loggingIn: false
       })
-      if(user.respCode === '00'){
-        if(user.respBody.isFirstTime === 'true'){
-          this.setState({
-            route: 'AgentSetup'
-        })
-        } else if(user.respBody.isFirstTime === 'false' && user.respBody.isNewDevice === 'true') {
-          this.setState({
-            route: 'pin'
-          })
-        } else if (user.respBody.isFirstTime === 'false' && user.respBody.isNewDevice === 'false'){          
-          sessionStorage.setItem('userDetails', JSON.stringify(user.respBody)); 
-          document.getElementById(id).disabled = false;   
-          this.redirectToDashboard(user.respBody.userType)    
-      }
-    } else {
-        this.setState({
-          route: 'login', 
+      if(user.respCode === '00'){          
+        sessionStorage.setItem('userDetails', JSON.stringify(user.respBody)); 
+        document.getElementById(id).disabled = false;   
+        redirectToDashboard(user.respBody.userType)    
+      } else {
+        setState({
+          ...state, 
           loginError: true
         })
       }  
     }).catch(err => {
       document.getElementById(id).disabled = false;
-      this.setState({
+      setState({
+        ...state,
         loggingIn: false
       })
       swal("Login Failed", `${err}`, 'error')
     })
   }
 }
-routeChange = (route) => this.setState({
-  route: route
-})
 
-redirectToDashboard = (userType) => {
+const redirectToDashboard = (userType) => {
   // Redirect to Dashboard    
-  userType = userType.toLowerCase(); 
-  const { history } = this.props;      
+  userType = userType.toLowerCase();       
   if (userType === 'aggregator') {
     history.push("/aggregator")
     } else if (userType  === 'operator' || userType  === 'agent'){
@@ -208,57 +90,16 @@ redirectToDashboard = (userType) => {
     } 
 }
 
-// Manipulate Number input fields and Password fields for Pin to not accept anything other than numbers
-manipulateNumber = (e) => {
-  var inputKeyCode = e.keyCode ? e.keyCode : e.which;
-  if (((inputKeyCode >= 48 && inputKeyCode <= 57) || (inputKeyCode >= 96 && inputKeyCode <= 105)) && (inputKeyCode != null)){
-      if((e.target.value.length === e.target.maxLength) || (inputKeyCode === 45)){
-      e.preventDefault();
-    }
-  } else {
-    e.preventDefault();
-  }
-}
+  const { loggingIn, loginError } = state;
 
-  render(){
-    const { loggingIn, loginError, route } = this.state;
-
-    return (
-      <React.Fragment>
-        {
-          route === 'login' ?
-              <Login 
-                loginButtonClick={this.loginButtonClick} 
-                onChange={this.onChange} 
-                routeChange={this.routeChange}
-                loggingIn = {loggingIn}
-                loginError = {loginError}
-              />
-            : (
-                route === 'AgentSetup' ?
-                  <AgentSetup 
-                    onChange={this.onChange} 
-                    AgentSetupButton={this.AgentSetupButton} 
-                    routeChange={this.routeChange}
-                    loggingIn = {loggingIn}
-                    loginError = {loginError} 
-                  />
-                : (
-                    route === 'pin' ?
-                      <PinCheck 
-                        onChange={this.onChange}   
-                        pinValidation={this.pinValidation} 
-                        loginError={loginError} 
-                        loggingIn={loggingIn} 
-                      />
-                    : 
-                    route === 'login'
-                  )
-              )
-        }
-      </React.Fragment> 
-    ); 
-  } 
+  return (
+    <Login 
+      loginButtonClick={loginButtonClick} 
+      onChange={onChange} 
+      loggingIn = {loggingIn}
+      loginError = {loginError}
+    /> 
+  ); 
 }
 
 export default MainLogin;

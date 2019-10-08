@@ -26,7 +26,7 @@ const Login = ({ onChange, loginButtonClick, loggingIn, loginError }) => {
                           required="required" 
                           autoFocus="autofocus" 
                           placeholder="Agent ID"
-                          name="agentID"
+                          name="agentId"
                           autoComplete="autocomplete"
                           onChange={onChange} 
                         />
@@ -40,7 +40,7 @@ const Login = ({ onChange, loginButtonClick, loggingIn, loginError }) => {
                           className="form-control" 
                           required="required"  
                           placeholder="Terminal ID"
-                          name="terminalID"
+                          name="terminalId"
                           autoComplete="autocomplete"
                           onChange={onChange} 
                         />
