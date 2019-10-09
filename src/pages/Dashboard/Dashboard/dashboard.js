@@ -1,12 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import swal from '../../../Utils/alert';
-
 import withTimeout from '../../../Components/HOCs/withTimeout.hoc';
-
 import Spinner from '../../../Components/PreLoader/preLoader';
 import baseUrl from '../../../baseUrl';
 import PrintReceipt from '../../../Utils/print';
-
 import Header from '../../Header/Header';
 import Wallets from './Wallet/Wallet';
 import Table from './Table';

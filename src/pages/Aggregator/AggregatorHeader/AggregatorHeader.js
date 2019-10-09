@@ -3,9 +3,9 @@ import './AggregatorHeader.scss';
 import HeaderComponent from '../../../Components/HeaderComponent/HeaderComponent';
 
 const AggregatorHeader = () => { 
-  const { agentName } = JSON.parse(sessionStorage.getItem('userDetails'))
+  const { username } = JSON.parse(sessionStorage.getItem('userDetails'))
   return(
-    <HeaderComponent agentName={agentName} />
+    <HeaderComponent agentName={username} />
   )
 }
 export default AggregatorHeader;

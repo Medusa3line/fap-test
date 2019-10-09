@@ -1,49 +1,58 @@
-import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import baseUrl from '../../baseUrl';
 import withTimeoutWithoutRestriction from '../../Components/HOCs/withTimeoutWithoutRestriction.hoc';
-import { manipulateNumber } from '../../Utils/manipulateNumber';
 import swal from '../../Utils/alert';
+import { pinRegex } from '../../Utils/regex';
 import LoginError from '../../Components/loginError/LoginError';
 import LoginContainerHeader from '../../Components/LoginContainerHeader/LoginContainerHeader';
 import CustomButton from '../../Components/CustomButton/CustomButton.component';
 
-class ChangePin extends Component {
-  _isMounted = false;
-    constructor(){
-    super()
-    this.state = {
+const ChangePin = () => {
+  const [ state, setState ] = useState({
       userDetails : {},
-      changeRoute: false,
       loggingIn: false,
       loginError: false,
       oldPin: '',
       newPin: '',
-      newPinAgain: '', 
-      userType: ''
-    }
+      newPinAgain: '',
+      errorMessage: ''
+    })
+
+  const history = useHistory();
+
+  const onChange = (event) => {
+    setState({
+      ...state,
+      [event.target.name]: pinRegex(event)
+    });
   }
 
-  onChange = (event) => { this.setState({[event.target.name]: event.target.value});}
-
-  ChangePin = (e) => {
+  const changePin = (e) => {
     e.preventDefault();
   let id = e.target.id;
-  this.setState({loginError: false})
-  let reqBody = {
-    agentUsername: this.state.userDetails.agentUsername,
-    newPin: this.state.newPin,
-    oldPin: this.state.oldPin
-    };
-  if (this.state.newPin === '' || this.state.newPinAgain === '' || this.state.oldPin === '' ){
+  setState({
+    ...state,
+    loginError: false
+  })
+  if (state.newPin === '' || state.newPinAgain === '' || state.oldPin === '' ){
     swal("Failed Attempt", "Please fill all fields", "info")
-  } else if (this.state.newPin !== this.state.newPinAgain) {
-    swal("Failed Attempt", "New Pins do not match", "error")
-  } else if (this.state.newPin === this.state.newPinAgain) {
+  } else if (state.newPin !== state.newPinAgain) {
+    swal("Failed Attempt", "New Pins do not match", "info")
+  } else if (state.newPin === state.newPinAgain) {
+    //Get User Information
+    const { auth_token, username } = JSON.parse(sessionStorage.getItem('userDetails'));
+    let reqBody = {
+      username,
+      newPin: state.newPin,
+      oldpin: state.oldPin
+    };
     document.getElementById(id).disabled = true;
-    this.setState({loggingIn: true})
-    let auth_token = this.state.userDetails.auth_token;
-    fetch (`${baseUrl}/oauth/changepin`, {
+    setState({
+      ...state,
+      loggingIn: true
+    })
+    fetch (`${baseUrl}/auth/web/changepin`, {
       method: 'post',
       headers: {
         'Content-Type' : 'application/json', 
@@ -51,128 +60,124 @@ class ChangePin extends Component {
       }, 
       body: JSON.stringify(reqBody)
     }).then (response => response.json())
-    .then(
-      result => {
+    .then(result => {
+      document.getElementById(id).disabled = false;
       if (result.respCode === "00") {
         swal("Successful Operation", "New Pin has been set.", "success");
-        document.getElementById(id).disabled = false;
-        this.setState({loggingIn: false, changeRoute: true, userType: this.state.userDetails.userType.toLowerCase()})
-        this.renderRedirect();
-      } else if (result.respCode === "96") {
-        this.setState({loggingIn: false, loginError: true})
-        document.getElementById(id).disabled = false;
+        setState({
+          ...state,
+          loggingIn: false,
+        })
+        renderRedirect();
       } else {
-        swal('An Error Occured', 'There was an error while processing this request, please try again', 'error')
-        this.setState({loggingIn: false, loginError: true})
-        document.getElementById(id).disabled = false;
+        swal('An Error Occured', `${result.respDescription}`, 'error')
+        setState({
+          ...state,
+          loggingIn: false, 
+          loginError: true,
+          errorMessage: result.respDescription
+        })
       }
     })
     .catch(err => {
-      this.setState({loggingIn: false})
+      setState({
+        ...state,
+        loggingIn: false
+      })
       document.getElementById(id).disabled = false;
-      swal('An Error Occured', 'There was an error while processing this request, please try again', 'error')
+      swal('An Error Occured', `${err}`, 'error')
     });
   }
 }
 
-  componentDidMount = async () => {
-    this._isMounted = true;
-
-    await sessionStorage.getItem('userDetails') && this.setState ({
-      userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
-    }) 
-  }
-
-  renderRedirect = () => {
-    const { changeRoute, userType } =  this.state;
-    if (changeRoute && ( userType === 'aggregator' || userType === 'subaggregator')) {
-      this.props.history.push("/aggregator");
-      } else if (changeRoute && (userType === 'sub agent' || userType === 'sub-agent' || userType === 'subagent' || userType === 'sole' || userType === 'sub_agent')){
-        this.props.history.push("/dashboard");
+  const renderRedirect = () => {
+    let { userType } = JSON.parse(sessionStorage.getItem('userDetails'));
+    userType = userType.toLowerCase();
+    if ( userType === 'aggregator') {
+      history.push("/aggregator");
+      } else if (userType  === 'operator' || userType  === 'agent'){
+        history.push("/dashboard");
       } else {
-        this.props.history.push("/");
+        history.push("/");
       }
 }
 
-  render() {
-    const { loginError, loggingIn } = this.state;
+    const { loginError, loggingIn, oldPin, newPin, newPinAgain, errorMessage } = state;
 
     return (
     <div className="body">
-          <div id="login-layout">
-            <div id="fit-image">
-            </div>
-            <div className="animated zoomIn delay-2s">
-              <div id="login-container">
-                <LoginContainerHeader content={<p>Change Pin</p>} /><br/>
-
-              {/*-- Agent Setup Form */}
-                <div>
-                    <form onSubmit={this.ChangePin}>
-                      <div className="form-group">
-                        <div className="col-md-9" >
-                          <input 
-                            type="password" 
-                            className="form-control" 
-                            required="required"
-                            placeholder="Enter Old Pin"
-                            autoComplete="autocomplete"
-                            autoFocus="autofocus"
-                            maxLength="4"
-                            name="oldPin"
-                            onChange={this.onChange}
-                            onKeyPress={(e) => manipulateNumber(e)}
-                          />
-                        </div>
-                      </div> 
-                      <div className="form-group">
-                        <div className="col-md-9" >          
-                          <input 
-                            type="password" 
-                            className="form-control" 
-                            required="required"
-                            autoComplete="autocomplete" 
-                            placeholder="Enter New Pin"
-                            maxLength="4" 
-                            name="newPin"
-                            onChange={this.onChange}
-                            onKeyPress={(e) => manipulateNumber(e)}
-                          />
-                        </div>
-                      </div> 
-
-                      <div className="form-group">
-                        <div className="col-md-9" >          
-                          <input 
-                            type="password" 
-                            className="form-control" 
-                            required="required"
-                            autoComplete="autocomplete" 
-                            placeholder="Confirm  New Pin"
-                            maxLength="4"
-                            name="newPinAgain" 
-                            onChange={this.onChange}
-                            onKeyPress={(e) => manipulateNumber(e)}
-                          />
-                        </div>
-                      </div> <br/>
-        
-                      <CustomButton 
-                        loggingIn={loggingIn} 
-                        buttonClick={this.ChangePin}
-                      />
-                    </form>
-                      {
-                        loginError ? <LoginError /> : null
-                      }
-                </div>
-              </div>
-          </div>
+      <div id="login-layout">
+        <div id="fit-image">
         </div>
+        <div className="animated zoomIn delay-2s">
+          <div id="login-container">
+            <LoginContainerHeader content={<p>Change Pin</p>} /><br/>
+
+            <div>
+              <form onSubmit={changePin}>
+                <div className="form-group">
+                  <div className="col-md-9" >
+                    <input 
+                      type="password" 
+                      className="form-control" 
+                      required="required"
+                      placeholder="Enter Old Pin"
+                      autoComplete="autocomplete"
+                      autoFocus="autofocus"
+                      maxLength="4"
+                      name="oldPin"
+                      value={oldPin}
+                      onChange={onChange}
+                    />
+                  </div>
+                </div> 
+                <div className="form-group">
+                  <div className="col-md-9" >          
+                    <input 
+                      type="password" 
+                      className="form-control" 
+                      required="required"
+                      autoComplete="autocomplete" 
+                      placeholder="Enter New Pin"
+                      maxLength="4" 
+                      name="newPin"
+                      value={newPin}
+                      onChange={onChange}
+                    />
+                  </div>
+                </div> 
+
+                <div className="form-group">
+                  <div className="col-md-9" >          
+                    <input 
+                      type="password" 
+                      className="form-control" 
+                      required="required"
+                      autoComplete="autocomplete" 
+                      placeholder="Confirm  New Pin"
+                      maxLength="4"
+                      name="newPinAgain" 
+                      value={newPinAgain}
+                      onChange={onChange}
+                    />
+                  </div>
+                </div> <br/>
+  
+                <CustomButton 
+                  loggingIn={loggingIn} 
+                  buttonClick={changePin}
+                  value={'Proceed'}
+                />
+              </form>
+              {
+                loginError ? <LoginError errorMessage={errorMessage} /> : null
+              }
+            </div>
+          </div>
+      </div>
+      </div>
     </div>
-    )
-  }
-	
+    )	
 }
 
-export default withTimeoutWithoutRestriction(withRouter(ChangePin));
+export default withTimeoutWithoutRestriction(ChangePin);

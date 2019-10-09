@@ -10,8 +10,7 @@ import './css/main.css';
 
 // Routes for Login and setups
 import MainLogin  from './pages/Login/MainLogin';
-import ChangePassword from './pages/Header/ChangePassword';
-import ResetPassword from './pages/Header/ResetPassword';
+import ResetPin from './pages/Header/ResetPin';
 import ChangePin from './pages/Header/ChangePin';
 
 //Performance Optimization components
@@ -51,8 +50,7 @@ class App extends Component {
               <Route exact path="/airtime" component={Airtime} />
               <Route exact path="/deposit" component={Deposit} />
               <Route exact path="/transfer" component={Transfer} />
-              <Route exact path="/passwordChange" component={ChangePassword} />
-              <Route exact path="/resetPassword" component={ResetPassword} />
+              <Route exact path="/resetPin" component={ResetPin} />
               <Route exact path="/pinChange" component={ChangePin} />
               <Route exact path='/receipt/:transId' component={Receipt} />
               <Route exact path="/bill-payment-receipt/:transId" component={BillPaymentReceipt} />

@@ -2,8 +2,7 @@ import React from 'react';
 import MakingPayment from '../../Components/makingPayment/makingPayment';
 import { manipulateNumber } from '../../Utils/manipulateNumber';
 
-const CreditRequest = () => {
-  const { creditRequestApprove, bankName, amount, depositorsName, makingPayment } = this.props;
+const CreditRequest = ({ creditRequestApprove, bankName, amount, depositorsName, makingPayment }) => {
   return (
     <div>
       <form onSubmit={creditRequestApprove}>

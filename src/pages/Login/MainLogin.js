@@ -1,39 +1,48 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import swal from '../../Utils/alert';
 import Login from './Login.component';
 import baseUrl from '../../baseUrl';
+import { pinRegex } from '../../Utils/regex'
+
+export const LoginContext = createContext();
 
 const MainLogin = ({history}) => {
   const [state, setState] = useState({
     agentId: '',
-    terminalId: '',
     pin: '',
     loggingIn: false,
-    loginError: false
+    loginError: false,
+    errorMessage: ''
   })   
 
   useEffect(() => {
     sessionStorage.clear();
   }, [])
 
-const onChange = (event) => {
-  setState({
-    ...state,
-  [event.target.name]: event.target.value
-})}
+const onChange = (event, option) => {
+  if(option){
+    setState({
+      ...state,
+      [event.target.name]: pinRegex(event)
+    });
+  } else {
+      setState({
+        ...state,
+      [event.target.name]: event.target.value
+    })
+  }
+}
 
 const loginButtonClick = (e) => {
   e.preventDefault();
   let id = e.target.id;
-  const { agentId, terminalId, pin } = state;
+  const { agentId, pin } = state;
     let reqBody = {
       agentId,
-      deviceId: terminalId,
       pin,
-      terminalId
     };
 
-    if(pin === '' || terminalId === '' || agentId === ''){
+    if(pin === '' || agentId === ''){
       swal("Wrong Operation", "All Fields are Required", "error")
     } else {
       setState({
@@ -42,7 +51,7 @@ const loginButtonClick = (e) => {
         loginError: false
       });
       document.getElementById(id).disabled = true;
-    fetch(`${baseUrl}/login`, {
+    fetch(`${baseUrl}/web/login`, {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(reqBody)
@@ -61,7 +70,8 @@ const loginButtonClick = (e) => {
       } else {
         setState({
           ...state, 
-          loginError: true
+          loginError: true,
+          errorMessage: user.respDescription
         })
       }  
     }).catch(err => {
@@ -87,15 +97,19 @@ const redirectToDashboard = (userType) => {
     } 
 }
 
-  const { loggingIn, loginError } = state;
+  const { loggingIn, loginError, errorMessage, pin } = state;
 
   return (
-    <Login 
-      loginButtonClick={loginButtonClick} 
-      onChange={onChange} 
-      loggingIn = {loggingIn}
-      loginError = {loginError}
-    /> 
+    <LoginContext.Provider value={{
+      loginButtonClick, 
+      onChange, 
+      loggingIn,
+      loginError,
+      errorMessage,
+      pin
+    }}>
+      <Login /> 
+    </LoginContext.Provider>
   ); 
 }
 

@@ -22,7 +22,6 @@ export default function HeaderComponent({agentName}) {
                 >
                     {agentName} <span className="fa fa-chevron-down"></span></button>
                 <ul className="dropdown-menu dropdown">
-                    <li><Link to={"/passwordChange"}> Change Password</Link></li>
                     <li><Link to={"/pinChange"}> Change Pin</Link></li>
                     <li><Link onClick={Logout} to={"/"}> Logout</Link></li>
                 </ul>

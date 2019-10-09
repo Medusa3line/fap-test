@@ -22,14 +22,14 @@ const Header = () => {
     }))
   }, [])
 
-  const { fullName } = state.userDetails;
+  const { username } = state.userDetails;
   const active = {
     color: '#5C2584'
   }
   
   return (
   <div>
-    <HeaderComponent agentName={fullName} />
+    <HeaderComponent agentName={username} />
     <nav className="navbar navbar-default container-fluid">
       <div>
         <div className="navbar navbar-header">

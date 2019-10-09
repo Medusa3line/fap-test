@@ -2,7 +2,7 @@ import React from 'react';
 import IsLoading from '../isLoading/isLoading';
 import './CustomButton.styles.scss';
 
-export default function CustomButton({ buttonClick, loggingIn }) {
+export default function CustomButton({ buttonClick, loggingIn, value }) {
     return (
         <div className="form-group" >        
             <button 
@@ -12,7 +12,7 @@ export default function CustomButton({ buttonClick, loggingIn }) {
             onClick={buttonClick}>
             {
                 loggingIn ? <IsLoading />
-                : 'Login'
+                : value
             }
             </button>
         </div>

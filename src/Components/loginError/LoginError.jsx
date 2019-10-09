@@ -1,10 +1,10 @@
 import React from 'react';
 import './loginError.css';
 
-const LoginError = () => {
+const LoginError = ({ errorMessage }) => {
     return (
         <div className="alert alert-danger alert-dismissible out" id="loginError">
-            Please enter correct credentials.
+            {errorMessage}
         </div>
     )
 }
