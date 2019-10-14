@@ -8,7 +8,7 @@ import withTimeout from '../../../Components/HOCs/withTimeoutAggregator.hoc';
 import {Link} from 'react-router-dom';
 import Spinner from '../../../Components/PreLoader/preLoader';
 import swal from '../../../Utils/alert';
-import baseUrl from '../../../baseUrl';
+import baseUrl from '../../../Utils/baseUrl';
 import PrintReceipt from '../../../Utils/print';
 import ExportToExcel from '../../../Components/ExportToExcel/ExportToExcel';
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import swal from '../../../Utils/alert';
 import withTimeout from '../../../Components/HOCs/withTimeout.hoc';
 import Spinner from '../../../Components/PreLoader/preLoader';
-import baseUrl from '../../../baseUrl';
+import {dashboardUrl, transactionHistoryUrl} from '../../../Utils/baseUrl';
 import PrintReceipt from '../../../Utils/print';
 import Header from '../../Header/Header';
 import Wallets from './Wallet/Wallet';
@@ -15,7 +15,6 @@ const Dashboard = () => {
     const [state, setState] = useState({
       userDetails : {},
       balance: {},
-      route: 'dashboard',
       transactions:[],
       totalCount: 1,
       hasNextRecord: false,
@@ -29,7 +28,7 @@ const Dashboard = () => {
   
   useEffect(() => {
     //Fetching Balance for Dashboard
-    fetch(`${baseUrl}/agents/fetchprofile`, {
+    fetch(`${dashboardUrl}`, {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -40,11 +39,11 @@ const Dashboard = () => {
       .then(result => {
         setState( state =>({
           ...state,
-          balance: result.respBody
+          balance: result.respBody.agentWalletDTO
         }))
       })
       .catch(err => {
-        swal('An Error Occured', `${err}`, 'info')
+        swal('An Error Occured', `${err}`, 'error')
       });
 
     // Fetch Transactions History
@@ -67,7 +66,7 @@ const Dashboard = () => {
       size: state.size
     };
 
-      await fetch(`${baseUrl}/transactions/agenttransactions`, {
+      await fetch(`${transactionHistoryUrl}`, {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -93,7 +92,7 @@ const Dashboard = () => {
         }
       })
       .catch(err => {
-        swal('Connection Problem', `${err}`, 'info')
+        swal('Connection Problem', `${err}`, 'error')
       });
 
     setState(state =>({
@@ -171,7 +170,7 @@ const Dashboard = () => {
             <Header />
               <div className="container-fluid" style={{padding: '0'}} id="bottom-content">
                 <Wallets 
-                  walletBalance={balance.walletBalance} 
+                  walletBalance={balance.accountBalance} 
                 />
 
                 {/* <!-- Table -->             */}

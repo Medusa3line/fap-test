@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import baseUrl from '../../baseUrl';
+import baseUrl from '../../Utils/baseUrl';
 import swal from '../../Utils/alert';
 import LoginError from '../../Components/loginError/LoginError';
 import LoginContainerHeader from '../../Components/LoginContainerHeader/LoginContainerHeader';

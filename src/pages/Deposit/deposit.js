@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import swal from '../../Utils/alert';
 import withTimeout from '../../Components/HOCs/withTimeout.hoc';
-import baseUrl from '../../baseUrl';
+import baseUrl from '../../Utils/baseUrl';
 
 import Balance from '../../Components/Balance/Balance';
 import DepositFields from './DepositFields';

@@ -6,7 +6,7 @@ import './AggregatorView.styles.scss';
 
 import withTimeout from '../../../Components/HOCs/withTimeoutAggregator.hoc';
 import Spinner from '../../../Components/PreLoader/preLoader';
-import baseUrl from '../../../baseUrl';
+import baseUrl from '../../../Utils/baseUrl';
 import swal from '../../../Utils/alert';
 import AggregatorStatistics from '../Components/AggregatorStatistics/AggregatorStatistics';
 import AgentViewInputField from './AgentViewInputField';

@@ -4,7 +4,7 @@ import withTimeout from '../../Components/HOCs/withTimeout.hoc';
 import swal from '../../Utils/alert';
 import NetworkOptions from '../Bill_Payment/NetworkOptions';
 import NetworkList from '../Bill_Payment/NetworkList'
-import baseUrl from '../../baseUrl';
+import baseUrl from '../../Utils/baseUrl';
 import MakingPayment from '../../Components/makingPayment/makingPayment';
 import { manipulateNumber } from '../../Utils/manipulateNumber';
 import Layout from '../../Components/Layout/Layout.component';

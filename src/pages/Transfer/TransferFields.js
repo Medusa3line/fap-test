@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom'
 import swal from '../../Utils/alert';
-import baseUrl from '../../baseUrl';
+import baseUrl from '../../Utils/baseUrl';
 import MakingPayment from '../../Components/makingPayment/makingPayment';
 import { manipulateNumber } from '../../Utils/manipulateNumber';
 

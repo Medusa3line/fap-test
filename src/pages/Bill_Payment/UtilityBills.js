@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import PaymentReceipt from './PaymentReceipt/PaymentReceipt';
 import NetworkList from './NetworkList';
 import swal from '../../Utils/alert';
-import baseUrl from '../../baseUrl';
+import baseUrl from '../../Utils/baseUrl';
 import NetworkOptions from './NetworkOptions';
 import MakingPayment from '../../Components/makingPayment/makingPayment';
 import { manipulateNumber } from '../../Utils/manipulateNumber';
@@ -110,7 +110,7 @@ class UtilityBills extends Component {
         result.respBody.map((code) => this.setState({code: code.code} ))
     })
       .catch(err => {
-        swal('Error', `${err}`, 'info')
+        swal('Error', `${err}`, 'error')
       });
   //End of Get Service Code for each ID
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import TransactionsList from './TransactionsList';
+import TransactionsList from './TransactionsList/TransactionsList';
 import NoResultFound from '../../../Components/NoResultFound/NoResultfound';
 
 export default React.memo(({transactions, showMore, showLess, page, printReceipt, size, totalCount, hasNextRecord}) => {
@@ -30,7 +30,7 @@ export default React.memo(({transactions, showMore, showLess, page, printReceipt
                   printReceipt={printReceipt} 
                   transId={transaction.tranId} 
                   serialNumber={i} 
-                  status={transaction.statusdescription} 
+                  status={transaction.status} 
                   amount={transaction.amount} 
                   transType={transaction.transactionType} 
                   transDate={transaction.tranDate} 

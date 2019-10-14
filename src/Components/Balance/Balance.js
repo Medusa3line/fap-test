@@ -1,5 +1,5 @@
 import React, { memo, useState, useEffect, useRef } from 'react';
-import baseUrl from '../../baseUrl';
+import baseUrl from '../../Utils/baseUrl';
 import swal from '../../Utils/alert';
 import './balance.scss';
 
@@ -37,7 +37,7 @@ const Balance = () => {
             }))
           })
           .catch(err => {
-            swal('Error', `${err}`, 'info')
+            swal('Error', `${err}`, 'error')
           });
         }
       setState(state => ({

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import baseUrl from '../../../baseUrl';
+import baseUrl from '../../../Utils/baseUrl';
 import swal from '../../../Utils/alert';
 
 import AccountFields1 from './FCMBAccountFields1';
@@ -146,7 +146,7 @@ componentDidMount = async () => {
             .catch(err => {
               document.getElementById(id).disabled = false;
               this.setState({makingPayment: false})
-              swal('An Error Occured', `${err}`, 'info')
+              swal('An Error Occured', `${err}`, 'error')
             });
         }
   }

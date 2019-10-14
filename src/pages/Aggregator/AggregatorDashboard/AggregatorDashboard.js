@@ -9,7 +9,7 @@ import './AggregatorDashboard.styles.scss'
 import withTimeout from '../../../Components/HOCs/withTimeoutAggregator.hoc';
 import Spinner from '../../../Components/PreLoader/preLoader';
 import {Link} from 'react-router-dom';
-import baseUrl from '../../../baseUrl';
+import baseUrl from '../../../Utils/baseUrl';
 import PrintReceipt from '../../../Utils/print';
 import SwitchButton from '../Components/SwitchButton/SwitchButton';
 import AggregatorHeader from '../AggregatorHeader/AggregatorHeader';
@@ -135,7 +135,7 @@ getPerformance = async () => {
       this.setState({performance: performance.respBody})
     })
     .catch(err => {
-      swal('Error', `${err}`, 'info')
+      swal('Error', `${err}`, 'error')
     });
 }
 
@@ -175,7 +175,7 @@ componentDidMount = async () => {
           })
         })
         .catch(err => {
-          swal('Error', `${err}`, 'info')
+          swal('Error', `${err}`, 'error')
         });
       
       //Fetch Agent Performance

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext } from 'react';
 import swal from '../../Utils/alert';
 import Login from './Login.component';
-import baseUrl from '../../baseUrl';
+import { loginUrl } from '../../Utils/baseUrl';
 import { pinRegex } from '../../Utils/regex'
 
 export const LoginContext = createContext();
@@ -51,7 +51,7 @@ const loginButtonClick = (e) => {
         loginError: false
       });
       document.getElementById(id).disabled = true;
-    fetch(`${baseUrl}/web/login`, {
+    fetch(`${loginUrl}`, {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(reqBody)

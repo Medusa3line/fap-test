@@ -25,12 +25,11 @@ const AggregatorReceipt = lazy(() => import('./pages/Aggregator/Receipts/PrintRe
 const AggregatorBillPaymentReceipt = lazy(() => import('./pages/Aggregator/Receipts/bill-payment-receipt'));
 
 //Routes for Agent Portal
-const FundWallet = lazy(() => import('./pages/FundWallet/FundWallet'));
 const Bill_payment = lazy(() => import('./pages/Bill_Payment/bill_payment'));
 const Transfer = lazy(() => import('./pages/Transfer/transfer'));
 const AccountOpening = lazy(() => import('./pages/Account/OpenAnAccount.component'));
 const Withdrawal = lazy(() => import('./pages/Withdrawal/withdrawal'));
-const Receipt = lazy(() => import('./pages/Dashboard/Dashboard/PrintReceipt')) ;
+const Receipt = lazy(() => import('./pages/Dashboard/Dashboard/Receipts/PrintReceipt')) ;
 const BillPaymentReceipt = lazy(() => import('./pages/Dashboard/Dashboard/bill-payment-receipt'));
 const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard/dashboard'));
 const Deposit = lazy(() => import('./pages/Deposit/deposit'));
@@ -45,7 +44,6 @@ class App extends Component {
             <Switch>
               <Route exact path="/" component={MainLogin} /> 
               <Route exact path="/dashboard" component={Dashboard} />
-              <Route exact path="/fundWallet" component={FundWallet} />
               <Route exact path="/bill_payment" component={Bill_payment} />
               <Route exact path="/airtime" component={Airtime} />
               <Route exact path="/deposit" component={Deposit} />

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import baseUrl from '../../baseUrl';
+import { changePinUrl } from '../../Utils/baseUrl';
 import withTimeoutWithoutRestriction from '../../Components/HOCs/withTimeoutWithoutRestriction.hoc';
 import swal from '../../Utils/alert';
 import { pinRegex } from '../../Utils/regex';
@@ -52,7 +52,7 @@ const ChangePin = () => {
       ...state,
       loggingIn: true
     })
-    fetch (`${baseUrl}/auth/web/changepin`, {
+    fetch (`${changePinUrl}`, {
       method: 'post',
       headers: {
         'Content-Type' : 'application/json', 

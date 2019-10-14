@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import baseUrl from '../../baseUrl';
+import baseUrl from '../../Utils/baseUrl';
 
 import InternetServices from './InternetServices';
 import UtilityBills from './UtilityBills';
