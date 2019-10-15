@@ -253,11 +253,11 @@ componentDidMount = async () => {
                         <div className="row" style={{paddingTop: '2vh'}}>
                           <div className="col-lg-6"><h4><strong>{agentsPerformanceTitle ? 'Agents Performance' : 'My Transactions'}</strong></h4></div>
                           <div className="dropdown" style={{textAlign: 'right'}}>
-                              <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" id="pad-aggregator-items">Export <span style={{fontSize: '8px'}} className="fa fa-chevron-down"></span></button>
-                              <ul className="dropdown-menu dropdown">
-                                <li onClick={() => PrintReceipt('right-aggregator-view')}><Link to="#">PDF</Link></li>
-                                <ExportToExcel />
-                              </ul>
+                            <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" id="pad-aggregator-items">Export <span style={{fontSize: '8px'}} className="fa fa-chevron-down"></span></button>
+                            <ul className="dropdown-menu dropdown">
+                              <li onClick={() => PrintReceipt('right-aggregator-view')}><Link to="#">PDF</Link></li>
+                              <ExportToExcel />
+                            </ul>
                           </div>
                         </div><br/>
                           

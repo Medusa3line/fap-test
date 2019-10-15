@@ -30,7 +30,6 @@ const Transfer = lazy(() => import('./pages/Transfer/transfer'));
 const AccountOpening = lazy(() => import('./pages/Account/OpenAnAccount.component'));
 const Withdrawal = lazy(() => import('./pages/Withdrawal/withdrawal'));
 const Receipt = lazy(() => import('./pages/Dashboard/Dashboard/Receipts/PrintReceipt')) ;
-const BillPaymentReceipt = lazy(() => import('./pages/Dashboard/Dashboard/bill-payment-receipt'));
 const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard/dashboard'));
 const Deposit = lazy(() => import('./pages/Deposit/deposit'));
 const Airtime = lazy(() => import('./pages/Airtime/AirtimeTopup'));
@@ -51,7 +50,6 @@ class App extends Component {
               <Route exact path="/resetPin" component={ResetPin} />
               <Route exact path="/pinChange" component={ChangePin} />
               <Route exact path='/receipt/:transId' component={Receipt} />
-              <Route exact path="/bill-payment-receipt/:transId" component={BillPaymentReceipt} />
               <Route exact path="/open-an-account" component={AccountOpening} />
               <Route exact path="/withdrawal" component={Withdrawal} />
 

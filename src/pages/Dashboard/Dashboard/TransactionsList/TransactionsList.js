@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import './TransactionsList.scss';
 
 const TransactionsList = ({ transId, amount, transType, transDate, status, serialNumber, transaction } ) => {
-    const statusClass = () => {
+  const statusClass = () => {
     if(status.toLowerCase().includes('success')){
       return 'success'
     } else if (status.toLowerCase().includes('pending')){
@@ -14,7 +14,7 @@ const TransactionsList = ({ transId, amount, transType, transDate, status, seria
       return 'reverse'
     }
   }
-  const pathName = `/${transType === 'Bill Payment' || transType === 'Recharge' ? 'bill-payment-receipt' : 'receipt'}/${transId}`;
+  const pathname = `receipt/${transId}`;
     return (
       <tr>
         <td>{serialNumber + 1}</td>
@@ -26,7 +26,7 @@ const TransactionsList = ({ transId, amount, transType, transDate, status, seria
         <td>{transDate.substring(11, transDate.length - 9)}</td>
         <td>
           <Link 
-            to={{pathname: pathName, state: {transaction}} }
+            to={{pathname, state: {transaction}} }
             id="view"
           >
             <i className="fa fa-print"></i>

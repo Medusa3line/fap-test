@@ -6,7 +6,11 @@ import {dashboardUrl, transactionHistoryUrl} from '../../../Utils/baseUrl';
 import PrintReceipt from '../../../Utils/print';
 import Header from '../../Header/Header';
 import Wallets from './Wallet/Wallet';
-import Table from './Table';
+import Table from './Table/Table';
+import './dashboard.styles.scss';
+import ExportToExcel from '../../../Components/ExportToExcel/ExportToExcel';
+import { Link } from 'react-router-dom';
+import Pagination from '../../../Components/Pagination/Pagination.component';
 
 const Dashboard = () => {
   //Get User Information
@@ -19,7 +23,7 @@ const Dashboard = () => {
       totalCount: 1,
       hasNextRecord: false,
       page: 0,
-      size: 20,
+      size: 5,
       searchField: '',
       fromDate: '',
       toDate: '',
@@ -47,9 +51,7 @@ const Dashboard = () => {
       });
 
     // Fetch Transactions History
-    if (sessionStorage.getItem('userDetails')){
       fetchTransactions();
-    }
   }, [fetchTransactions, auth_token]) //End of ComponentDidMount
 
   const fetchTransactions = useCallback(async() =>{
@@ -166,26 +168,30 @@ const Dashboard = () => {
       } else {
         return (
         <div className="body">  
-          <div className="container-fluid" style={{padding: '0'}}>  
+          <div className="container-fluid">  
             <Header />
-              <div className="container-fluid" style={{padding: '0'}} id="bottom-content">
+              <div className="container-fluid" id="bottom-content">
                 <Wallets 
                   walletBalance={balance.accountBalance} 
                 />
 
                 {/* <!-- Table -->             */}
-                <div className="container" id="bottom_div" style={{overflowX:'auto'}}>
-                  <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                    <div style={{display: 'flex'}}>  
-                      <h4 style={{fontWeight: 'bolder'}}> &nbsp; Transactions History</h4>
+                <div className="container" id="bottom_div">
+                  <div id="top-layer">
+                    <div>  
+                      <h4> &nbsp; Transactions History</h4>
                     </div>
                     <div>
-                      <h4><button type="button" className="btn" onClick={() => print('table')} id="pad-aggregator-items">Print</button></h4>
+                      <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" id="pad-aggregator-items">Export <span className="fa fa-chevron-down"></span></button>
+                      <ul className="dropdown-menu dropdown">
+                        <li onClick={() => print('table')} id="pad-aggregator-items"><Link to="#">PDF</Link></li>
+                        <ExportToExcel />
+                      </ul>
                     </div>
                   </div>
-                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', overflowX: 'auto'}}>
-                    <div className="form-group">
-                      <select className="form-control" onChange={searchTransactions}  style={{textAlign: 'center'}}>
+                  <div id="bottom-layer">
+                    <div className="form-group" id="bottom-layer-left">
+                      <select className="form-control" onChange={searchTransactions}>
                         <option value="">All Transactions</option>
                         <option value="deposit">Deposit</option>
                         <option value="recharge">Recharge</option>
@@ -193,18 +199,14 @@ const Dashboard = () => {
                         <option value="withdrawal">Withdrawal</option>
                       </select>
                     </div>
-                    <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                      <form className="form-inline">
-                        <div style={{textAlign: 'center'}}>
-                          From: <input type="date" style={{width: '60%'}} onChange={fromDate} className="form-control" id="pad-aggregator-items" />
-                        </div>
-                      </form>
-                      <form className="form-inline">
-                        <div style={{textAlign: 'center'}}>
-                          To: <input type="date" style={{width: '60%'}} onChange={toDate} className="form-control" id="pad-aggregator-items" />
-                        </div>
-                      </form>
-                      <div style={{textAlign: 'center'}}>
+                    <div id="bottom-layer-right">
+                      <div className="form-inline">
+                        From: <input type="date" onChange={fromDate} className="form-control" id="pad-aggregator-items" />
+                      </div>
+                      <div className="form-inline">
+                        To: <input type="date" onChange={toDate} className="form-control" id="pad-aggregator-items" />
+                      </div>
+                      <div>
                         <h4><button type="button" className="btn btn-success btn-sm" onClick={fetchTransactions}>Filter</button></h4>
                       </div>
                     </div>
@@ -212,15 +214,17 @@ const Dashboard = () => {
                   <br/>
                   <div id="table">
                     <Table 
-                      transactions={transactions} 
-                      showMore={showMore} 
-                      showLess={showLess} 
-                      page={page} 
-                      size={size} 
-                      totalCount={totalCount}
-                      hasNextRecord={hasNextRecord}
+                      transactions={transactions}
                     />
                   </div>
+                  <Pagination 
+                    showLess={showLess}
+                    totalCount={totalCount} 
+                    showMore={showMore} 
+                    size={size} 
+                    page={page}
+                    hasNextRecord={hasNextRecord}
+                  />
                 </div>
               </div>   
           </div>

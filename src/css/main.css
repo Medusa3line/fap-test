@@ -358,10 +358,6 @@ tbody tr{
 #panel > h4, #panel > h5 {
 	font-weight: bolder;
 }
-
-#deposit-fields-2 span{ font-weight: bold; float: right; text-align: left }
-#deposit-fields-2 .total{ background-color: #f3f3f3; padding: 1vh; }
-#deposit-fields-2 .total h5{ font-weight: bold; }
 #thrift-container{
 	position: relative;
 	width: 100%;
@@ -395,8 +391,6 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 #right-aggregator-view{ background-color: #ffffff; padding: 2.5px; margin-top: 2%; }
 #right-aggregator-view table th{ font-size: 11px; text-align: left; color: #4d4f5c; }
 #right-aggregator-view table td{ font-size: 13px; text-align: left; }
-#dashboard-table table td{ font-size: 13px; text-align: left; }
-#dashboard-table table th{ font-size: 11px; text-align: left; color: #4d4f5c; }
 #right-aggregator-view .form-inline{ float: right; margin: 1% 2% 1% 2%; width: 35%; }
 #right-aggregator-view .form-inline input, #right-aggregator-view .form-inline button{ margin-right: 2%; border-radius: .5vw; }
 #view{ text-align: center; color: lightgrey; }

@@ -1,11 +1,12 @@
 import React from 'react';
-import TransactionsList from './TransactionsList/TransactionsList';
-import NoResultFound from '../../../Components/NoResultFound/NoResultfound';
+import TransactionsList from '../TransactionsList/TransactionsList';
+import NoResultFound from '../../../../Components/NoResultFound/NoResultfound';
+import './Table.styles.scss';
 
-export default React.memo(({transactions, showMore, showLess, page, printReceipt, size, totalCount, hasNextRecord}) => {
+export default React.memo(({transactions}) => {
   return(
     <div id="dashboard-table">
-      <table align="center" className="table table-responsive" style={{width:'100%', color: 'black', textAlign: 'center', position: 'relative'}}>
+      <table align="center" id="table-to-xls" className="table table-responsive">
         <thead> 
           <tr>
             <th>S/N</th>
@@ -26,8 +27,7 @@ export default React.memo(({transactions, showMore, showLess, page, printReceipt
               return (
                 <TransactionsList 
                   transaction={transaction} 
-                  key={i} 
-                  printReceipt={printReceipt} 
+                  key={i}  
                   transId={transaction.tranId} 
                   serialNumber={i} 
                   status={transaction.status} 
@@ -39,25 +39,7 @@ export default React.memo(({transactions, showMore, showLess, page, printReceipt
             ) 
           }
         </tbody>
-      </table> 
-      <div id="table-nav-buttons" className="row">
-        {
-          page > 0 ? 
-          <button className="btn btn-success btn-xs" onClick={showLess}>
-            Previous
-          </button>
-          : null
-        }
-        
-        <h6> Page { page + 1 } of { Math.ceil(totalCount/size) } </h6>
-        {
-          hasNextRecord ? 
-          <button className="btn btn-success btn-xs" onClick={showMore}>
-            Next
-          </button>
-          : null
-        }
-      </div>       
+      </table>       
     </div>
   )
 });

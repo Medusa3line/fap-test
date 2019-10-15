@@ -1,0 +1,19 @@
+#dashboard-table {
+    table {
+        width: 100%;
+        color: black;
+        text-align: center;
+        position: relative;
+
+        th{ 
+            font-size: 11px; 
+            text-align: left; 
+            color: #4d4f5c; 
+        }
+        
+        td{ 
+            font-size: 13px; 
+            text-align: left; 
+        }
+    } 
+}

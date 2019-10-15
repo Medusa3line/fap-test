@@ -1,64 +1,64 @@
 import React, { useState, useEffect } from 'react';
 import withTimeout from '../../../../Components/HOCs/withTimeout.hoc';
-import { withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import PrintReceipt from '../../../../Utils/print';
+import './PrintReceipt.styles.scss';
 import ReceiptFooter from '../../../../Components/ReceiptFooter/ReceiptFooter.component';
 
-const Receipt = ({ history: { location }}, history) => {
+const Receipt = () => {
 	const [state, setState] = useState({
 		transaction: {},
 		userDetails: {}
 	})
 
+	const history = useHistory();
+	const { location } = history;
+
 	useEffect(() => {
 		if (location.state === undefined){
 			history.push("/dashboard");
 		} else {
-			console.log(location.state.transaction)
-			setState({
-				...state,
-				transaction: location.state.transaction
-			})
-
 			// Getting Agent's Details
-			sessionStorage.getItem('userDetails') && setState ({
+			sessionStorage.getItem('userDetails') && setState (state => ({
 				...state,
+				transaction: location.state.transaction,
 				userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
-			})
+			}))
 		}
-	}, [])
+	}, [history, location.state])
 
 	const print = (divName) => {
 	    PrintReceipt(divName);
   	}
 
-		const { transactionType, transactionRef, tranDate, status, amount, tranId, bankFrom, bankTo, beneficiary, agentName, fee } = state.transaction;
-		const { address } = state.userDetails;
-
-		// const statusClass = () => {
-		// 	if(status.toLowerCase().includes('success')){
-		// 		return 'success'
-		// 	} else if (status.toLowerCase().includes('pending')){
-		// 		return 'pending'
-		// 	} else if (status.toLowerCase().includes('failed')){
-		// 		return 'failed'
-		// 	} else if (status.toLowerCase().includes('reverse')){
-		// 		return 'reverse'
-		// 	}
-		// }
+	const { transactionType, transactionRef, tranDate, status, amount, tranId, bankFrom, bankTo, beneficiary, agentName, fee } = state.transaction;
+	const { address } = state.userDetails;
+	const statusClass = () => {
+		if(status !== undefined){
+			if(status.toLowerCase().includes('success')){
+				return 'success'
+			} else if (status.toLowerCase().includes('pending')){
+				return 'pending'
+			} else if (status.toLowerCase().includes('failed')){
+				return 'failed'
+			} else if (status.toLowerCase().includes('reverse')){
+				return 'reverse'
+			}
+		}
+	}
 
 	return (
 		<div id="print-receipt">
 	        <div className="form-horizontal" id="deposit-fields-2">
-				<div>
-					<h4>{transactionType} </h4>
+				<div id="receipt-header">
+					<h4>{transactionType !== undefined ? transactionType.replace(/_/g, ' '): null} </h4>
 					<h6>FCMB</h6>
-					<h5>{status} </h5>
+					<h5 className={statusClass()}>{status} </h5>
 				</div>
 				<div className="form-group">
 		            <div className="col-sm-12 col-md-12 col-lg-12">
-		              <h5>Agent Name <span>{`${agentName}`}</span></h5>
+		              <h5>Agent Name <span>{agentName}</span></h5>
 		            </div>
 		        </div>
 				<div className="form-group">
@@ -73,12 +73,12 @@ const Receipt = ({ history: { location }}, history) => {
 		        </div>
 		        <div className="form-group">
 		            <div className="col-sm-12 col-md-12 col-lg-12">
-		              {/* <h5>Date <span> {tranDate.substring(0, tranDate.length - 18)} </span></h5> */}
+		              <h5>Date <span> {tranDate !== undefined ? tranDate.substring(0, tranDate.length - 18) : null } </span></h5>
 		            </div>
 		        </div>
 		        <div className="form-group">
 		            <div className="col-sm-12 col-md-12 col-lg-12">
-		              {/* <h5>Time <span> {tranDate.substring(11, tranDate.length - 9)} </span></h5> */}
+		              <h5>Time <span> {tranDate !== undefined ? tranDate.substring(11, tranDate.length - 9): null} </span></h5>
 		            </div>
 		        </div>
 		        <div className="form-group">
@@ -135,4 +135,4 @@ const Receipt = ({ history: { location }}, history) => {
 	)
 }
 
-export default withTimeout(withRouter(Receipt));
+export default withTimeout(Receipt);
