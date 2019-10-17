@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import baseUrl from '../../../Utils/baseUrl';
+import {accountOpening, validateBVN } from '../../../Utils/baseUrl';
 import swal from '../../../Utils/alert';
 
 import AccountFields1 from './FCMBAccountFields1';
@@ -13,16 +13,23 @@ class FCMBAccount extends Component {
         route: 'page1',
         userDetails : {},
         firstName: '',
+        middleName: '',
         lastName: '',
         dob: '',
         gender: '',
+        maritalStatus: '',
         mothersMaidenName: '',
-        bankCode: '058',
+        bankCode: '',
         phoneNumber: '',
         bvn: '',
         email: '',
-        address: '',
-        hasBVN: null,
+        residentAddress: '', 
+        lgOfResidence: '', 
+        stateOfResidence: '',
+        nextOfKin: '', 
+        occupation: '', 
+        nationality: '',
+        hasBVN: '',
         showAccountOpeningFields: false,       
         makingPayment: false,
         showValidateBVNButton: false,
@@ -37,50 +44,38 @@ componentDidMount = async () => {
 }
   onSubmit = (e) => {
     e.preventDefault();
-    const { firstName, lastName, dob, mothersMaidenName, gender } = this.state;
-    if (firstName === '' || lastName === '' || dob === '' || mothersMaidenName === '' || gender === '' ){
+    const { firstName, lastName, dob, mothersMaidenName, gender, maritalStatus, middleName } = this.state;
+    if (firstName.trim() === '' || lastName.trim() === '' || dob.trim() === '' || mothersMaidenName.trim() === '' || gender.trim() === '' || maritalStatus.trim() === '' || middleName.trim() === '' ){
       swal("Failed Operation", "Fill all fields", "info")
     } else {
       this.setState ({route: 'page2'});
-      this.props.toShowSelectBank(false);
     }
   }
 
   goBack = () => { 
     this.setState ({route: 'page1'})
-    this.props.toShowSelectBank(true);
   }
+
   validateBvn = (e) => {
     let id = e.target.id;
     document.getElementById(id).disabled = true;
     this.setState({makingPayment: true})
-    let reqBody = {
-      bvn: this.state.bvn,
-      };
 
       let auth_token = this.state.userDetails.auth_token;
 
-      fetch(`${baseUrl}/account/bvn/validate`, {
-        method: 'post',
+      fetch(`${validateBVN}/${this.state.bvn}`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${auth_token}`
-        },
-        body: JSON.stringify(reqBody)
+        }
       }).then(response => response.json())
         .then(result => {
           this.setState({makingPayment: false});
           document.getElementById(id).disabled = false;
           if(result.respCode === '00'){
-            const { firstName, lastName, gender, email, phoneNumber } = result.respBody;
             this.setState({
               showValidateBVNButton: false, 
-              showAccountOpeningFields:true,
-              firstName,
-              lastName,
-              gender,
-              email,
-              phoneNumber,
+              showAccountOpeningFields:true
             })
           } else {
             swal("Failed Operation", `${result.respDescription}`, "error")
@@ -96,33 +91,40 @@ componentDidMount = async () => {
   openAccount = (e) => {
     e.preventDefault();
     let id = e.target.id;
-    const { phoneNumber, address, email } = this.state;
-      if ( phoneNumber === '' || address === '' || email === ''){
-          swal("Failed Operation", "Fill all fields", "info")
+    const { phoneNumber, email, lgOfResidence, nationality, occupation, nextOfKin, residentAddress, stateOfResidence } = this.state;
+      if ( phoneNumber.trim() === '' || email.trim() === '' || nextOfKin.trim() === '' || nationality.trim() === '' || residentAddress.trim() === '' || lgOfResidence.trim() === '' || occupation.trim() === '' || stateOfResidence.trim() === ''){
+          swal("Required Fields", "Fill all fields", "info")
       } else {
         document.getElementById(id).disabled = true;
         this.setState({makingPayment: true})
-        const { firstName, gender, lastName, address, phoneNumber, bankCode,  bvn, dob, email, mothersMaidenName } = this.state;
+        const { firstName, gender, lastName, phoneNumber, bvn, dob, email, mothersMaidenName, residentAddress, lgOfResidence, nextOfKin, occupation, nationality, middleName, maritalStatus, stateOfResidence, hasBVN } = this.state;
           let day = dob.slice(8);
           let month = dob.slice(5,7);
           let year = dob.slice(0,4);
           let dateOfBirth = `${month}/${day}/${year}`;
             let reqBody = {
-              firstName: firstName,
-              gender: gender,
-              lastName: lastName,
-              address: address,
+              firstName,
+              gender,
+              lastName,
+              middleName,
+              maritalStatus,
+              residentAddress,
+              lgOfResidence,
+              nextOfKin, 
+              occupation, 
+              nationality,
               dateOfBirth: dateOfBirth,
-              phoneNo: phoneNumber,
-              motherMaiden: mothersMaidenName,
-              bvn: bvn,
-              bankCode: bankCode,
-              email: email
+              phoneNumber,
+              motherMaidenName: mothersMaidenName,
+              BVN: hasBVN ? bvn : '',
+              countryCode: 'NG',
+              email, 
+              stateOfResidence
             };
 
           let auth_token = this.state.userDetails.auth_token;
 
-          fetch(`${baseUrl}/account/gtb/open`, {
+          fetch(`${accountOpening}`, {
             method: 'post',
             headers: {
               'Content-Type': 'application/json',
@@ -138,7 +140,6 @@ componentDidMount = async () => {
                   generatedAccountNumber: result.respBody.accountNumber, 
                   route: "receipt"
                 })
-                this.props.toShowSelectBank(false);
               } else {
                 swal("Failed Operation", `${result.respDescription}`, "error")
               }
@@ -158,7 +159,6 @@ componentDidMount = async () => {
     await this.setState({bvn: event.target.value})
     if(this.state.bvn.length === 11){
       this.setState({showValidateBVNButton: true})
-      // this.validateBvn();
     } else {
       this.setState({showValidateBVNButton: false})
     }
@@ -186,12 +186,13 @@ componentDidMount = async () => {
   } 
 
   render() {
-    const { route, hasBVN, showValidateBVNButton, generatedAccountNumber, showAccountOpeningFields, makingPayment, firstName, lastName, dob, gender, mothersMaidenName, phoneNumber, bvn, email, address } = this.state;
+    const { route, hasBVN, showValidateBVNButton, generatedAccountNumber, showAccountOpeningFields, makingPayment, firstName, lastName, dob, gender, mothersMaidenName, phoneNumber, bvn, email, maritalStatus, residentAddress, lgOfResidence, nextOfKin, occupation, nationality, middleName, stateOfResidence } = this.state;
   if (route === 'receipt') {
     return <AccountOpeningSuccess 
       generatedAccountNumber = {generatedAccountNumber}
       firstName = {firstName}
       lastName = {lastName} 
+      middleName={middleName}
     />    
   } else {
     return (               
@@ -201,32 +202,39 @@ componentDidMount = async () => {
               route === 'page1' ?
                 <React.Fragment>                   
                   <AccountFields1 
-                  onChange={this.onChange}
-                  onSubmit={this.onSubmit}
-                  firstName={firstName} 
-                  lastName={lastName} 
-                  dob={dob} 
-                  gender={gender} 
-                  mothersMaidenName={mothersMaidenName} 
-                  bvn={bvn}
-                  isThereBvn={this.isThereBvn}
-                  hasBVN={hasBVN}
-                  validateBvn={this.validateBvn}
-                  onChangeBVN={this.onChangeBVN}
-                  showValidateBVNButton={showValidateBVNButton}
-                  showAccountOpeningFields={showAccountOpeningFields}
+                    onChange={this.onChange}
+                    onSubmit={this.onSubmit}
+                    firstName={firstName} 
+                    lastName={lastName}
+                    middleName={middleName} 
+                    dob={dob} 
+                    gender={gender} 
+                    maritalStatus={maritalStatus}
+                    mothersMaidenName={mothersMaidenName} 
+                    bvn={bvn}
+                    isThereBvn={this.isThereBvn}
+                    hasBVN={hasBVN}
+                    validateBvn={this.validateBvn}
+                    onChangeBVN={this.onChangeBVN}
+                    showValidateBVNButton={showValidateBVNButton}
+                    showAccountOpeningFields={showAccountOpeningFields}
                   />  
-                  </React.Fragment>:
+                </React.Fragment>:
                   (
                   route === 'page2' ? 
                     <AccountFields2 
-                    onChange={this.onChange}
-                    phoneNumber={phoneNumber}  
-                    email={email} 
-                    address={address} 
-                    makingPayment={makingPayment}
-                    goBack={this.goBack}
-                    openAccount={this.openAccount}
+                      onChange={this.onChange}
+                      phoneNumber={phoneNumber}  
+                      email={email} 
+                      residentAddress={residentAddress}
+                      lgOfResidence={lgOfResidence}
+                      stateOfResidence={stateOfResidence}
+                      nextOfKin={nextOfKin}
+                      occupation={occupation}
+                      nationality={nationality}
+                      makingPayment={makingPayment}
+                      goBack={this.goBack}
+                      openAccount={this.openAccount}
                     />
                     : 
                     null

@@ -4,12 +4,14 @@ import withTimeout from '../../Components/HOCs/withTimeout.hoc';
 import FCMBAccount from './FCMB/FCMBaccount.component';
 import Layout from '../../Components/Layout/Layout.component';
 
+import './OpenAnAccount.styles.scss';
+
 const OpenAnAccount = () => {  
   return (
     <Layout>
       <div id="panel">
         <h4> Open a Bank Account </h4>
-        <small style={{color: '#ff0014'}}>All fields are required * </small>
+        <small>All fields are required * </small>
       </div>
       <div className="line"></div><br/>  
       <FCMBAccount />                              

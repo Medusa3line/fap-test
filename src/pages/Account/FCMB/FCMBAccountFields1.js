@@ -1,7 +1,7 @@
 import React from 'react';
 import { manipulateNumber } from '../../../Utils/manipulateNumber';
 
-const AccountFields1 = ({bvn, onChangeBVN, showValidateBVNButton, firstName, lastName, dob, gender, mothersMaidenName,  onChange, onSubmit, isThereBvn, hasBVN, showAccountOpeningFields, validateBvn }) => {
+const AccountFields1 = ({bvn, onChangeBVN, showValidateBVNButton, firstName, lastName, dob, gender, mothersMaidenName,  onChange, onSubmit, isThereBvn, hasBVN, showAccountOpeningFields, validateBvn, maritalStatus, middleName }) => {
     return (
         <div className="row">                
             <div className="form-group">
@@ -71,6 +71,19 @@ const AccountFields1 = ({bvn, onChangeBVN, showValidateBVNButton, firstName, las
                                 type="text" 
                                 className="form-control" 
                                 required="required" 
+                                placeholder="Middle Name" 
+                                name="middleName"
+                                onChange={onChange}
+                                value={middleName}
+                            />
+                        </div>
+                    </div>
+                    <div className="form-group">
+                        <div className="col-sm-12 col-md-12 col-lg-12" style={{marginBottom: '2vh'}}>
+                            <input 
+                                type="text" 
+                                className="form-control" 
+                                required="required" 
                                 placeholder="Last Name" 
                                 name="lastName"
                                 onChange={onChange}
@@ -110,7 +123,18 @@ const AccountFields1 = ({bvn, onChangeBVN, showValidateBVNButton, firstName, las
                                 <option value="Male" >Male</option>
                             </select>
                         </div>
-                    </div>                                                         
+                    </div>  
+                    <div className="form-group">
+                        <div className="col-sm-12 col-md-12 col-lg-12" style={{marginBottom: '2vh'}}>
+                            <select className="form-control" required="required" onChange={onChange} value={maritalStatus} name="maritalStatus">
+                                <option value="" >Marital Status</option>
+                                <option value="Single" >Single</option>
+                                <option value="Married" >Married</option>
+                                <option value="Divorced" >Divorced</option>
+                                <option value="Widow" >Widow</option>
+                            </select>
+                        </div>
+                    </div>                                                       
                     <div className="col-sm-12 col-md-12 col-lg-12">
                         <button 
                             type="submit" 

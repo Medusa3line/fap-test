@@ -77,7 +77,7 @@ const Dashboard = () => {
       body: JSON.stringify(historyBody)
     }).then(response => response.json())
       .then(transactions => {
-        if(transactions.respBody.transactions){
+        if(transactions.respBody.transactions){  
           setState(state => ({
             ...state,
             transactions: transactions.respBody.transactions, 

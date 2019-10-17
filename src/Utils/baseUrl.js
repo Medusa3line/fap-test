@@ -17,5 +17,9 @@ export const loginUrl = `${baseUrl()}/v1/agent/web/login`;
 export const dashboardUrl = `${authUrl}/dashboard`;
 export const transactionHistoryUrl = `${authUrl}/transactions/history`;
 
+//Account Opening URLs
+export const accountOpening = `${authUrl}/account/open`;
+export const validateBVN = `${authUrl}/account/validate`;
+
 // Change Pin URL
 export const changePinUrl = `${authUrl}/changepin`;

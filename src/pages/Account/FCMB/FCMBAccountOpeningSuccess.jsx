@@ -8,7 +8,7 @@ const print = (divName) => {
     document.getElementById("panel").style.display = "block";
 }
 
-const AccountOpeningSuccess = ({generatedAccountNumber, firstName, lastName, history }) => {
+const AccountOpeningSuccess = ({generatedAccountNumber, firstName, middleName, lastName, history }) => {
     return (
         <div style={{marginBottom: '5vh', top: '2vh'}}>
             <div className="form-horizontal" style={{textAlign: 'left'}} id="deposit-fields-2">
@@ -21,17 +21,17 @@ const AccountOpeningSuccess = ({generatedAccountNumber, firstName, lastName, his
                     <hr />
                     <div className="form-group">
                         <div className="col-sm-12 col-md-12 col-lg-12">
-                            <h5>Account Number <span> {generatedAccountNumber} </span></h5>
+                            <h5>Account Number:<span> {generatedAccountNumber} </span></h5>
                         </div>
                     </div>
                     <div className="form-group">
                         <div className="col-sm-12 col-md-12 col-lg-12">
-                            <h5>Bank <span>Guaranty Trust Bank (GTB)</span></h5>
+                            <h5>Bank: <span>First City Monument Bank (FCMB)</span></h5>
                         </div>
                     </div>
                     <div className="form-group">
                         <div className="col-sm-12 col-md-12 col-lg-12">
-                            <h5> Account Name <span>{`${firstName} ${lastName}`} </span></h5>
+                            <h5> Account Name <span>{`${firstName} ${middleName } ${lastName}`} </span></h5>
                         </div>
                     </div>
                     
