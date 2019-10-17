@@ -23,7 +23,7 @@ const Dashboard = () => {
       totalCount: 1,
       hasNextRecord: false,
       page: 0,
-      size: 5,
+      size: 10,
       searchField: '',
       fromDate: '',
       toDate: '',
@@ -207,7 +207,7 @@ const Dashboard = () => {
                         To: <input type="date" onChange={toDate} className="form-control" id="pad-aggregator-items" />
                       </div>
                       <div>
-                        <h4><button type="button" className="btn btn-success btn-sm" onClick={fetchTransactions}>Filter</button></h4>
+                        <h4><button type="button" className="btn btn-sm" onClick={fetchTransactions}>Filter</button></h4>
                       </div>
                     </div>
                   </div>

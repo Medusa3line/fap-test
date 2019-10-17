@@ -11,7 +11,7 @@ const SearchComponent = ({ searchAgents, fromDate, toDate, filter }) => {
 	            <input type="date" style={{width: '20%', fontSize: '12px'}} onChange={fromDate} className="form-control" id="pad-aggregator-items" />
 	            <label id="pad-aggregator-items">To </label>
 	            <input type="date" style={{width: '20%', fontSize: '12px'}} onChange={toDate} className="form-control" id="pad-aggregator-items" />
-	            <button type="button" onClick={filter} className="btn btn-success btn-sm" id="pad-aggregator-items">Filter</button>
+	            <button type="button" onClick={filter} className="btn btn-sm" id="pad-aggregator-items">Filter</button>
 	        </div>
 	    </div>
 	)

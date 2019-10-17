@@ -15,7 +15,7 @@ class DepositReceipt extends Component {
         <div className="form-group">
           <div style={{display: 'flex', justifyContent: 'space-between'}}>
             <h4> Deposit </h4>
-            <h4 className="btn btn-success btn-sm" style={{cursor: 'not-allowed'}}>Successful</h4>
+            <h4 className="btn btn-sm" style={{cursor: 'not-allowed'}}>Successful</h4>
         </div>
           </div>
           <hr />
@@ -54,7 +54,7 @@ class DepositReceipt extends Component {
           
           <div style={{display: 'flex', justifyContent: 'space-between'}}>        
             <button type="button"
-              className="btn btn-success"
+              className="btn"
               onClick={() => this.print('print-receipt')}
             >
               Print Receipt

@@ -119,7 +119,7 @@ const AccountFields2 = ({phoneNumber, email, residentAddress, lgOfResidence, nex
                         </button>
                         <button 
                             type="submit" 
-                            className="btn btn-success col-sm-8 col-md-6 col-lg-4" 
+                            className="btn col-sm-8 col-md-6 col-lg-4" 
                             id="submit_button"
                             onClick={openAccount}
                         >

@@ -20,7 +20,7 @@ const TransactionsList = ({ transId, amount, transType, transDate, status, seria
         <td>{serialNumber + 1}</td>
         <td>{transId}</td>
         <td>₦{amount}</td>
-        <td>{transType}</td>
+        <td>{transType.replace(/[_]/g, ' ')}</td>
         <td><p className={statusClass()}>{status}</p></td>
         <td>{transDate.substring(0, transDate.length - 18)}</td>
         <td>{transDate.substring(11, transDate.length - 9)}</td>

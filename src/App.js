@@ -6,7 +6,7 @@ import './assets/css/bootstrap.min.css';
 import './assets/extras/animate.css';
 import './assets/css/font-awesome.min.css';
 
-import './css/main.css';
+import './scss/main.scss';
 
 // Routes for Login and setups
 import MainLogin  from './pages/Login/MainLogin';

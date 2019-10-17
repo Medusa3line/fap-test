@@ -162,7 +162,7 @@ class BillPaymentReceipt extends Component {
 
 	        <div style={{display: 'flex', justifyContent: 'space-around'}}>        
 	              <button type="submit"
-	                className="btn btn-success btn-xs col-sm-4 col-md-4 col-lg-4"
+	                className="btn btn-xs col-sm-4 col-md-4 col-lg-4"
 	                onClick={() => this.print('deposit-fields-2')}>
 	                Print Receipt
 	            </button>

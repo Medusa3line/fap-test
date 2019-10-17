@@ -1,15 +1,22 @@
-/* Style.css */
+//Custom Colors 
+$color-purple: #5C2584;
+$color-yellow: #FBB700;
+$color-green: #418003;
+$color-grey: #bebebe;
+$color-light-red: #E6061C;
+$color-dim-red: #c60115;
+$color-pink: #F8CECA;
 
+//Styles
 .body{
 	background-color: #FFF;
 	font-family:  'avenir', Lato !important;
 	box-sizing: border-box;
-	/* position: relative; */
 	display: block;
 }
 
 ::-webkit-scrollbar-track {
-	border: 1px solid #FBB700;
+	border: 1px solid $color-yellow;
 	border-radius: 5px;
 	background-color: #F3F3F3;
 }
@@ -20,7 +27,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-	background-color: #5C2584;	
+	background-color: $color-purple;	
 }
 
 @font-face {
@@ -45,16 +52,18 @@
 	padding: 0% 15%;
 	width: 100%;
 	text-align: center;
-}
-#login-container .form-group {
-	display: flex;
-	justify-content: center;
-}
-#login-container input {
-	height: 40px;
-	padding: 10px;
-	font-size: 13px;
-	border-radius: 3px;
+
+	.form-group {
+		display: flex;
+		justify-content: center;
+	}
+
+	input {
+		height: 40px;
+		padding: 10px;
+		font-size: 13px;
+		border-radius: 3px;
+	}
 }
 input.form-control:read-only { 
   background: white;
@@ -65,7 +74,7 @@ input.form-control:read-only {
 	text-align: center;
 }
 .form-control:hover{
-	border: 1px solid #E6061C;
+	border: 1px solid $color-light-red;
 }
 input[type="text"]{
 	height: 40px;
@@ -86,8 +95,8 @@ input[type="text"]{
 	justify-content: center;
 }
 .underline-thrift-panel{
-	border-bottom: 2px solid #c60115;
-	color: #5C2584;
+	border-bottom: 2px solid $color-dim-red;
+	color: $color-purple;
 	font-weight: bolder;
 }
 #container{
@@ -103,11 +112,11 @@ input[type="text"]{
 }
 #back-button {
 	margin: 15px;
-}
-#back-button button {
-	background-color: white; 
-	color: #5C2584;
-	border: 1px solid #c60115;
+	button {
+		background-color: white; 
+		color: $color-purple;
+		border: 1px solid $color-dim-red;
+	}
 }
 #panel-bottom{
 	text-align: left;
@@ -119,36 +128,35 @@ input[type="text"]{
 	left: 10%;
 }
 .form-control:hover{
-	border: 1px solid #F8CECA;
+	border: 1px solid $color-pink;
 }
 .form-control:focus {
-	box-shadow: inset 0 0px 0px #F8CECA, 0 0 0px #F8CECA;
-	border-color: #F8CECA;
+	box-shadow: inset 0 0px 0px $color-pink, 0 0 0px $color-pink;
+	border-color: $color-pink;
 }
 #transferDetails {
 	display: block; 
 	justify-content: center;
-}
-#transferDetails span{
-	font-weight: bold;
-}
-
-#bill-list>li{
-	padding: 2.5%;
-	list-style: none;
-	display: inline-block;
+	span{
+		font-weight: bold;
+	}
 }
 #bill-list{
 	border-bottom: 1px solid #f3f3f3;
 	margin-bottom: 5%;
-}
-#bill-list>li:hover{
-	cursor: pointer;
-	color: red;
-	font-weight: bold;
+	>li{
+		padding: 2.5%;
+		list-style: none;
+		display: inline-block;
+		&:hover{
+			cursor: pointer;
+			color: red;
+			font-weight: bold;
+		}
+	}
 }
 #serviceName{
-	color: #c60115;
+	color: $color-dim-red;
 	font-weight: bold;
 }
 #billPaymentOptionsDropdown{ 
@@ -158,13 +166,12 @@ input[type="text"]{
 }
 #NetworkList{
 	cursor: pointer;
-	padding: 5px 5px;
-}
-#NetworkList:hover {
-	background-color: #FBB700;
+	padding: 5px;
+	&:hover {
+		background-color: $color-yellow;
+	}
 }
 
-/* Dashboard CSS*/
 .navbar{
 	background-color: white;
 	min-height: 0px;
@@ -183,7 +190,7 @@ hr{
 .navbar-default .navbar-nav>.active>a, 
 .navbar-default .navbar-nav>li>a:hover, 
 .navbar-default .navbar-nav>.active>a:hover{
-    color: #5C2584;
+    color: $color-purple;
     background-color: white;
 }
 .navbar-default .navbar-nav>li>a>span>img:hover {
@@ -224,7 +231,7 @@ hr{
 	display: inline-block;
 }
 #table-nav-buttons h4{
-	color: #5C2584;
+	color: $color-purple;
 }
 input.form-control, select.form-control{
 	height: 40px;
@@ -247,13 +254,13 @@ div ul li{
 #credit_request_arrow{
 	color: #ffffff;
 	border: 1px solid #ffffff;
-	background: #FBB700;
+	background: $color-yellow;
 	justify-content: center;
-}
-#credit_request_arrow:hover{
-	color: #FBB700;
-	background: #5C2584;
-	font-weight: bold;
+	&:hover{
+		color: $color-yellow;
+		background: $color-purple;
+		font-weight: bold;
+	}
 }
 #bottom_div{
 	border-top: 2px solid #F6C2C6;
@@ -278,18 +285,18 @@ td, th, tr{
 	background-color: white;
 }
 .table thead tr th a:hover{
-	color: #E6061C;
+	color: $color-light-red;
 	text-decoration: none;
 	font-weight: bold;
 }
-tbody tr:hover{
-	background-color: #FEF9F9;
-}
-tbody tr td{
-	font-size: 15px;
-}
 tbody tr{
 	border-top: 2px solid #fafafa;
+	&:hover{
+		background-color: #FEF9F9;
+	}
+	td{
+		font-size: 15px;
+	}
 }
 .table>tbody>tr>td{
 	padding: 20px;
@@ -313,12 +320,12 @@ tbody tr{
 	left: 15%;
 	width: 70%;
 }
-.line li{
-	display: inline-block;
-	padding: 5vw;
-}
 .line {
-  	position: relative;
+	position: relative;
+	li {
+		display: inline-block;
+		padding: 5vw;
+	}
 }
 .line:before, .line:after {
 	content: "";
@@ -329,34 +336,38 @@ tbody tr{
 .line:after {
 	right: 0;
 	height: 2px;
-	background:  linear-gradient(90deg, #5C2584 50%, #FBB700 50%);
+	background:  linear-gradient(90deg, $color-purple 50%, $color-yellow 50%);
 }
 .btn{
-	background-color: #5C2584;
+	background-color: $color-purple;
 	font-weight: bold;
 	text-transform: none;
 	border-color: currentColor;
 	color: #fff;
+
+	:active, :focus{
+		background-color: $color-purple;
+		border-color: $color-yellow;
+	}
+	:hover {
+		opacity: 0.9;
+		color: #fff;
+		background-color: $color-yellow;
+	}
 }
-.btn.btn-sm{
+.btn-sm{
 	padding: 7px;
 	border-radius: 5px;
 	text-transform: none; 
-}
-.btn-sm{ text-transform: none; }
-.btn:hover {
-	opacity: 0.9;
-	color: #fff;
-	background-color: #FBB700;
 }
 
 /* Deposit.css */
 #panel{
 	font-weight: bold;
 	padding: 2vh 0vh;
-}
-#panel > h4, #panel > h5 {
-	font-weight: bolder;
+	> h4, > h5 {
+		font-weight: bolder;
+	}
 }
 #thrift-container{
 	position: relative;
@@ -369,56 +380,136 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
   -webkit-appearance: none; 
   margin: 0; 
 }
-#aggregator-card{ width: 20%; display: inline-block; padding: 1%; box-sizing: border-box; border: 2px solid red; }
 #first-aggregator-count {
-	display:inline-block; justify-content: space-between; padding-bottom: 0px; padding-top: 0px;
+	display:inline-block; 
+	justify-content: space-between; 
+	padding-bottom: 0px; 
+	padding-top: 0px;
 }
 #stats-card-row-dashboard {
 	padding: 10px 0px;
 	display: grid;
 	grid-template-columns: 1fr;
 }
-.yellow{ color: #FBB700; }
-.green{ color: #418003; }
-.grey{ color: #bebebe; }
-#aggregator-count-image{ display: block; float: right; height: 30px; width: 30px; top: 0px; position: relative; }
-#dashboard-count-image { display: block; float: right; height: 50px; width: 50px; top: 0px; position: relative; }
-#bold{ font-weight: bold; }
-#second-aggregator-card{ color: #000; background-color: #ffffff; width: 100%; display: inline-block; padding: 1%; box-sizing: border-box; }
-#aggregator-count, #aggregator-count{ color: #ff0014; }
-#aggregator-card>h5>span>img{ width: 12.5px; height:12.5px; }
-#aggregator-card>h4{ font-weight: bold; }
-#right-aggregator-view{ background-color: #ffffff; padding: 2.5px; margin-top: 2%; }
-#right-aggregator-view table th{ font-size: 11px; text-align: left; color: #4d4f5c; }
-#right-aggregator-view table td{ font-size: 13px; text-align: left; }
-#right-aggregator-view .form-inline{ float: right; margin: 1% 2% 1% 2%; width: 35%; }
-#right-aggregator-view .form-inline input, #right-aggregator-view .form-inline button{ margin-right: 2%; border-radius: .5vw; }
-#view{ text-align: center; color: lightgrey; }
-#view:hover{ text-decoration: underline; cursor: pointer; font-weight: bold; }
-#view-btn-1, #view-btn-2{ color: #ffffff; border: 1px solid #ffffff; float: right; border-radius: 5px; }
-#view-btn-1{ background-color: #f7b352; }
-#view-btn-2{ background-color: #cb0111; }
-#view-btn-1:hover, #view-btn-2:hover{ font-weight: bold; }
-#view-btn-1:hover{ background: #FBB700 }
-#view-btn-2:hover{ background: #d42e3b }
-#view-card{ border-radius: .5vw; width: 45%; background-color: #fff; box-sizing: border-box; padding: 2%; overflow-x: auto }
-#aggregator-view-card-top{ padding: 2% 4%; width: 100%; }
+.yellow{ color: $color-yellow; }
+.green{ color: $color-green; }
+.grey{ color: $color-grey; }
+#aggregator-count-image{ 
+	display: block; 
+	float: right; 
+	height: 30px; 
+	width: 30px; 
+	top: 0px; 
+	position: relative; 
+}
+#bold{ 
+	font-weight: bold; 
+}
+#aggregator-count{ 
+	color: #ff0014; 
+}
+#aggregator-card{ 
+	width: 20%; 
+	display: inline-block; 
+	padding: 1%; 
+	box-sizing: border-box; 
+	border: 2px solid red; 
+	>h4{ 
+		font-weight: bold; 
+	}
+	>h5>span>img{ 
+		width: 12.5px; 
+		height:12.5px; 
+	}
+}
+#right-aggregator-view {
+	background-color: #ffffff; 
+	padding: 2.5px; 
+	margin-top: 2%;
+	.form-inline{ 
+		float: right; 
+		margin: 1% 2%; 
+		width: 35%; 
+		input button{ 
+			margin-right: 2%; 
+			border-radius: .5vw; 
+		}
+	}
+	table {
+		th{ 
+			font-size: 11px; 
+			text-align: left; 
+			color: #4d4f5c; 
+		}
+		td{ 
+			font-size: 13px; 
+			text-align: left; 
+		}
+	}
+}
+#view{ 
+	text-align: center; 
+	color: lightgrey; 
+	&:hover{ 
+		text-decoration: underline; 
+		cursor: pointer; 
+		font-weight: bold; 
+	}
+}
+#view-btn-1, #view-btn-2{ 
+	color: #ffffff; 
+	border: 1px solid #ffffff; 
+	float: right; 
+	border-radius: 5px; 
+}
+#view-btn-1{ 
+	background-color: #f7b352; 
+	&:hover{ 
+		background: $color-yellow;
+		font-weight: bold;
+	}
+}
+#view-btn-2{ 
+	background-color: #cb0111; 
+	&:hover{ 
+		background: #d42e3b;
+		font-weight: bold;
+	}
+}
+#view-card{ 
+	border-radius: .5vw; 
+	width: 45%; 
+	background-color: #fff; 
+	box-sizing: border-box; 
+	padding: 2%; 
+	overflow-x: auto 
+}
+#aggregator-view-card-top{ 
+	padding: 2% 4%; 
+	width: 100%; 
+}
 #toggleAgentPerformance, #toggleAgentPerformance a {
 	display: flex; 
 	justify-content: flex-start;
 	color: #333333;
 }
-#toggleAgentPerformance > h5:hover, #toggleAgentPerformance a:hover {
-	font-weight: bold;
-	cursor: pointer;
-	color: #5C2584;
-	text-decoration: underline;
-}
 .toggleAgentPerformance {
 	margin-top: 10px;
+	> h5:hover, a:hover {
+		font-weight: bold;
+		cursor: pointer;
+		color: $color-purple;
+		text-decoration: underline;
+	}
 }
 
-#income-wallet-div{ background: #FFFFFF; padding: 2%; width: 100%; box-sizing: border-box; margin-bottom: 2%; }
+#income-wallet-div{ 
+	background: #FFFFFF; 
+	padding: 2%; 
+	width: 100%; 
+	box-sizing: border-box; 
+	margin-bottom: 2%; 
+}
 #dashboard-wallet-div{
 	width: 92%;
 	left: 4%;
@@ -503,5 +594,5 @@ input[type="date"]::-webkit-inner-spin-button {
 		width: 100%;
 		position: relative;
 		justify-content: center;
-	  }
-  }
+	}
+}

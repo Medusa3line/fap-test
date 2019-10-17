@@ -117,7 +117,7 @@ const Receipt = () => {
 
 	        <div id="receipt-footer">        
 	              <button type="submit"
-	                className="btn btn-success btn-xs col-sm-4 col-md-4 col-lg-4"
+	                className="btn btn-xs col-sm-4 col-md-4 col-lg-4"
 	                onClick={() => print('deposit-fields-2')}>
 	                Print Receipt
 	            </button>

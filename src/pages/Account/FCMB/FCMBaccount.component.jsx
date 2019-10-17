@@ -84,7 +84,7 @@ componentDidMount = async () => {
         .catch(err => {
           document.getElementById(id).disabled = false;
           this.setState({makingPayment: false})
-          swal('An Error Occured', 'There was an error while processing this request, please try again', 'info')
+          swal('An Error Occured', `${err}`, 'error')
         });
     }
 

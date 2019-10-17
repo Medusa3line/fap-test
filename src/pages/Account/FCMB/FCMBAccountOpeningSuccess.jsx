@@ -15,7 +15,7 @@ const AccountOpeningSuccess = ({generatedAccountNumber, firstName, middleName, l
                 <div className="form-group">
                     <div style={{display: 'flex', justifyContent: 'space-between'}}>
                         <h4> Account Opening </h4>
-                        <h4 className="btn btn-success btn-sm" style={{cursor: 'not-allowed'}}>Successful</h4>
+                        <h4 className="btn btn-sm" style={{cursor: 'not-allowed'}}>Successful</h4>
                     </div>
                     </div>
                     <hr />
@@ -38,7 +38,7 @@ const AccountOpeningSuccess = ({generatedAccountNumber, firstName, middleName, l
                     <div style={{display: 'flex', justifyContent: 'space-between'}}>        
                         <button 
                             type="button"
-                            className="btn btn-success"
+                            className="btn"
                             onClick={() => print()}
                         >
                             Print Receipt

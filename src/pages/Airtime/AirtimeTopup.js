@@ -219,7 +219,7 @@ componentDidMount = async () => {
                   <div className="form-group">         
                     <button 
                       type="submit"
-                      className="btn btn-success col-sm-8 col-md-6 col-lg-4" 
+                      className="btn col-sm-8 col-md-6 col-lg-4" 
                       id="button"                      
                       onClick={this.makePayment}>
                       {
