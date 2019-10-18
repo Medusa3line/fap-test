@@ -4,20 +4,22 @@
   align-items: center;
   width: 100vw;
   height: 100vh;
-}
-.lds-roller div {
-  animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  transform-origin: 32px 32px;
-}
-.lds-roller div:after {
-  content: " ";
-  display: block;
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #5C2584;
-  margin: -3px 0 0 -3px;
+
+  div {
+    animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    transform-origin: 32px 32px;
+
+    &:after {
+      content: " ";
+      display: block;
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #5C2584;
+      margin: -3px 0 0 -3px;
+    }
+  }
 }
 .lds-roller div:nth-child(1) {
   animation-delay: -0.036s;

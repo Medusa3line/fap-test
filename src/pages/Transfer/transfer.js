@@ -3,8 +3,10 @@ import Balance from '../../Components/Balance/Balance';
 import TransferFields from './TransferFields';
 import withTimeout from '../../Components/HOCs/withTimeout.hoc';
 import Layout from '../../Components/Layout/Layout.component';
+import { customPageTitle } from '../../Utils/customTitle';
 
 const Transfer = () => {
+  customPageTitle('Transfer')
   return (
     <Layout>
       <div id="panel">

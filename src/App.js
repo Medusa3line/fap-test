@@ -1,5 +1,5 @@
 import React, { Component, lazy, Suspense } from 'react';
-import { Route, Switch, HashRouter } from 'react-router-dom';
+import { Route, Switch, BrowserRouter } from 'react-router-dom';
 
 import 'bootstrap/dist/js/bootstrap.js';
 import './assets/css/bootstrap.min.css';
@@ -37,7 +37,7 @@ const Airtime = lazy(() => import('./pages/Airtime/AirtimeTopup'));
 class App extends Component {
   render() {
     return (
-      <HashRouter>
+      <BrowserRouter>
         <ErrorBoundary>
           <Suspense fallback={<Spinner />}>
             <Switch>
@@ -62,7 +62,7 @@ class App extends Component {
             </Switch>
           </Suspense>
         </ErrorBoundary>
-      </HashRouter>
+      </BrowserRouter>
     );  
   }
 }

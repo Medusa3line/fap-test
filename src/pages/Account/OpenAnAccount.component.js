@@ -1,12 +1,12 @@
 import React from 'react';
 import withTimeout from '../../Components/HOCs/withTimeout.hoc';
-
 import FCMBAccount from './FCMB/FCMBaccount.component';
 import Layout from '../../Components/Layout/Layout.component';
-
+import { customPageTitle } from '../../Utils/customTitle';
 import './OpenAnAccount.styles.scss';
 
 const OpenAnAccount = () => {  
+  customPageTitle('Open An Account')
   return (
     <Layout>
       <div id="panel">

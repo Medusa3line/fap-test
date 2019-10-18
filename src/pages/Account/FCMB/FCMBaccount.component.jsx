@@ -6,42 +6,36 @@ import AccountFields1 from './FCMBAccountFields1';
 import AccountFields2 from './FCMBAccountFields2';
 import AccountOpeningSuccess from './FCMBAccountOpeningSuccess';
 
-class FCMBAccount extends Component {
-    constructor(){
-      super()
-      this.state = {
-        route: 'page1',
-        userDetails : {},
-        firstName: '',
-        middleName: '',
-        lastName: '',
-        dob: '',
-        gender: '',
-        maritalStatus: '',
-        mothersMaidenName: '',
-        bankCode: '',
-        phoneNumber: '',
-        bvn: '',
-        email: '',
-        residentAddress: '', 
-        lgOfResidence: '', 
-        stateOfResidence: '',
-        nextOfKin: '', 
-        occupation: '', 
-        nationality: '',
-        hasBVN: '',
-        showAccountOpeningFields: false,       
-        makingPayment: false,
-        showValidateBVNButton: false,
-        generatedAccountNumber: ''
-      }
-    }
+//Get User Information
+const { auth_token } = JSON.parse(sessionStorage.getItem('userDetails'));
 
-componentDidMount = async () => {
-  await sessionStorage.getItem('userDetails') && this.setState ({
-    userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
-  })
-}
+class FCMBAccount extends Component {
+  state = {
+    route: 'page1',
+    userDetails : {},
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    dob: '',
+    gender: '',
+    maritalStatus: '',
+    mothersMaidenName: '',
+    bankCode: '',
+    phoneNumber: '',
+    bvn: '',
+    email: '',
+    residentAddress: '', 
+    lgOfResidence: '', 
+    stateOfResidence: '',
+    nextOfKin: '', 
+    occupation: '', 
+    nationality: '',
+    hasBVN: '',
+    showAccountOpeningFields: false,       
+    makingPayment: false,
+    showValidateBVNButton: false,
+    generatedAccountNumber: ''
+  }
   onSubmit = (e) => {
     e.preventDefault();
     const { firstName, lastName, dob, mothersMaidenName, gender, maritalStatus, middleName } = this.state;
@@ -60,8 +54,6 @@ componentDidMount = async () => {
     let id = e.target.id;
     document.getElementById(id).disabled = true;
     this.setState({makingPayment: true})
-
-      let auth_token = this.state.userDetails.auth_token;
 
       fetch(`${validateBVN}/${this.state.bvn}`, {
         headers: {
@@ -121,8 +113,6 @@ componentDidMount = async () => {
               email, 
               stateOfResidence
             };
-
-          let auth_token = this.state.userDetails.auth_token;
 
           fetch(`${accountOpening}`, {
             method: 'post',

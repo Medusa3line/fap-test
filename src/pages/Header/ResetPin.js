@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import baseUrl from '../../Utils/baseUrl';
 import swal from '../../Utils/alert';
+import { customPageTitle } from '../../Utils/customTitle';
 import LoginError from '../../Components/loginError/LoginError';
 import LoginContainerHeader from '../../Components/LoginContainerHeader/LoginContainerHeader';
 import CustomButton from '../../Components/CustomButton/CustomButton.component';
 
 const ResetPin = ({ history }) => {
-    const [ state, setState ] = useState({
-      loggingIn: false,
-      loginError: false,
-      agentId: ''
-   })
+  customPageTitle('Reset Pin');
+  const [ state, setState ] = useState({
+    loggingIn: false,
+    loginError: false,
+    agentId: ''
+  })
   
   const onChange = (event) => { 
     setState({

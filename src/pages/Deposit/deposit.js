@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import swal from '../../Utils/alert';
 import withTimeout from '../../Components/HOCs/withTimeout.hoc';
 import baseUrl from '../../Utils/baseUrl';
+import { customPageTitle } from '../../Utils/customTitle';
 
 import Balance from '../../Components/Balance/Balance';
 import DepositFields from './DepositFields';
@@ -11,6 +12,7 @@ import DepositReceipt from './DepositReceipt';
 import Layout from '../../Components/Layout/Layout.component';
 
 const { auth_token } = JSON.parse(sessionStorage.getItem('userDetails'));
+customPageTitle('Deposit')
 
 class deposit extends Component {
   _isMounted = false;

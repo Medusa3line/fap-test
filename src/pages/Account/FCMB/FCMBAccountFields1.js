@@ -16,7 +16,7 @@ const AccountFields1 = ({bvn, onChangeBVN, showValidateBVNButton, firstName, las
             </div>
             {
                 hasBVN && !showAccountOpeningFields ? 
-                <React.Fragment>
+                <form onSubmit={validateBvn}>
                     <div className="form-group">
                         <div className="col-sm-12 col-md-12 col-lg-12" style={{marginBottom: '2vh'}}>
                             <input 
@@ -26,8 +26,8 @@ const AccountFields1 = ({bvn, onChangeBVN, showValidateBVNButton, firstName, las
                                 placeholder="Enter BVN here" 
                                 maxLength="11"
                                 name="bvn"
-                                value={bvn}
                                 onChange={onChangeBVN}
+                                value={bvn}                                
                                 onKeyPress={(e) => manipulateNumber(e)} 
                             />
                         </div>
@@ -46,7 +46,7 @@ const AccountFields1 = ({bvn, onChangeBVN, showValidateBVNButton, firstName, las
                         </div>
                         : null
                     }
-                </React.Fragment> :
+                </form> :
                 null
             }
             {

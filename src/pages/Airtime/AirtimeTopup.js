@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import withTimeout from '../../Components/HOCs/withTimeout.hoc';
+import { customPageTitle } from '../../Utils/customTitle';
 import swal from '../../Utils/alert';
 import NetworkOptions from '../Bill_Payment/NetworkOptions';
 import NetworkList from '../Bill_Payment/NetworkList'
@@ -27,6 +28,7 @@ class AirtimeTopup extends Component {
   }
 
 componentDidMount = async () => { 
+  customPageTitle('Recharge');
   await fetch(`${baseUrl}/bills/category/1/service`, {
     method: 'post',
     headers: {

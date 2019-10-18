@@ -4,11 +4,13 @@ import { changePinUrl } from '../../Utils/baseUrl';
 import withTimeoutWithoutRestriction from '../../Components/HOCs/withTimeoutWithoutRestriction.hoc';
 import swal from '../../Utils/alert';
 import { pinRegex } from '../../Utils/regex';
+import { customPageTitle } from '../../Utils/customTitle';
 import LoginError from '../../Components/loginError/LoginError';
 import LoginContainerHeader from '../../Components/LoginContainerHeader/LoginContainerHeader';
 import CustomButton from '../../Components/CustomButton/CustomButton.component';
 
 const ChangePin = () => {
+  customPageTitle('Change Pin');
   const [ state, setState ] = useState({
       userDetails : {},
       loggingIn: false,

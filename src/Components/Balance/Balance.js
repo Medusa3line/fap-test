@@ -1,5 +1,5 @@
 import React, { memo, useState, useEffect, useRef } from 'react';
-import baseUrl from '../../Utils/baseUrl';
+import {dashboardUrl} from '../../Utils/baseUrl';
 import swal from '../../Utils/alert';
 import './balance.scss';
 
@@ -22,7 +22,7 @@ const Balance = () => {
     async function fetchBalance(){
       if (_isMounted && sessionStorage.getItem('userDetails')){
         let reqBody = {}
-        fetch(`${baseUrl}/agents/fetchprofile`, {
+        fetch(`${dashboardUrl}`, {
           method: 'post',
           headers: {
             'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ const Balance = () => {
           .then(result => {
             setState(state => ({
               ...state,
-              balance: result.respBody.walletBalance
+              balance: result.respBody.agentWalletDTO.accountBalance
             }))
           })
           .catch(err => {

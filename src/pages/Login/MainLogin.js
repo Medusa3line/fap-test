@@ -2,11 +2,12 @@ import React, { useState, useEffect, createContext } from 'react';
 import swal from '../../Utils/alert';
 import Login from './Login.component';
 import { loginUrl } from '../../Utils/baseUrl';
-import { pinRegex } from '../../Utils/regex'
+import { pinRegex } from '../../Utils/regex';
+import { customPageTitle } from '../../Utils/customTitle';
 
 export const LoginContext = createContext();
-
 const MainLogin = ({history}) => {
+  customPageTitle('Login');
   const [state, setState] = useState({
     agentId: '',
     pin: '',
@@ -26,8 +27,8 @@ const onChange = (event, option) => {
       [event.target.name]: pinRegex(event)
     });
   } else {
-      setState({
-        ...state,
+    setState({
+      ...state,
       [event.target.name]: event.target.value
     })
   }

@@ -11,10 +11,12 @@ import './dashboard.styles.scss';
 import ExportToExcel from '../../../Components/ExportToExcel/ExportToExcel';
 import { Link } from 'react-router-dom';
 import Pagination from '../../../Components/Pagination/Pagination.component';
+import { customPageTitle } from '../../../Utils/customTitle';
 
 const Dashboard = () => {
   //Get User Information
   const { auth_token, userName } = JSON.parse(sessionStorage.getItem('userDetails'));
+  customPageTitle('Dashboard')
 
     const [state, setState] = useState({
       userDetails : {},
@@ -170,7 +172,7 @@ const Dashboard = () => {
         <div className="body">  
           <div className="container-fluid">  
             <Header />
-              <div className="container-fluid" id="bottom-content">
+              <div id="bottom-content">
                 <Wallets 
                   walletBalance={balance.accountBalance} 
                 />
