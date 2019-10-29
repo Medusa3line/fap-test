@@ -6,10 +6,11 @@ import './AggregatorView.styles.scss';
 
 import withTimeout from '../../../Components/HOCs/withTimeoutAggregator.hoc';
 import Spinner from '../../../Components/PreLoader/preLoader';
-import baseUrl from '../../../Utils/baseUrl';
+import {agentDashboard} from '../../../Utils/baseUrl';
 import swal from '../../../Utils/alert';
-import AggregatorStatistics from '../Components/AggregatorStatistics/AggregatorStatistics';
 import AgentViewInputField from './AgentViewInputField';
+import TotalAggregatorStatistics from '../Components/AggregatorStatistics/TotalAggregatorStatistics';
+import TodayAggregatorStatistics from '../Components/AggregatorStatistics/TodayAggregatorStatistics';
 
 class AggregatorView extends Component {
   _isMounted = false;
@@ -19,8 +20,7 @@ class AggregatorView extends Component {
       userDetails : {},
       AgentId: '',
       agentDetails: {},
-      totalStats: {},
-      dailyStats: {},
+      stats: {},
       finishedLoading: false
     }
   }
@@ -34,11 +34,13 @@ class AggregatorView extends Component {
     })
 
     if (this._isMounted){
-      let reqBody = {};
+      let reqBody = {
+        agentId: this.props.match.params.agentId
+      };
       let auth_token = this.state.userDetails.auth_token;
 
         this.setState({ finishedLoading: false})
-        await fetch(`${baseUrl}/aggregator/dashboard/${this.props.match.params.agentId}`, {
+        await fetch(`${agentDashboard}`, {
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
@@ -47,20 +49,21 @@ class AggregatorView extends Component {
         body: JSON.stringify(reqBody)
       }).then(response => response.json())
         .then(result => {
-          this.setState({agentDetails: result.respBody.agent})
-          this.setState({totalStats: result.respBody.totalDaysStats})
-          this.setState({dailyStats: result.respBody.currentStats})
-          } 
-        )
+          console.log(result)
+          this.setState({
+            agentDetails: result.respBody.agent,
+            stats: result.respBody
+          })
+        })
         .catch(err => {
-          swal('Error', 'An Error Occured while fetching details for this dashboard, please try again', 'info')
+          swal('Error', `${err}`, 'error')
         });
         this.setState({ finishedLoading: true})
     }    
   }
 
 	render(){
-    const { agentDetails, totalStats, dailyStats, finishedLoading } = this.state;
+    const { agentDetails, stats, finishedLoading } = this.state;
     const { agentId, username, firstName, lastName, email, dob, phoneNumber, address, gender, state, lga, businessName, terminalId, businessLocation, agentType } = agentDetails;
     if (!finishedLoading){
         return <Spinner />
@@ -131,13 +134,13 @@ class AggregatorView extends Component {
                       <div className="col-lg-12 col-md-12 col-sm-12" style={{padding: '0'}}>
                         <div className="row" style={{margin: '0px'}}>
                           <div className="row" id="stats-top-most-card" style={{padding: '0'}}>
-                            <AggregatorStatistics stats={dailyStats} />
+                            <TotalAggregatorStatistics stats={stats} />
                           </div>
                         </div>
 
                         <div className="row" style={{margin: '0px'}}>
                           <div className="row" id="stats-top-most-card" style={{padding: '0'}}>
-                            <AggregatorStatistics stats={totalStats} />
+                            <TodayAggregatorStatistics stats={stats} />
                           </div>
                         </div>
                       </div>

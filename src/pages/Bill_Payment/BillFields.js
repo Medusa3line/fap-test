@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import baseUrl from '../../Utils/baseUrl';
 
-import InternetServices from './InternetServices';
-import UtilityBills from './UtilityBills';
-import CableTv from './CableTv';
+import InternetServices from './InternetServices/InternetServices';
+import UtilityBills from './UtilityBills/UtilityBills';
+import CableTv from './CableTv/CableTv';
 
 const { auth_token } = JSON.parse(sessionStorage.getItem('userDetails'));
 
@@ -57,25 +57,18 @@ class BillFields extends Component {
       </div>
       <div style={{marginBottom: '5%'}}>
         <div className="dropdown">
-            {
-              route === 'internet_services' ?
-                <InternetServices 
-                  serviceName={serviceName}
-                /> : 
-                (
-                  route === 'utility_bills' ? 
-                    <UtilityBills 
-                      serviceName={serviceName} 
-                    /> : 
-                  (
-                    route === 'cable_tv' ?
-                      <CableTv 
-                        serviceName={serviceName} 
-                      />  : 
-                      null
-                  )
-                )                   
-            }
+          {(function() {
+            switch(route) {
+              case 'internet_services':
+                return <InternetServices serviceName={serviceName} />;
+              case 'utility_bills':
+                return <UtilityBills serviceName={serviceName} />;
+              case 'cable_tv':
+                return <CableTv serviceName={serviceName} />;
+              default:
+                return null;
+            } 
+          })()}
           </div>           
         </div>
     </div>

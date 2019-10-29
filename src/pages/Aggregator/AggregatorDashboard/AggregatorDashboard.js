@@ -2,20 +2,20 @@ import React, { Component } from 'react';
 import swal from '../../../Utils/alert';
 import ExportToExcel from '../../../Components/ExportToExcel/ExportToExcel';
 import AgentsPerformance from './AgentsPerformance';
-import AgentsTransactions from '../Components/AgentsTransactions';
 import SearchComponent from '../Components/SearchComponent';
 import './AggregatorDashboard.styles.scss'
 
 import withTimeout from '../../../Components/HOCs/withTimeoutAggregator.hoc';
 import Spinner from '../../../Components/PreLoader/preLoader';
 import {Link} from 'react-router-dom';
-import baseUrl from '../../../Utils/baseUrl';
+import { dashboardDetails, agentsList } from '../../../Utils/baseUrl';
 import PrintReceipt from '../../../Utils/print';
 import SwitchButton from '../Components/SwitchButton/SwitchButton';
 import AggregatorHeader from '../AggregatorHeader/AggregatorHeader';
-import AggregatorStatistics from '../Components/AggregatorStatistics/AggregatorStatistics';
+import TotalAggregatorStatistics from '../Components/AggregatorStatistics/TotalAggregatorStatistics';
+import TodayAggregatorStatistics from '../Components/AggregatorStatistics/TodayAggregatorStatistics';
 
-const { auth_token } = JSON.parse(sessionStorage.getItem('userDetails'));
+const { auth_token, username } = JSON.parse(sessionStorage.getItem('userDetails'));
 const today = new Date();
 const todaysDate = today.getDate()+'-'+(today.getMonth()+1).toString().padStart(2, '0')+'-'+today.getFullYear();
 
@@ -23,10 +23,9 @@ class AggregatorDashboard extends Component{
   _isMounted = false;
 
   state = {
-    dailyStats: {},
-    totalStats: {},
+    stats: {},
     page: 0,
-    size: 20,
+    size: 5,
     fromDate: '01-01-2012',
     fromDateTransactions: '01-01-2012', 
     toDate: todaysDate,
@@ -80,50 +79,17 @@ class AggregatorDashboard extends Component{
     }
 }
 
-// Fetch Transactions
-getTransactions = async() => {
-  const { page, size, toDateTransactions, fromDateTransactions } = this.state;
-  let reqBody = {
-    agentName: "",
-    fromDate: fromDateTransactions,
-    page: page,
-    size: size,
-    toDate: toDateTransactions,
-    tranType: ""
-  }
-  await fetch(`${baseUrl}/transactions/agenttransactions/`, {
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${auth_token}`
-    },
-    body: JSON.stringify(reqBody)
-  }).then(response => response.json())
-    .then(transactions => {
-      if (transactions.respBody.transactions && transactions.respBody.totalCount){
-        this.setState({
-          transactions: transactions.respBody.transactions, 
-          transactionsCount: transactions.respBody.totalCount,
-          hasNextRecord: transactions.respBodyhasNextRecord
-        })
-      }else {
-        this.setState({transactions: [], transactionsCount: 1, hasNextRecord: false})
-      }
-    })
-    .catch(err => {
-      swal('Error', `${err}`, 'error')
-    });
-}
-
 getPerformance = async () => {
   // Fetch Performance List
-  const { fromDate, toDate } = this.state;
+  const { fromDate, toDate, size, page } = this.state;
   let reqBody = {
     from: fromDate,
-    to: toDate
+    to: toDate,
+    agentId: username,
+    pageNumber: page,
+    pageSize: size
   }
-
-  await fetch(`${baseUrl}/aggregator/agent_performance/`, {
+  await fetch(`${agentsList}`, {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
@@ -132,33 +98,28 @@ getPerformance = async () => {
     body: JSON.stringify(reqBody)
   }).then(response => response.json())
     .then(performance => {
-      this.setState({performance: performance.respBody})
+      // console.log(performance, 'performance')
+      this.setState({performance: performance.respBody.details})
     })
     .catch(err => {
       swal('Error', `${err}`, 'error')
     });
 }
 
-filterTransactions = async () => {
-  const { fromDateTransactions, toDateTransactions, } = this.state;
-  if(fromDateTransactions === '' || toDateTransactions === ''){
-    swal('Select Valid Date Range', 'Select the appropriate date range', 'info')
-  } else {
-    this.getTransactions()
-  }
-} 
 
 showMore = () => {this.setState({showMore: !this.state.showMore})}
 
 componentDidMount = async () => {
-    this._isMounted = true;
+  this._isMounted = true;
 
-    if (this._isMounted){
-      let reqBody = { }
-      this.setState({ finishedLoading: false})
+  if (this._isMounted){
+    let reqBody = {
+      agentId: username
+    }
+    this.setState({ finishedLoading: false})
 
   // Fetch Dashboard Statistics
-    await fetch(`${baseUrl}/aggregator/dashboard`, {
+    await fetch(`${dashboardDetails}`, {
       method: 'post',
       headers: {
           'Content-Type': 'application/json',
@@ -167,11 +128,8 @@ componentDidMount = async () => {
       body: JSON.stringify(reqBody)
       }).then(response => response.json())
         .then(aggregatorDetails => {
-          const { currentStats, totalDaysStats, agentPerformances } = aggregatorDetails;
           this.setState({
-            dailyStats: currentStats,
-            totalStats: totalDaysStats,
-            agentsList: agentPerformances
+            stats: aggregatorDetails.respBody
           })
         })
         .catch(err => {
@@ -180,44 +138,18 @@ componentDidMount = async () => {
       
       //Fetch Agent Performance
       this.getPerformance();
-      //Fetch Transactions as well
-      this.getTransactions();
       
       this.setState({ finishedLoading: true})
   }   
 } // End of componentDidMount
 
   searchAgents = (event) => { this.setState({searchField: event.target.value}) }
-  searchAgentsTransactions = (event) => { this.setState({searchFieldTransactions: event.target.value}) }
-
-  showAgentsPerformance = async (value) => {
-    await this.setState({showAgentsPerformance: value, agentsPerformanceTitle: value})
-    if(value !== this.state.showAgentsPerformance){
-      await this.setState({fromDate: '01-01-2012', toDate: todaysDate, searchField: ''})
-    }
-  }
-
-  showLessTransactions = async () => {
-    if(this.state.page > 0){
-      await this.setState({page: this.state.page - 1});
-      this.getTransactions();
-    }
-  }
-
-  showMoreTransactions = async() => {
-    if (this.state.transactions.length === this.state.size){
-      await this.setState({page: this.state.page + 1});
-      this.getTransactions();
-    }
-  }
 
   render(){
-    const { totalStats, dailyStats, showMore, finishedLoading, agentsPerformanceTitle, showAgentsPerformance, page, size, transactionsCount, hasNextRecord } = this.state;
-    const performance = this.state.performance.filter(agentPerformance => {
-      return (agentPerformance.agentName.toLowerCase()).includes(this.state.searchField.toLowerCase())
-    });
-    const transactions = this.state.transactions.filter(transaction => {
-      return (transaction.agentName.toLowerCase()).includes(this.state.searchFieldTransactions.toLowerCase())
+    const { stats, showMore, finishedLoading } = this.state;
+    let { performance } = this.state;
+    performance = performance.filter(agentPerformance => {
+      return (agentPerformance.userName.toLowerCase()).includes(this.state.searchField.toLowerCase())
     });
       if (!finishedLoading){
         return <Spinner />
@@ -233,25 +165,15 @@ componentDidMount = async () => {
                     {
                       showMore ? 
                         <React.Fragment>
-                          <AggregatorStatistics stats={totalStats} />
-                          <AggregatorStatistics stats={dailyStats} />
+                          <TotalAggregatorStatistics stats={stats} />
+                          <TodayAggregatorStatistics stats={stats} />
                         </React.Fragment>
                         : null
                     }
                     <div id="dashboard-wallet-div">
-                      <div>
-                        <div className="toggleAgentPerformance">
-                          {
-                            !agentsPerformanceTitle ? 
-                              <button className="btn btn-xs btn-primary" onClick={() => this.showAgentsPerformance(true)}>Show Agents Performance</button> 
-                              : 
-                              <button className="btn btn-xs btn-primary" onClick={() => {this.showAgentsPerformance(false); this.getTransactions()}}>
-                                Show My Transactions
-                              </button>
-                          }                                  
-                        </div>
+                      <div className="col-sm-12 col-md-12 col-lg-12">
                         <div className="row" style={{paddingTop: '2vh'}}>
-                          <div className="col-lg-6"><h4><strong>{agentsPerformanceTitle ? 'Agents Performance' : 'My Transactions'}</strong></h4></div>
+                          <div className="col-lg-6"><h4><strong>Agents Performance</strong></h4></div>
                           <div className="dropdown" style={{textAlign: 'right'}}>
                             <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" id="pad-aggregator-items">Export <span style={{fontSize: '8px'}} className="fa fa-chevron-down"></span></button>
                             <ul className="dropdown-menu dropdown">
@@ -261,40 +183,16 @@ componentDidMount = async () => {
                           </div>
                         </div><br/>
                           
-                          <React.Fragment>
-                          {
-                            showAgentsPerformance ? 
-                            <React.Fragment>
-                              <SearchComponent 
-                                searchAgents={this.searchAgents}
-                                fromDate={this.fromDate}
-                                toDate={this.toDate} 
-                                filter={this.filterPerformance}
-                              />
-                              <AgentsPerformance 
-                                performance={performance}  
-                              />
-                            </React.Fragment>
-                              :
-                            <React.Fragment>
-                              <SearchComponent 
-                                searchAgents={this.searchAgentsTransactions}
-                                fromDate={this.fromDateTransactions}
-                                toDate={this.toDateTransactions} 
-                                filter={this.filterTransactions}
-                              />
-                              <AgentsTransactions 
-                                transactions={transactions} 
-                                page={page}
-                                size={size}
-                                showLessTransactions={this.showLessTransactions}
-                                showMoreTransactions={this.showMoreTransactions}
-                                transactionsCount={transactionsCount}
-                                hasNextRecord={hasNextRecord}                                   
-                                showPrintButton="true"
-                              />
-                            </React.Fragment>                                    
-                          }
+                        <React.Fragment>
+                          <SearchComponent 
+                            searchAgents={this.searchAgents}
+                            fromDate={this.fromDate}
+                            toDate={this.toDate} 
+                            filter={this.filterPerformance}
+                          />
+                          <AgentsPerformance 
+                            performance={performance}  
+                          />
                         </React.Fragment>   
                       </div>
                     </div>

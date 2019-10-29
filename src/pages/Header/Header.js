@@ -78,7 +78,7 @@ const Header = () => {
                 <span>
                   <img src={TransferIcon} alt="" />
                 </span>
-                <span>Wallet Transfer</span>
+                <span>Funds Transfer</span>
               </NavLink>
             </li>
             <li>

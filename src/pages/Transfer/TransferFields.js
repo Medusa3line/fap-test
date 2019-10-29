@@ -28,7 +28,7 @@ class TransferFields extends Component {
   }
 
   incomeToTradingTransfer = async (e) => {
-    if (this.state.ittAmount === '' || this.state.ittPin === ''){
+    if (this.state.ittAmount.trim() === '' || this.state.ittPin.trim() === ''){
         swal("Invalid Operation", "Please fill all fields", "error")
     } else {
         let id = e.target.id;
@@ -57,20 +57,16 @@ class TransferFields extends Component {
             if (transferStatus.respCode === '00'){
                 swal("Succesful Operation", "Transfer was Succesful", "success")
                 this.props.history.push('/dashboard');
-            } else if (transferStatus.respCode === '100'){
-                swal("Unsuccesful Operation", "Balance is insufficient", "error")
-            } else if (transferStatus.respCode === '154'){
-                swal("Unsuccesful Operation", "Pin is Incorrect", "error")
             } else {
-                if (transferStatus.respDescription !== null){
-                   swal("Unsuccesful Operation", transferStatus.respDescription, "error") 
-                } else {
-                    swal("Unsuccesful Operation", "An Error Occured, please try again later.", "error")
-                }
+              if (transferStatus.respDescription !== null){
+                  swal("Unsuccesful Operation", transferStatus.respDescription, "error") 
+              } else {
+                  swal("Unsuccesful Operation", "An Error Occured, please try again later.", "error")
+              }
             }
           }).catch(err => {
             this.setState({makingPayment: false})
-            swal("Unsuccesful Operation", "An Error Occured, Please try again", "error");
+            swal("Unsuccesful Operation", `${err}`, "error");
             document.getElementById(id).disabled = false;
             this.props.history.push('/dashboard');
           })
@@ -135,15 +131,15 @@ render(){
             <div className="col-sm-12 col-md-12 col-lg-12">
               <select className="form-control" required="required" name="transferType" onChange={this.onChange} id="select_bank">
                   <option value="" defaultValue>Transfer Type</option>
-                  <option value="income-to-trading">Income to Trading Wallet Transfer</option>
-                  <option value="trading-to-account">Trading Wallet to Account Transfer</option>
+                  <option value="intra-bank">Intra-bank Transfer</option>
+                  <option value="inter-bank">Inter-bank Transfer</option>
               </select>
             </div>
           </div>
 
             {
               transferType === '' ? null: (
-                transferType === 'income-to-trading' ? 
+                transferType === 'intra-bank' ? 
                   <div>
                     <div className="form-group has-feedback">
                       <div className="col-sm-12 col-md-12 col-lg-12">

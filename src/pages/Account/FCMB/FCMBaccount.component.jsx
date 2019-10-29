@@ -105,7 +105,7 @@ class FCMBAccount extends Component {
               nextOfKin, 
               occupation, 
               nationality,
-              dateOfBirth: dateOfBirth,
+              dateOfBirth,
               phoneNumber,
               motherMaidenName: mothersMaidenName,
               BVN: hasBVN ? bvn : '',
@@ -208,6 +208,7 @@ class FCMBAccount extends Component {
                     onChangeBVN={this.onChangeBVN}
                     showValidateBVNButton={showValidateBVNButton}
                     showAccountOpeningFields={showAccountOpeningFields}
+                    makingPayment={makingPayment}
                   />  
                 </React.Fragment>:
                   (

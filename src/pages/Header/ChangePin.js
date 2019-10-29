@@ -12,14 +12,14 @@ import CustomButton from '../../Components/CustomButton/CustomButton.component';
 const ChangePin = () => {
   customPageTitle('Change Pin');
   const [ state, setState ] = useState({
-      userDetails : {},
-      loggingIn: false,
-      loginError: false,
-      oldPin: '',
-      newPin: '',
-      newPinAgain: '',
-      errorMessage: ''
-    })
+    userDetails : {},
+    loggingIn: false,
+    loginError: false,
+    oldPin: '',
+    newPin: '',
+    newPinAgain: '',
+    errorMessage: ''
+  })
 
   const history = useHistory();
 
@@ -40,7 +40,9 @@ const ChangePin = () => {
   if (state.newPin === '' || state.newPinAgain === '' || state.oldPin === '' ){
     swal("Failed Attempt", "Please fill all fields", "info")
   } else if (state.newPin !== state.newPinAgain) {
-    swal("Failed Attempt", "New Pins do not match", "info")
+    swal("Failed Attempt", "New Pin do not match", "info")
+  } else if (state.newPin === state.oldPin) {
+    swal("Failed Attempt", "New Pin is thesame as Old Pin", "info")
   } else if (state.newPin === state.newPinAgain) {
     //Get User Information
     const { auth_token, username } = JSON.parse(sessionStorage.getItem('userDetails'));
@@ -70,7 +72,7 @@ const ChangePin = () => {
           ...state,
           loggingIn: false,
         })
-        renderRedirect();
+        history.push("/");
       } else {
         swal('An Error Occured', `${result.respDescription}`, 'error')
         setState({
@@ -92,21 +94,8 @@ const ChangePin = () => {
   }
 }
 
-  const renderRedirect = () => {
-    let { userType } = JSON.parse(sessionStorage.getItem('userDetails'));
-    userType = userType.toLowerCase();
-    if ( userType === 'aggregator') {
-      history.push("/aggregator");
-      } else if (userType  === 'operator' || userType  === 'agent'){
-        history.push("/dashboard");
-      } else {
-        history.push("/");
-      }
-}
-
-    const { loginError, loggingIn, oldPin, newPin, newPinAgain, errorMessage } = state;
-
-    return (
+  const { loginError, loggingIn, oldPin, newPin, newPinAgain, errorMessage } = state;
+  return (
     <div className="body">
       <div id="login-layout">
         <div id="fit-image">
@@ -179,7 +168,6 @@ const ChangePin = () => {
       </div>
       </div>
     </div>
-    )	
+  )	
 }
-
 export default withTimeoutWithoutRestriction(ChangePin);

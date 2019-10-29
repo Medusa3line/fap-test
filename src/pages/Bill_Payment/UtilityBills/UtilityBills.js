@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import PaymentReceipt from './PaymentReceipt/PaymentReceipt';
+import PaymentReceipt from '../PaymentReceipt/PaymentReceipt';
 import NetworkList from './NetworkList';
-import swal from '../../Utils/alert';
-import baseUrl from '../../Utils/baseUrl';
-import NetworkOptions from './NetworkOptions';
-import MakingPayment from '../../Components/makingPayment/makingPayment';
-import { manipulateNumber } from '../../Utils/manipulateNumber';
+import swal from '../../../Utils/alert';
+import baseUrl from '../../../Utils/baseUrl';
+import NetworkOptions from '../NetworkOptions';
+import MakingPayment from '../../../Components/makingPayment/makingPayment';
+import { manipulateNumber } from '../../../Utils/manipulateNumber';
 
 const { auth_token } = JSON.parse(sessionStorage.getItem('userDetails'));
 
@@ -190,11 +190,22 @@ class UtilityBills extends Component {
           <div className="row" style={{display:'flex', justifyContent: 'center', marginBottom:'5%'}}>
             <ul className="nav navbar-nav">
               <div className="dropdown">
-                <li className="btn dropdown-toggle" type="button" data-toggle="dropdown" style={{backgroundColor: '#faa831'}}><strong>{serviceNames}</strong> <span className="fa fa-chevron-down"></span></li>
+                <li 
+                  className="btn dropdown-toggle" 
+                  type="button" data-toggle="dropdown" 
+                  style={{backgroundColor: '#faa831', width: '350px'}}>
+                    <strong>{serviceNames}</strong> 
+                    <span className="fa fa-chevron-down"></span>
+                </li>
                 <ul className="dropdown-menu dropdown" id="billPaymentOptionsDropdown">
                   {
                     serviceName.map((name,i) => {
-                      return <NetworkList getServiceNames={() => this.getServiceNames(name.serviceName)} key={i} name={name.serviceName} />
+                      return <NetworkList 
+                        getServiceNames={() => this.getServiceNames(name.serviceName)} 
+                        key={i} 
+                        name={name.serviceName} 
+                        index={i}
+                      />
                     })
                   }
                 </ul>
@@ -207,7 +218,7 @@ class UtilityBills extends Component {
           <div className="row" style={{display:'flex', justifyContent: 'center', marginBottom:'5%'}}>
             <ul className="nav navbar-nav">
               <div className="dropdown">
-                <li className="btn dropdown-toggle" type="button" data-toggle="dropdown" style={{backgroundColor: '#faa831'}}><strong>{this.state.optionName}</strong> <span className="fa fa-chevron-down"></span></li>
+                <li className="btn dropdown-toggle" type="button" data-toggle="dropdown" id="billPaymentOptions"><strong>{this.state.optionName}</strong> <span className="fa fa-chevron-down"></span></li>
                 <ul className="dropdown-menu dropdown" id="billPaymentOptionsDropdown">
                   {
                     options === null ? null : (options.length === 0 ? null : 

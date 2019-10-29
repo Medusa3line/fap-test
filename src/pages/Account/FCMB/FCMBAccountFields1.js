@@ -1,7 +1,8 @@
 import React from 'react';
 import { manipulateNumber } from '../../../Utils/manipulateNumber';
+import MakingPayment from '../../../Components/makingPayment/makingPayment';
 
-const AccountFields1 = ({bvn, onChangeBVN, showValidateBVNButton, firstName, lastName, dob, gender, mothersMaidenName,  onChange, onSubmit, isThereBvn, hasBVN, showAccountOpeningFields, validateBvn, maritalStatus, middleName }) => {
+const AccountFields1 = ({bvn, onChangeBVN, showValidateBVNButton, firstName, lastName, dob, gender, mothersMaidenName,  onChange, onSubmit, isThereBvn, hasBVN, showAccountOpeningFields, validateBvn, maritalStatus, middleName, makingPayment }) => {
     return (
         <div className="row">                
             <div className="form-group">
@@ -33,7 +34,7 @@ const AccountFields1 = ({bvn, onChangeBVN, showValidateBVNButton, firstName, las
                         </div>
                     </div>
                     {
-                        showValidateBVNButton ? 
+                        showValidateBVNButton ?
                         <div className="col-sm-12 col-md-12 col-lg-12">
                             <button 
                                 type="submit" 
@@ -41,7 +42,10 @@ const AccountFields1 = ({bvn, onChangeBVN, showValidateBVNButton, firstName, las
                                 id="bvnValidation"
                                 onClick={validateBvn}
                             > 
-                            Validate BVN 
+                            {
+                                makingPayment ? <MakingPayment />
+                                : 'Validate BVN'
+                            }
                             </button>
                         </div>
                         : null

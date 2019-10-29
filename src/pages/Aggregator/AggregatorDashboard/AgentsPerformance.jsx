@@ -1,5 +1,6 @@
 import React from 'react';
 import AgentsPerformanceList from './AgentsPerformanceList';
+import NoResultFound from '../../../Components/NoResultFound/NoResultfound';
 
 const AgentsPerformance = ({ performance }) => {
 	return (
@@ -20,11 +21,12 @@ const AgentsPerformance = ({ performance }) => {
              	</thead>
               	<tbody>
 		            {
-		                performance === null ? null : (performance.length === 0 ? null : 
+		                performance === null ? null : (performance.length === 0 ? 
+							<NoResultFound /> : 
 		                  	performance.map((agent,i) => {
 			                    return <AgentsPerformanceList 
-			                      agentName={agent.agentName}
-			                      terminal={agent.terminal}
+			                      agentName={`${agent.firstName} ${agent.lastName}`}
+			                      terminal={agent.terminalId}
 			                      totalDeposits={agent.totalDeposits}
 			                      totalDepositsValue={agent.totalDepositsValue}
 			                      totalWithdrawals={agent.totalWithdrawals}

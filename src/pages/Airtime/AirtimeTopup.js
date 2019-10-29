@@ -4,7 +4,7 @@ import withTimeout from '../../Components/HOCs/withTimeout.hoc';
 import { customPageTitle } from '../../Utils/customTitle';
 import swal from '../../Utils/alert';
 import NetworkOptions from '../Bill_Payment/NetworkOptions';
-import NetworkList from '../Bill_Payment/NetworkList'
+import NetworkList from './NetworkList'
 import baseUrl from '../../Utils/baseUrl';
 import MakingPayment from '../../Components/makingPayment/makingPayment';
 import { manipulateNumber } from '../../Utils/manipulateNumber';
@@ -153,7 +153,7 @@ componentDidMount = async () => {
                 <li 
                   className="btn dropdown-toggle" 
                   type="button" data-toggle="dropdown" 
-                  style={{backgroundColor: '#faa831'}}
+                  style={{backgroundColor: '#faa831', width: '350px'}}
                 >
                   <strong>{networkNames}</strong> 
                   <span className="fa fa-chevron-down"></span>
@@ -163,8 +163,10 @@ componentDidMount = async () => {
                     Networks.map((name,i) => {
                       return <NetworkList 
                         getServiceNames={() => this.getServiceNames(name.serviceName)} 
-                        key={name.serviceName} 
-                        name={name.serviceName} />
+                        key={i} 
+                        name={name.serviceName} 
+                        index={i}
+                      />
                     })
                   }
                 </ul>
@@ -181,7 +183,8 @@ componentDidMount = async () => {
                   <li 
                     className="btn dropdown-toggle" 
                     type="button" data-toggle="dropdown" 
-                    style={{backgroundColor: '#faa831'}}>
+                    id="billPaymentOptions"  
+                  >
                       <strong>{optionName}</strong> 
                       <span className="fa fa-chevron-down"></span>
                     </li>

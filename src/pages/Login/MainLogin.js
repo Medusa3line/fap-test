@@ -89,9 +89,9 @@ const loginButtonClick = (e) => {
 const redirectToDashboard = (userType) => {
   // Redirect to Dashboard    
   userType = userType.toLowerCase();       
-  if (userType === 'aggregator') {
+  if (userType.includes('master')) {
     history.push("/aggregator")
-    } else if (userType  === 'operator' || userType  === 'agent'){
+    } else if (userType.includes('operator') || userType.includes('agent')){
       history.push("/dashboard")
     } else {
       swal("Login Failed", 'User type unknown', 'error')              

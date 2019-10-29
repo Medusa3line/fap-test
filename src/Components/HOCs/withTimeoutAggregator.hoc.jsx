@@ -48,7 +48,7 @@ const withTimeout = (WrappedComponent) => {
                 const userDetails = JSON.parse(sessionStorage.getItem('userDetails'));
                 const userType = userDetails.userType.toLowerCase();
                 var userExists;
-                if (userType.includes('aggregator')){
+                if (userType.includes('master')){
                     userExists = true;
                 } else {
                     userExists = false;

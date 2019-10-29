@@ -54,7 +54,7 @@ const Dashboard = () => {
 
     // Fetch Transactions History
       fetchTransactions();
-  }, [fetchTransactions, auth_token]) //End of ComponentDidMount
+  }, [fetchTransactions, auth_token, state.size]) //End of ComponentDidMount
 
   const fetchTransactions = useCallback(async() =>{
     //Fetch Transaction History
@@ -124,7 +124,7 @@ const Dashboard = () => {
   }
 
   const toDate = async (event) => { 
-    const { todate } =dateModifier(event) 
+    const { todate } = dateModifier(event) 
     await setState({
       ...state,
       toDate: todate, page: 0
@@ -156,6 +156,20 @@ const Dashboard = () => {
     searchField: event.target.value
   }) }
 
+  const increasePageCount = async(event) => { 
+    if(event.target.value === ''){
+      await setState({
+        ...state,
+        size: state.totalCount,
+      })
+    } else {
+      await setState({
+        ...state,
+        size: event.target.value,
+      })
+    }
+  }
+
   const print = (divName) => {
     PrintReceipt(divName);
   }
@@ -184,7 +198,14 @@ const Dashboard = () => {
                       <h4> &nbsp; Transactions History</h4>
                     </div>
                     <div>
-                      <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" id="pad-aggregator-items">Export <span className="fa fa-chevron-down"></span></button>
+                      <button 
+                        type="button" 
+                        className="btn dropdown-toggle" 
+                        data-toggle="dropdown" 
+                        id="pad-aggregator-items"
+                      > Export 
+                        <span className="fa fa-chevron-down"></span>
+                      </button>
                       <ul className="dropdown-menu dropdown">
                         <li onClick={() => print('table')} id="pad-aggregator-items"><Link to="#">PDF</Link></li>
                         <ExportToExcel />
@@ -199,6 +220,15 @@ const Dashboard = () => {
                         <option value="recharge">Recharge</option>
                         <option value="bill payment"> Bill Payment</option>
                         <option value="withdrawal">Withdrawal</option>
+                      </select>
+                    </div>
+                    <div className="form-group" id="bottom-layer-left">
+                      <select className="form-control" onChange={increasePageCount} value={size}>
+                        <option value="10">10 Results</option>
+                        <option value="20">20 Results</option>
+                        <option value="50">50 Results</option>
+                        <option value="100">100 Results</option>
+                        <option value="">All Results</option>
                       </select>
                     </div>
                     <div id="bottom-layer-right">

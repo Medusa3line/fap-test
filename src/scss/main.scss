@@ -103,6 +103,7 @@ input[type="text"]{
 	margin-top: 5vh;
 	position: absolute;
 	width: 40%;
+	min-height: 40vh;
 	max-height: 90vh;
 	overflow-y: auto;
 	overflow-x: hidden;
@@ -110,6 +111,7 @@ input[type="text"]{
 	background-color: #ffffff;
 	box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
 }
+
 #back-button {
 	margin: 15px;
 	button {
@@ -163,6 +165,11 @@ input[type="text"]{
 	overflow-y: auto; 
 	max-height: 40vh;
 	position: relative;
+	width: 350px;
+}
+#billPaymentOptions{
+	background-color: $color-yellow; 
+	width: 350px;
 }
 #NetworkList{
 	cursor: pointer;
@@ -340,11 +347,11 @@ tbody tr{
 	border-color: currentColor;
 	color: #fff;
 
-	:active, :focus{
+	&:active, &:focus{
 		background-color: $color-purple;
 		border-color: $color-yellow;
 	}
-	:hover {
+	&:hover {
 		opacity: 0.9;
 		color: #fff;
 		background-color: $color-yellow;
@@ -421,6 +428,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 	background-color: #ffffff; 
 	padding: 2.5px; 
 	margin-top: 2%;
+	
 	.form-inline{ 
 		float: right; 
 		margin: 1% 2%; 
@@ -482,20 +490,6 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 #aggregator-view-card-top{ 
 	padding: 2% 4%; 
 	width: 100%; 
-}
-#toggleAgentPerformance, #toggleAgentPerformance a {
-	display: flex; 
-	justify-content: flex-start;
-	color: #333333;
-}
-.toggleAgentPerformance {
-	margin-top: 10px;
-	> h5:hover, a:hover {
-		font-weight: bold;
-		cursor: pointer;
-		color: $color-purple;
-		text-decoration: underline;
-	}
 }
 
 #income-wallet-div{ 

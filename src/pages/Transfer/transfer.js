@@ -10,7 +10,7 @@ const Transfer = () => {
   return (
     <Layout>
       <div id="panel">
-        <h4> Wallet Transfer </h4>
+        <h4> Funds Transfer </h4>
         <h6> Transfer funds to any account </h6>
       </div>
       <div className="line"></div><br/>
