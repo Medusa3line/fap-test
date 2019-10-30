@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import { withRouter } from 'react-router-dom'
+import React, {useEffect, useState} from 'react';
+import { useHistory, useParams } from 'react-router-dom'
 import {Link} from 'react-router-dom';
 import AggregatorHeader from '../AggregatorHeader/AggregatorHeader';
 import './AggregatorView.styles.scss';
@@ -12,59 +12,55 @@ import AgentViewInputField from './AgentViewInputField';
 import TotalAggregatorStatistics from '../Components/AggregatorStatistics/TotalAggregatorStatistics';
 import TodayAggregatorStatistics from '../Components/AggregatorStatistics/TodayAggregatorStatistics';
 
-class AggregatorView extends Component {
-  _isMounted = false;
-  constructor(){
-    super()
-    this.state = {
-      userDetails : {},
-      AgentId: '',
-      agentDetails: {},
-      stats: {},
-      finishedLoading: false
-    }
-  }
+const { auth_token } = JSON.parse(sessionStorage.getItem('userDetails'));
 
+const AggregatorView = () => {
+  const [ initialState, setState ] = useState({
+    userDetails : {},
+    AgentId: '',
+    agentDetails: {},
+    stats: {},
+    finishedLoading: false
+  })
 
-  componentDidMount = async () => {
-    this._isMounted = true;
+  const history = useHistory();
+  const params = useParams();
 
-    await sessionStorage.getItem('userDetails') && this.setState ({
-      userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
-    })
+  useEffect(() => {
+    let reqBody = {
+      agentId: params.agentId
+    };
+      setState(state => ({ 
+        ...state, 
+        finishedLoading: false
+      }))
+      fetch(`${agentDashboard}`, {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${auth_token}`
+      },
+      body: JSON.stringify(reqBody)
+    }).then(response => response.json())
+      .then(result => {
+        // console.log(result)
+        setState(state => ({
+          ...state,
+          agentDetails: result.respBody.agentProfile,
+          stats: result.respBody
+        }))
+      })
+      .catch(err => {
+        swal('Error', `${err}`, 'error')
+      });
+      setState(state => ({ 
+        ...state, 
+        finishedLoading: true
+      }))
+  }, [params.agentId])
 
-    if (this._isMounted){
-      let reqBody = {
-        agentId: this.props.match.params.agentId
-      };
-      let auth_token = this.state.userDetails.auth_token;
-
-        this.setState({ finishedLoading: false})
-        await fetch(`${agentDashboard}`, {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${auth_token}`
-        },
-        body: JSON.stringify(reqBody)
-      }).then(response => response.json())
-        .then(result => {
-          console.log(result)
-          this.setState({
-            agentDetails: result.respBody.agent,
-            stats: result.respBody
-          })
-        })
-        .catch(err => {
-          swal('Error', `${err}`, 'error')
-        });
-        this.setState({ finishedLoading: true})
-    }    
-  }
-
-	render(){
-    const { agentDetails, stats, finishedLoading } = this.state;
-    const { agentId, username, firstName, lastName, email, dob, phoneNumber, address, gender, state, lga, businessName, terminalId, businessLocation, agentType } = agentDetails;
+    const { agentDetails, stats, finishedLoading } = initialState;
+    const { agentId, userName, firstName, lastName, email, dob, phoneNumber, address, gender, state, lga, businessName, terminalId, buisnessLoc, agentType } = agentDetails;
     if (!finishedLoading){
         return <Spinner />
       } else {
@@ -75,7 +71,7 @@ class AggregatorView extends Component {
                 <div id="main">
                 	<div className="row" id="aggregator-container">
                     <div id="back-button">
-                      <button className="btn btn-sm" onClick={() => this.props.history.goBack()}> 
+                      <button className="btn btn-sm" onClick={() => history.goBack()}> 
                         <i className="fa fa-chevron-left"></i> 
                           Back
                       </button>
@@ -83,7 +79,7 @@ class AggregatorView extends Component {
                 		<div className="col-lg-6 col-md-12 col-sm-12" id="aggregator-view-card">
                 		  <h4>Profile Details</h4>
                       <AgentViewInputField label="Agent ID" value={agentId} />
-                      <AgentViewInputField label="User Name" value={username} />
+                      <AgentViewInputField label="User Name" value={userName} />
                       <AgentViewInputField label="First Name" value={firstName} />
                       <AgentViewInputField label="Last Name" value={lastName} />
                       <AgentViewInputField label="Email" value={email} />
@@ -116,8 +112,8 @@ class AggregatorView extends Component {
                         <input type="text" className="form-control" readOnly defaultValue={terminalId} />
                       </div>
                       <AgentViewInputField label="Email" value={email} />
-                      <AgentViewInputField label="Business Location" value={businessLocation} />
-                      <AgentViewInputField label="Agent Type" value={agentType} />
+                      <AgentViewInputField label="Business Location" value={buisnessLoc} />
+                      <AgentViewInputField label="Agent Type" value={agentType ? agentType.code.replace(/[_]/g, ' '): null} />
         	        	</div>
 
                     <div className="col-lg-6 col-md-12 col-sm-12">
@@ -152,7 +148,6 @@ class AggregatorView extends Component {
     			</div>
     		)
     }
-	}
 }
 
-export default withTimeout(withRouter(AggregatorView));     
+export default withTimeout(AggregatorView);     
