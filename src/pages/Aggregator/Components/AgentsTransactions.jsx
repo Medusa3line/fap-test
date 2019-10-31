@@ -1,5 +1,5 @@
 import React from 'react';
-import AllTransactions from './AllTransactions';
+import AllTransactions from './AllTransactions/AllTransactions';
 import NoResultFound from '../../../Components/NoResultFound/NoResultfound';
 
 const AgentsTransactions = ({ transactions, page, size, showLessTransactions, showMoreTransactions, transactionsCount, hasNextRecord, showPrintButton }) => {
@@ -26,22 +26,21 @@ const AgentsTransactions = ({ transactions, page, size, showLessTransactions, sh
 							transactions === null ? null : (transactions.length === 0 ? 
 								<NoResultFound /> : 
 		                        transactions.map((agent,i) => {
-									  return <AllTransactions
+									return <AllTransactions
 									  	i={i} 
-			                            agentName={agent.agentName}
-			                            tranId={agent.tranId}
-			                            amount={agent.amount}
-			                            transactionType={agent.transactionType}
-			                            description={agent.description}
-			                            date={agent.tranDate}
-			                            time={agent.tranDate}
-			                            statusdescription={agent.statusdescription}
-			                            fee={agent.fee}
+			                            agentName={agent.agentId}
+			                            tranId={agent.rrn}
+			                            amount={agent.minorAmount}
+			                            transactionType={agent.tranType.replace(/[_]/g, ' ')}
+			                            description={agent.status}
+			                            date={agent.dateCreated}
+			                            time={agent.dateCreated}
+			                            statusdescription={agent.status}
+			                            fee={agent.transactionFee}
 			                            key={i} 
 										agent={agent}
 										showPrintButton={showPrintButton}
-									/>
-										
+									/>	
 		                            }
 		                        )
 		                    )

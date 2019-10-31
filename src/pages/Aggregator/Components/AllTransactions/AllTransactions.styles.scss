@@ -1,0 +1,32 @@
+.status{
+    text-align: center;
+    font-size: 10px;
+ }
+ 
+ @mixin borders {
+     border-radius: 5px;
+     padding: 5px 10px;
+     color: white;
+     width: 100%;
+     text-align: center;
+ }
+ 
+ .success{
+     @include borders;
+     background-color: #4caf50;
+ }
+ 
+ .pending {
+     @include borders;
+     background-color: #faa831;
+ }
+ 
+ .failed{
+     @include borders;
+     background-color: #E6061C;
+ }
+ 
+ .reverse{
+     @include borders;
+     background-color: #bdbdbd;
+ }

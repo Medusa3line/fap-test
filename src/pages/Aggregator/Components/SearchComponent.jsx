@@ -4,7 +4,7 @@ const SearchComponent = ({ searchAgents, fromDate, toDate, filter }) => {
 	return (
 		<div className="row"  style={{boxSizing: 'border-box', padding:'10px'}}>
 	        <div id="income-wallet-topLeft" className="form-inline" >
-	          <input type="search" style={{width: '200%', fontSize: '12px'}} className="form-control" onChange={searchAgents} placeholder="Search Agents" />
+	          <input type="search" style={{width: '200%', fontSize: '12px'}} className="form-control" onChange={searchAgents} placeholder="Search Agents by ID" />
 	        </div>
 	        <div id="income-wallet-topRight" className="form-inline" >
 	            <label id="pad-aggregator-items" style={{fontSize: '12px'}} >Select Date Range </label>

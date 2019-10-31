@@ -23,15 +23,16 @@ const AgentsPerformance = ({ performance }) => {
 		            {
 		                performance === null ? null : (performance.length === 0 ? 
 							<NoResultFound /> : 
-		                  	performance.map((agent,i) => {
+							performance.map((agent, i) => {
+								const { agentProfile: { firstName, lastName, terminalId, agentId }, numOfDeposits, numOfWithdrawal, totalDepositAmount, totalWithdrawalAmount } = agent;
 			                    return <AgentsPerformanceList 
-			                      agentName={`${agent.firstName} ${agent.lastName}`}
-			                      terminal={agent.terminalId}
-			                      totalDeposits={agent.totalDeposits}
-			                      totalDepositsValue={agent.totalDepositsValue}
-			                      totalWithdrawals={agent.totalWithdrawals}
-			                      totalWithdrawalsValue={agent.totalWithdrawalsValue}
-								  AgentId={agent.agentId}
+			                      agentName={`${firstName} ${lastName}`}
+									terminal={terminalId}
+			                      totalDeposits={numOfDeposits}
+			                      totalDepositsValue={totalDepositAmount}
+			                      totalWithdrawals={numOfWithdrawal}
+									totalWithdrawalsValue={totalWithdrawalAmount}
+								  AgentId={agentId}
 								  i={i}
 								  key={i}
 								/>

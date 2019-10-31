@@ -113,7 +113,7 @@ const AggregatorView = () => {
                       </div>
                       <AgentViewInputField label="Email" value={email} />
                       <AgentViewInputField label="Business Location" value={buisnessLoc} />
-                      <AgentViewInputField label="Agent Type" value={agentType ? agentType.code.replace(/[_]/g, ' '): null} />
+                      <AgentViewInputField label="Agent Type" value={agentType ? agentType.replace(/[_]/g, ' '): null} />
         	        	</div>
 
                     <div className="col-lg-6 col-md-12 col-sm-12">

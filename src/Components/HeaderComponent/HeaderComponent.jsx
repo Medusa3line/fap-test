@@ -16,15 +16,15 @@ export default function HeaderComponent({agentName}) {
                 
                 <div>
                     <div className="dropdown">
-                    <button className="btn btn-light btn-sm dropdown-toggle" 
-                        type="button" 
-                        data-toggle="dropdown" 
-                    >
-                    {agentName} <span className="fa fa-chevron-down"></span></button>
-                    <ul className="dropdown-menu dropdown">
-                        <li><Link to={"/pinChange"}> Change Pin</Link></li>
-                        <li><Link onClick={Logout} to={"/"}> Logout</Link></li>
-                    </ul>
+                        <button className="btn btn-light btn-sm dropdown-toggle" 
+                            type="button" 
+                            data-toggle="dropdown" 
+                        >
+                        {agentName} <span className="fa fa-chevron-down"></span></button>
+                        <ul className="dropdown-menu dropdown">
+                            <li><Link to={"/pinChange"}> Change Pin</Link></li>
+                            <li><Link onClick={Logout} to={"/"}> Logout</Link></li>
+                        </ul>
                     </div>
                 </div> 
             </div><br/>

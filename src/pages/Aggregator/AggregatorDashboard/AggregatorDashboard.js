@@ -98,8 +98,8 @@ getPerformance = async () => {
     body: JSON.stringify(reqBody)
   }).then(response => response.json())
     .then(performance => {
-      // console.log(performance, 'performance')
-      this.setState({performance: performance.respBody.details})
+      // console.log(performance.respBody, 'performance')
+      this.setState({ performance: performance.respBody.subAgentDetails.dashboardDetails})
     })
     .catch(err => {
       swal('Error', `${err}`, 'error')
@@ -149,7 +149,7 @@ componentDidMount = async () => {
     const { stats, showMore, finishedLoading } = this.state;
     let { performance } = this.state;
     performance = performance.filter(agentPerformance => {
-      return (agentPerformance.userName.toLowerCase()).includes(this.state.searchField.toLowerCase())
+      return (agentPerformance.agentProfile.userName.toLowerCase()).includes(this.state.searchField.toLowerCase())
     });
       if (!finishedLoading){
         return <Spinner />

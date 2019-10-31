@@ -25,3 +25,4 @@ export const changePinUrl = `${authUrl}/changepin`; // Chage Agent's PIN
 export const agentsList = `${authUrl}/master/agents`; // List of Agents and their performances
 export const dashboardDetails = `${authUrl}/master/dashboard`; // Dashboard Information
 export const agentDashboard = `${authUrl}/master/agentdashboard`;   //View Every Agent under master agent
+export const agentTransactions = `${authUrl}/master/transactions`;   //View Every Agent under master agent
