@@ -61,31 +61,32 @@
 
 #aggregator-view-card{ 
     background-color: #ffffff; 
-    margin: 1%; 
-    width: 48%; 
     display: inline-block; 
-    padding: 1%; 
+    padding: 2%; 
     border-radius: 3px; 
     box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
 }
 
 #aggregator-container-view{
-    width: 100%; 
-    box-sizing: border-box;
+    padding: 2%;
 }
 
 .AggregatorViewcontainer{
-    padding: 0; 
     background-color: #f3f3f3; 
     box-sizing: border-box;
 
     #aggregator-container{ 
-        padding-top: 4vh; 
-        padding-left: 2%; 
+        padding: 2%; 
         box-sizing: border-box; 
         position: relative; 
         width: 100%; 
         background-color: #f3f3f3;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+
+        @media only screen and (max-width: 960px) {
+            grid-template-columns: 1fr;
+        }
 
         .form-group{ 
             padding: 0vh 1vh; 

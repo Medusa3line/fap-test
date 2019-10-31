@@ -1,0 +1,36 @@
+.fluid{
+    padding: 0;
+    background-color: #f3f3f3;
+
+    #back-button{
+       margin-left: 0; 
+       button{
+            i{
+                font-size: 8px;
+            }
+       }
+    }
+}
+#dashboard-wallet-div{
+    margin:0px; 
+    margin-bottom: 5vh;
+    width: 100%;
+    top: 2vh; 
+    overflow-x:auto;
+}
+#income-wallet-div{
+    overflow-x: auto;
+    background: #FFFFFF; 
+	padding: 2%; 
+    margin-bottom: 2%;
+    
+    #upperSection{
+        padding-top: 2vh;
+
+        #top{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    }
+}

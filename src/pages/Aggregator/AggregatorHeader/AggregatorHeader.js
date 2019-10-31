@@ -1,6 +1,6 @@
 import React from 'react';
 import './AggregatorHeader.scss';
-import HeaderComponent from '../../../Components/HeaderComponent/HeaderComponent';
+import HeaderComponent from '../../../Components/HeaderComponent/AggregatorHeaderComponent';
 
 const AggregatorHeader = () => { 
   const { username } = JSON.parse(sessionStorage.getItem('userDetails'))

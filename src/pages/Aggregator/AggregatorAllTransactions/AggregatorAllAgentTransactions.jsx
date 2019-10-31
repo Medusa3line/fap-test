@@ -10,6 +10,7 @@ import swal from '../../../Utils/alert';
 import {agentTransactions} from '../../../Utils/baseUrl';
 import PrintReceipt from '../../../Utils/print';
 import ExportToExcel from '../../../Components/ExportToExcel/ExportToExcel';
+import './AggregatorAllAgentTransactions.styles.scss';
 
 const { auth_token } = JSON.parse(sessionStorage.getItem('userDetails'))
 const AggregatorAllAgentTransactions = () =>  {
@@ -170,38 +171,39 @@ const showMoreTransactions = async() => {
       } else {
         return (
           <div className="body">
-            <div className="container-fluid" style={{padding: '0', backgroundColor: '#f3f3f3'}}>
+            <div className="fluid">
               <AggregatorHeader />
                 <div id="main">
-                  <div className="row" id="aggregator-container">
-                    <div className="row" style={{marginLeft: '0'}} id="back-button">
-                      <button className="btn btn-sm" onClick={() => history.goBack()}> 
-                        <i style={{fontSize: '8px'}} className="fa fa-chevron-left"></i> Back
-                      </button>
-                    </div>
-                    <div id="income-wallet-div" style={{overflowX:'auto'}}>
-                        <div className="row">
-                            <div className="col-lg-12 col-sm-12 col-md-12" style={{paddingTop: '2vh'}}>
-                                <div className="row">
-                                    <div className="col-lg-6">
-                                        <div><h4><strong>Transactions History of {agentId}</strong></h4></div>
-                                    </div>
-                                    <div className="dropdown" style={{textAlign: 'right'}}>
-                                        <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" id="pad-aggregator-items">Export <span className="fa fa-chevron-down"></span></button>
-                                        <ul className="dropdown-menu dropdown">
-                                          <li onClick={() => print('print-div')}><Link to="#">PDF</Link></li>
-                                          <ExportToExcel />
-                                        </ul>
-                                    </div>
-                            </div><br/>
-                            <SearchComponent 
-                              searchAgents={searchAgents}
-                              fromDate={fromDate}
-                              toDate={toDate} 
-                              filter={filter}
-                            />
-                            </div>                       
+                  <div id="dashboard-wallet-div">
+                    <div id="income-wallet-div">
+                      <div id="back-button">
+                        <button className="btn btn-sm" onClick={() => history.goBack()}> 
+                          <i className="fa fa-chevron-left"></i> Back
+                        </button>
+                      </div>
+                      <div id="upperSection">
+                        <div id="top">
+                          <div>
+                            <h4>
+                              <strong>Transactions History of {agentId}</strong>
+                            </h4>
+                          </div>
+                              
+                          <div className="dropdown">
+                            <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" id="pad-aggregator-items">Export <span className="fa fa-chevron-down"></span></button>
+                            <ul className="dropdown-menu dropdown">
+                              <li onClick={() => print('print-div')}><Link to="#">PDF</Link></li>
+                              <ExportToExcel />
+                            </ul>
+                          </div>
                         </div>
+                        <SearchComponent 
+                          searchAgents={searchAgents}
+                          fromDate={fromDate}
+                          toDate={toDate} 
+                          filter={filter}
+                        />
+                      </div>
                             <AgentsTransactions 
                               transactions={transactions} 
                               page={page}

@@ -68,16 +68,43 @@ const AggregatorView = () => {
     			<div className="body">
     				<div className="AggregatorViewcontainer">
           		<AggregatorHeader />
-                <div id="main">
-                	<div className="row" id="aggregator-container">
+              <div id="main">
+                <div id="aggregator-container">
+                  <div>
                     <div id="back-button">
                       <button className="btn btn-sm" onClick={() => history.goBack()}> 
                         <i className="fa fa-chevron-left"></i> 
                           Back
                       </button>
                     </div>
-                		<div className="col-lg-6 col-md-12 col-sm-12" id="aggregator-view-card">
-                		  <h4>Profile Details</h4>
+                    <div>
+                      <div id="aggregator-view-card-top">
+                        <div id="toggleAgentPerformance">
+                          <h5 style={{fontWeight: 'bold'}}>
+                            <Link to={`/allWallet/${agentId}`}>
+                              View All Transactions 
+                            </Link>
+                          </h5>                                 
+                        </div><br/>
+                      </div>
+                      <div id="aggregator-container-view">
+                        <div className="col-lg-12 col-md-12 col-sm-12" style={{padding: '0'}}>
+                          <div className="row" style={{margin: '0px'}}>
+                            <div className="row" id="stats-top-most-card" style={{padding: '0'}}>
+                              <TotalAggregatorStatistics stats={stats} />
+                            </div>
+                          </div>
+
+                          <div className="row" style={{margin: '0px'}}>
+                            <div className="row" id="stats-top-most-card" style={{padding: '0'}}>
+                              <TodayAggregatorStatistics stats={stats} />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="aggregator-view-card">
+                      <h4>Profile Details</h4>
                       <AgentViewInputField label="Agent ID" value={agentId} />
                       <AgentViewInputField label="User Name" value={userName} />
                       <AgentViewInputField label="First Name" value={firstName} />
@@ -114,36 +141,10 @@ const AggregatorView = () => {
                       <AgentViewInputField label="Email" value={email} />
                       <AgentViewInputField label="Business Location" value={buisnessLoc} />
                       <AgentViewInputField label="Agent Type" value={agentType ? agentType.replace(/[_]/g, ' '): null} />
-        	        	</div>
-
-                    <div className="col-lg-6 col-md-12 col-sm-12">
-                      <div id="aggregator-view-card-top">
-                        <div id="toggleAgentPerformance">
-                          <h5 style={{fontWeight: 'bold'}}>
-                            <Link to={`/allWallet/${agentId}`}>
-                              View All Transactions 
-                            </Link>
-                          </h5>                                 
-                        </div><br/>
-                      </div>
-                    <div id="aggregator-container-view">
-                      <div className="col-lg-12 col-md-12 col-sm-12" style={{padding: '0'}}>
-                        <div className="row" style={{margin: '0px'}}>
-                          <div className="row" id="stats-top-most-card" style={{padding: '0'}}>
-                            <TotalAggregatorStatistics stats={stats} />
-                          </div>
-                        </div>
-
-                        <div className="row" style={{margin: '0px'}}>
-                          <div className="row" id="stats-top-most-card" style={{padding: '0'}}>
-                            <TodayAggregatorStatistics stats={stats} />
-                          </div>
-                        </div>
-                      </div>
                     </div>
-                    </div>
-                	</div>
+                  </div>
                 </div>
+              </div>
     				</div>
     			</div>
     		)
