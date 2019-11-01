@@ -88,6 +88,14 @@
             grid-template-columns: 1fr;
         }
 
+        #aggregator-view-card-top{
+            #toggleAgentPerformance{
+                h5{
+                    font-weight: bold;
+                }
+            }
+        }
+
         .form-group{ 
             padding: 0vh 1vh; 
         }
@@ -100,7 +108,7 @@
     #back-button{
         padding: 0; 
         background-color: #f3f3f3;
-        box-sizing: border-box;
+        margin: 0 20px;
 
         i{
             font-size: 8px;

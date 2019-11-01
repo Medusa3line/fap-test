@@ -77,15 +77,14 @@ const AggregatorView = () => {
                           Back
                       </button>
                     </div>
-                    <div>
-                      <div id="aggregator-view-card-top">
-                        <div id="toggleAgentPerformance">
-                          <h5 style={{fontWeight: 'bold'}}>
-                            <Link to={`/allWallet/${agentId}`}>
-                              View All Transactions 
-                            </Link>
-                          </h5>                                 
-                        </div><br/>
+                    <div id="aggregator-view-card-top">
+                      <div id="toggleAgentPerformance">
+                        <h5>
+                          <Link to={`/allWallet/${agentId}`}>
+                            View All Transactions 
+                          </Link>
+                        </h5>                                 
+                      </div>
                       </div>
                       <div id="aggregator-container-view">
                         <div className="col-lg-12 col-md-12 col-sm-12" style={{padding: '0'}}>
@@ -102,8 +101,8 @@ const AggregatorView = () => {
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div id="aggregator-view-card">
+                  </div>
+                  <div id="aggregator-view-card">
                       <h4>Profile Details</h4>
                       <AgentViewInputField label="Agent ID" value={agentId} />
                       <AgentViewInputField label="User Name" value={userName} />
@@ -142,7 +141,6 @@ const AggregatorView = () => {
                       <AgentViewInputField label="Business Location" value={buisnessLoc} />
                       <AgentViewInputField label="Agent Type" value={agentType ? agentType.replace(/[_]/g, ' '): null} />
                     </div>
-                  </div>
                 </div>
               </div>
     				</div>
