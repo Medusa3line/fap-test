@@ -10,7 +10,8 @@ import Table from './Table/Table';
 import './dashboard.styles.scss';
 import ExportToExcel from '../../../Components/ExportToExcel/ExportToExcel';
 import { Link } from 'react-router-dom';
-import Pagination from '../../../Components/Pagination/Pagination.component';
+import Pagination from "react-pagination-js";
+import "react-pagination-js/dist/styles.css";
 import { customPageTitle } from '../../../Utils/customTitle';
 
 const Dashboard = () => {
@@ -54,7 +55,7 @@ const Dashboard = () => {
 
     // Fetch Transactions History
       fetchTransactions();
-  }, [fetchTransactions, auth_token, state.size]) //End of ComponentDidMount
+  }, [fetchTransactions, auth_token, state.size, state.page]) //End of ComponentDidMount
 
   const fetchTransactions = useCallback(async() =>{
     //Fetch Transaction History
@@ -131,24 +132,11 @@ const Dashboard = () => {
     })
   }
 
-  const showLess = async () => {
-    if(state.page > 0){
-      await setState({
-        ...state,
-        page: state.page - 1
-      });
-      fetchTransactions();
-    }
-  }
-
-  const showMore = async() => {
-    if (state.transactions.length === state.size){
-      await setState({
-        ...state,
-        page: state.page + 1
-      });
-      fetchTransactions();
-    }
+  const changeCurrentPage = async (pageNumber) => {
+    setState({
+      ...state,
+      page: pageNumber - 1
+    })
   }
 
   const searchTransactions = async (event) => { await setState({
@@ -224,11 +212,11 @@ const Dashboard = () => {
                     </div>
                     <div className="form-group" id="bottom-layer-left">
                       <select className="form-control" onChange={increasePageCount} value={size}>
-                        <option value="10">10 Results</option>
-                        <option value="20">20 Results</option>
-                        <option value="50">50 Results</option>
-                        <option value="100">100 Results</option>
-                        <option value="">All Results</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="">All</option>
                       </select>
                     </div>
                     <div id="bottom-layer-right">
@@ -249,14 +237,16 @@ const Dashboard = () => {
                       transactions={transactions}
                     />
                   </div>
-                  <Pagination 
-                    showLess={showLess}
-                    totalCount={totalCount} 
-                    showMore={showMore} 
-                    size={size} 
-                    page={page}
-                    hasNextRecord={hasNextRecord}
-                  />
+                  <div id="table-nav-buttons" className="row">
+                    <Pagination
+                      currentPage={page + 1}
+                      totalSize={totalCount}
+                      sizePerPage={size}
+                      changeCurrentPage={changeCurrentPage}
+                      numberOfPagesNextToActivePage={2}
+                      theme="bootstrap"
+                    />
+                  </div>
                 </div>
               </div>   
           </div>

@@ -15,6 +15,12 @@
         }
     }
 
+    #rightContent{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
     .dropdown-menu>li a:hover{
         background-color: #fff;
         font-weight: bold;
@@ -26,14 +32,16 @@
         padding: 5px;
     }
 
-    .dropdown button span {
-        font-size: 8px;
+    .dropdown {
+        margin-right: 5px;
+        button span{
+            font-size: 8px;
+        }
     }
 
     .dropdown-toggle{
         color: white;
         background-color: #5C2584;
-        margin-top: 2vh;
     }
 
     .nav.navbar-header{

@@ -4,6 +4,8 @@ import ExportToExcel from '../../../Components/ExportToExcel/ExportToExcel';
 import AgentsPerformance from './AgentsPerformance';
 import SearchComponent from '../Components/SearchComponent';
 import './AggregatorDashboard.styles.scss'
+import Pagination from "react-pagination-js";
+import "react-pagination-js/dist/styles.css";
 
 import withTimeout from '../../../Components/HOCs/withTimeoutAggregator.hoc';
 import Spinner from '../../../Components/PreLoader/preLoader';
@@ -25,7 +27,8 @@ class AggregatorDashboard extends Component{
   state = {
     stats: {},
     page: 0,
-    size: 5,
+    size: 20,
+    totalSize: 0,
     fromDate: '01-01-2012',
     fromDateTransactions: '01-01-2012', 
     toDate: todaysDate,
@@ -77,7 +80,7 @@ class AggregatorDashboard extends Component{
     } else {
       this.getPerformance()
     }
-}
+  }
 
 getPerformance = async () => {
   // Fetch Performance List
@@ -99,7 +102,10 @@ getPerformance = async () => {
   }).then(response => response.json())
     .then(performance => {
       // console.log(performance.respBody, 'performance')
-      this.setState({ performance: performance.respBody.subAgentDetails.dashboardDetails})
+      this.setState({ 
+        performance: performance.respBody.subAgentDetails.dashboardDetails,
+        totalSize: performance.respBody.totalCount
+      })
     })
     .catch(err => {
       swal('Error', `${err}`, 'error')
@@ -144,9 +150,15 @@ componentDidMount = async () => {
 } // End of componentDidMount
 
   searchAgents = (event) => { this.setState({searchField: event.target.value}) }
+  changeCurrentPage = async (pageNumber) => {
+    await this.setState({
+      page: pageNumber - 1
+    })
+    await this.getPerformance()
+  }
 
   render(){
-    const { stats, showMore, finishedLoading } = this.state;
+    const { stats, showMore, finishedLoading, page, size, totalSize } = this.state;
     let { performance } = this.state;
     performance = performance.filter(agentPerformance => {
       return (agentPerformance.agentProfile.userName.toLowerCase()).includes(this.state.searchField.toLowerCase())
@@ -193,6 +205,16 @@ componentDidMount = async () => {
                           <AgentsPerformance 
                             performance={performance}  
                           />
+                          <div id="table-nav-buttons" className="row">
+                            <Pagination
+                              currentPage={page + 1}
+                              totalSize={totalSize}
+                              sizePerPage={size}
+                              changeCurrentPage={this.changeCurrentPage}
+                              numberOfPagesNextToActivePage={2}
+                              theme="bootstrap"
+                            />
+                          </div>
                         </React.Fragment>   
                       </div>
                     </div>

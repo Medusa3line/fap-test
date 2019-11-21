@@ -3,6 +3,8 @@ import { useHistory, useParams, Link } from 'react-router-dom';
 import AggregatorHeader from '../AggregatorHeader/AggregatorHeader';
 import AgentsTransactions from '../Components/AgentsTransactions';
 import SearchComponent from '../Components/SearchComponent';
+import Pagination from "react-pagination-js";
+import "react-pagination-js/dist/styles.css";
 
 import withTimeout from '../../../Components/HOCs/withTimeoutAggregator.hoc';
 import Spinner from '../../../Components/PreLoader/preLoader';
@@ -93,6 +95,7 @@ const AggregatorAllAgentTransactions = () =>  {
       body: JSON.stringify(reqBody)
     }).then(response => response.json())
       .then(result => {
+        console.log(result.respBody)
         if(result.respBody){
           setState(state =>({
               ...state,
@@ -128,33 +131,13 @@ const AggregatorAllAgentTransactions = () =>  {
   }, [fetchHistory, state.page, state.size, agentId])
 
 
-const showLessTransactions = async () => {
-  if(state.page > 0){
-    await setState({
+  const changeCurrentPage = async (pageNumber) => {
+    setState({
       ...state,
-      page: state.page - 1
-    });
-      let reqBody = {
-          page: state.page,
-          size: state.size
-      }
-      fetchHistory(reqBody);
-    }
-}
+      page: pageNumber - 1
+    })
+  }
 
-const showMoreTransactions = async() => {
-    if (state.transactions.length === state.size){
-      await setState({
-        ...state,
-        page: state.page + 1
-      });
-        let reqBody = {
-            page: state.page,
-            size: state.size
-        }
-        fetchHistory(reqBody);
-    }
-}
   const searchAgents = (event) => {
     setState({
       ...state,
@@ -171,10 +154,10 @@ const showMoreTransactions = async() => {
       } else {
         return (
           <div className="body">
-            <div className="fluid">
-              <AggregatorHeader />
-                <div id="main">
-                  <div id="dashboard-wallet-div">
+    				<div className="AggregatorViewcontainer">
+          		<AggregatorHeader />
+              <div id="main">
+              <div id="dashboard-wallet-div">
                     <div id="income-wallet-div">
                       <div id="back-button">
                         <button className="btn btn-sm" onClick={() => history.goBack()}> 
@@ -204,21 +187,25 @@ const showMoreTransactions = async() => {
                           filter={filter}
                         />
                       </div>
-                            <AgentsTransactions 
-                              transactions={transactions} 
-                              page={page}
-                              size={size}
-                              showLessTransactions={showLessTransactions}
-                              showMoreTransactions={showMoreTransactions}
-                              transactionsCount={transactionsCount}
-                              hasNextRecord={hasNextRecord}
-                              showPrintButton="false"
-                            /> 
+                      <AgentsTransactions 
+                        transactions={transactions}
+                        showPrintButton="false"
+                      /> 
+                      <div id="table-nav-buttons" className="row">
+                        <Pagination
+                          currentPage={page + 1}
+                          totalSize={transactionsCount}
+                          sizePerPage={size}
+                          changeCurrentPage={changeCurrentPage}
+                          numberOfPagesNextToActivePage={2}
+                          theme="bootstrap"
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-            </div>
-          </div>
+              </div>
+    				</div>
+    			</div>
         )
       }
 }

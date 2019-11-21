@@ -2,7 +2,7 @@ import React from 'react';
 import AllTransactions from './AllTransactions/AllTransactions';
 import NoResultFound from '../../../Components/NoResultFound/NoResultfound';
 
-const AgentsTransactions = ({ transactions, page, size, showLessTransactions, showMoreTransactions, transactionsCount, hasNextRecord, showPrintButton }) => {
+const AgentsTransactions = ({ transactions, showPrintButton }) => {
 		return (
 			<div className="row" id="print-div">
 	            <div id="right-aggregator-view">
@@ -47,23 +47,6 @@ const AgentsTransactions = ({ transactions, page, size, showLessTransactions, sh
 	                    }
 	                  	</tbody>
 	                </table>
-	                <div id="table-nav-buttons" className="row">
-	                  {
-	                    page > 0 ? 
-	                    <button className="btn btn-xs" onClick={showLessTransactions}>
-	                      Prev
-	                    </button>
-	                    : null
-	                  }
-	                  <h6> Page { page + 1 } of { Math.ceil(transactionsCount/size) } </h6>
-	                  {
-	                    hasNextRecord ? 
-	                    <button className="btn btn-xs" onClick={showMoreTransactions}>
-	                      Next
-	                    </button>
-	                    : null
-	                  }
-	                </div>
 	            </div>
 	        </div>
 		)

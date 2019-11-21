@@ -120,6 +120,11 @@ input[type="text"]{
 		border: 1px solid $color-dim-red;
 	}
 }
+#back-button button{
+	&:focus{
+		outline: unset;
+	}
+}
 #panel-bottom{
 	text-align: left;
 	padding: 2vh 6vh;

@@ -1,11 +1,13 @@
 import React from 'react';
 import './HeaderComponent.styles.scss';
 import Logo from '../../img/logo.png';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
-export default function HeaderComponent({agentName}) {
+export default function HeaderComponent({ agentName }) {
+    const history = useHistory();
     const Logout = () => {
         sessionStorage.clear();
+        history.push('/');
     }
     return (
         <div id="mainContainer">
@@ -14,17 +16,21 @@ export default function HeaderComponent({agentName}) {
                     <Link to="/dashboard" className="navbar-brand"><img src={Logo} alt="" /></Link>
                 </div>
                 
-                <div>
+                <div id="rightContent">
                     <div className="dropdown">
-                        <button className="btn btn-light btn-sm dropdown-toggle" 
+                        <button
+                            className="btn btn-light btn-sm dropdown-toggle" 
                             type="button" 
                             data-toggle="dropdown" 
-                        >
-                        {agentName} <span className="fa fa-chevron-down"></span></button>
+                        > Menu <span className="fa fa-chevron-down"></span></button>
                         <ul className="dropdown-menu dropdown">
                             <li><Link to={"/pinChange"}> Change Pin</Link></li>
-                            <li><Link onClick={Logout} to={"/"}> Logout</Link></li>
                         </ul>
+                    </div>
+                    <div>
+                        <button className="btn btn-sm" onClick={Logout}>
+                            <i className="fa fa-power-off" aria-hidden="true"></i>
+                        </button>                        
                     </div>
                 </div> 
             </div><br/>
