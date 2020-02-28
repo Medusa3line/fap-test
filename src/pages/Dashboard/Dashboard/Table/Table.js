@@ -5,8 +5,8 @@ import './Table.styles.scss';
 
 export default React.memo(({transactions}) => {
   return(
-    <div id="dashboard-table">
-      <table align="center" id="table-to-xls" className="table table-responsive">
+    <div id="dashboard-table" className="overflow-auto">
+      <table id="table-to-xls" className="table text-center position-relative w-100 text-black">
         <thead> 
           <tr>
             <th>S/N</th>

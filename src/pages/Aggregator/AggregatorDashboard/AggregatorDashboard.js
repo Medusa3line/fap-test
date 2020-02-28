@@ -6,12 +6,12 @@ import SearchComponent from '../Components/SearchComponent';
 import './AggregatorDashboard.styles.scss'
 import Pagination from "react-pagination-js";
 import "react-pagination-js/dist/styles.css";
+import ReactToPrint from 'react-to-print'
 
 import withTimeout from '../../../Components/HOCs/withTimeoutAggregator.hoc';
 import Spinner from '../../../Components/PreLoader/preLoader';
 import {Link} from 'react-router-dom';
 import { dashboardDetails, agentsList } from '../../../Utils/baseUrl';
-import PrintReceipt from '../../../Utils/print';
 import SwitchButton from '../Components/SwitchButton/SwitchButton';
 import AggregatorHeader from '../AggregatorHeader/AggregatorHeader';
 import TotalAggregatorStatistics from '../Components/AggregatorStatistics/TotalAggregatorStatistics';
@@ -165,66 +165,74 @@ componentDidMount = async () => {
     });
       if (!finishedLoading){
         return <Spinner />
-      } else {
-          return(
-            <div className="body">
-              <div style={{backgroundColor: '#f3f3f3'}}>
-                <AggregatorHeader />
-                <div id="main">
-                <div style={{width: '100%'}}>
-                  <div>
-                    <SwitchButton showMore={this.showMore} />
-                    {
-                      showMore ? 
-                        <React.Fragment>
-                          <TotalAggregatorStatistics stats={stats} />
-                          <TodayAggregatorStatistics stats={stats} />
-                        </React.Fragment>
-                        : null
-                    }
-                    <div id="dashboard-wallet-div">
-                      <div className="col-sm-12 col-md-12 col-lg-12">
-                        <div className="row" style={{paddingTop: '2vh'}}>
-                          <div className="col-lg-6"><h4><strong>Agents Performance</strong></h4></div>
-                          <div className="dropdown" style={{textAlign: 'right'}}>
-                            <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" id="pad-aggregator-items">Export <span style={{fontSize: '8px'}} className="fa fa-chevron-down"></span></button>
-                            <ul className="dropdown-menu dropdown">
-                              <li onClick={() => PrintReceipt('right-aggregator-view')}><Link to="#">PDF</Link></li>
-                              <ExportToExcel />
-                            </ul>
-                          </div>
-                        </div><br/>
-                          
-                        <React.Fragment>
-                          <SearchComponent 
-                            searchAgents={this.searchAgents}
-                            fromDate={this.fromDate}
-                            toDate={this.toDate} 
-                            filter={this.filterPerformance}
-                          />
-                          <AgentsPerformance 
-                            performance={performance}  
-                          />
-                          <div id="table-nav-buttons" className="row">
-                            <Pagination
-                              currentPage={page + 1}
-                              totalSize={totalSize}
-                              sizePerPage={size}
-                              changeCurrentPage={this.changeCurrentPage}
-                              numberOfPagesNextToActivePage={2}
-                              theme="bootstrap"
-                            />
-                          </div>
-                        </React.Fragment>   
-                      </div>
+      }
+      
+      return(
+        <div className="body">
+          <div id="mainWrapper">
+            <AggregatorHeader />
+            <div id="main">
+              <div id="wrapper">
+                <div id="topPart">
+                  <SwitchButton showMore={this.showMore} />
+                </div>
+                {
+                  showMore ? 
+                    <React.Fragment>
+                      <TotalAggregatorStatistics stats={stats} />
+                      <TodayAggregatorStatistics stats={stats} />
+                    </React.Fragment>
+                    : null
+                }
+                <div className="m-0 d-flex position-relative overflow-auto mb-1 mt-2" id="dashboard-wallet-div" ref={el => (this.componentRef = el)}>
+                  <div className="col-sm-12 col-md-12 col-lg-12">
+                    <div className="toggleAgentPerformance">
+                      <div className="col-lg-6"><h4><strong>Agents Performance</strong></h4></div>
                     </div>
+                    
+                    <div style={{paddingTop: '2vh'}} className="mb-4">
+                      <div className="dropdown" style={{float: 'right'}}>
+                          <button type="button" className="btn btn-danger  dropdown-toggle" data-toggle="dropdown" id="pad-aggregator-items">Export </button>
+                          <ul className="dropdown-menu dropdown">
+                            <li>                                    
+                              <ReactToPrint
+                                trigger={() => <Link to="#">PDF</Link>}
+                                content={() => this.componentRef}
+                              />                                    
+                            </li>
+                            <ExportToExcel />
+                          </ul>
+                      </div>
+                    </div><br/>
+                      
+                    <React.Fragment>
+                      <SearchComponent 
+                        searchAgents={this.searchAgents}
+                        fromDate={this.fromDate}
+                        toDate={this.toDate} 
+                        filter={this.filterPerformance}
+                      />
+                      <AgentsPerformance 
+                        performance={performance}  
+                      />
+                      <div id="table-nav-buttons" className="row">
+                        <Pagination
+                          currentPage={page + 1}
+                          totalSize={totalSize}
+                          sizePerPage={size}
+                          changeCurrentPage={this.changeCurrentPage}
+                          numberOfPagesNextToActivePage={2}
+                          theme="bootstrap"
+                        />
+                      </div>
+                    </React.Fragment>   
                   </div>
                 </div>
               </div>
-              </div>
             </div>
-          )
-        }
+          </div>
+        </div>
+      )
     }
 }
 export default withTimeout(AggregatorDashboard);

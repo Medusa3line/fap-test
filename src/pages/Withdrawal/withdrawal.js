@@ -1,23 +1,56 @@
-import React from 'react';
-import withTimeout from "../../Components/HOCs/withTimeout.hoc";
-import { customPageTitle } from '../../Utils/customTitle'
+import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+import withTimeout from "../../Components/HOCs/withTimeout.hoc"
 
 import Balance from '../../Components/Balance/Balance';
-import FCMBCashout from './FCMB/FCMBCashout';
-import Layout from '../../Components/Layout/Layout.component';
+// import GTBCashout from './gtb/GTBCashout';
+import FidelityCashout from './fidelity/FidelityCashout';
+import AuthenticatedPagesLayoutWrapper from '../../Components/AuthenticatedPagesLayoutWrapper/authenticatedPagesLayoutWrapper';
+import Panel from '../../Components/Panel/panel';
+import SlimContentCardWrapper from '../../Components/SlimContentCardWrapper/slimContentCardWrapper';
+import FancyLine from '../../Components/FancyLine/fancyLine';
 
-const Withdrawal = () => {
-  customPageTitle('Withdrawal')
-  return (
-    <Layout>
-      <div id="panel">
-        <h4> Withdrawal</h4>
-        <h6> Withdraw money from customer's bank account </h6>
-      </div> 
-      <div className="line"></div><br/>     
-      <Balance />
-      <FCMBCashout /> 
-    </Layout>             
-  )  
+class withdrawal extends Component{
+  state = {
+    bank: ''
+  }
+  selectedBank = (e) => {
+    this.setState({ bank: e.target.value})
+  }
+  render(){
+    const { bank } = this.state;
+    return (
+      <AuthenticatedPagesLayoutWrapper>   
+        <SlimContentCardWrapper>
+          <Panel 
+            title="Withdrawal"
+            snippet="Withdraw money from a bank account"
+          />
+          <FancyLine />   
+          <Balance /> 
+          <div className="form-horizontal">
+            <div className="form-group">
+              <div className="col-sm-12 col-md-12 col-lg-12"> 
+                <select className="form-control" required="required" disabled onChange={this.selectedBank} name="bank">
+                  <option value="">Select a Bank</option>
+                  <option value="fidelity">Fidelity Bank</option>
+                  <option value="gtb">Guaranty Trust Bank</option>
+                </select>
+              </div>
+            </div>
+          </div>  
+          {(function(){
+            switch(bank) {
+              case 'fidelity':
+                return <FidelityCashout />;
+              default:
+                return null;
+            }
+          })()}          
+        </SlimContentCardWrapper>
+      </AuthenticatedPagesLayoutWrapper>
+    )
+  }
+    
 }
-export default withTimeout(Withdrawal);
+export default withTimeout(withRouter(withdrawal));

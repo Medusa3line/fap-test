@@ -5,6 +5,7 @@ import { customPageTitle } from '../../Utils/customTitle';
 import LoginError from '../../Components/loginError/LoginError';
 import LoginContainerHeader from '../../Components/LoginContainerHeader/LoginContainerHeader';
 import CustomButton from '../../Components/CustomButton/CustomButton.component';
+import LoginPageLayoutWrapper from '../../Components/LoginPageLayoutWrapper/loginPageLayoutWrapper';
 
 const ResetPin = ({ history }) => {
   customPageTitle('Reset Pin');
@@ -81,44 +82,42 @@ const ResetPin = ({ history }) => {
 
   const { loginError, loggingIn } = state;
   return (
-  <div className="body">
-        <div id="login-layout">
-          <div id="fit-image">
-          </div>
-          <div className="animated zoomIn delay-2s">
-            <div id="login-container">
-              <LoginContainerHeader content={<p>Reset Pin</p>} /><br/>
+    <LoginPageLayoutWrapper>
+      <div id="login-container">
+        <LoginContainerHeader content="Reset Pin" /><br/>
 
-            {/*-- Agent Setup Form */}
-              <form onSubmit={resetPin}>
-                <div className="form-group">
-                  <div className="col-md-9" >
-                    <input 
-                      type="text" 
-                      className="form-control" 
-                      required="required"
-                      placeholder="Enter your Agent Id"
-                      autoComplete="autocomplete"
-                      autoFocus="autofocus"
-                      maxLength=""
-                      name="agentId"
-                      onChange={onChange} />
-                  </div>
-                </div> <br/>
-  
-                <CustomButton 
-                  loggingIn={loggingIn} 
-                  buttonClick={resetPin}
-                  value={'Proceed'}
-                />
-                {
-                  loginError ? <LoginError /> : null
-                }
-              </form>
+      {/*-- Agent Setup Form */}
+        <form onSubmit={resetPin}>
+          <div className="form-group">
+            <div className="col-md-9" >
+              <input 
+                type="text" 
+                className="form-control" 
+                required="required"
+                placeholder="Enter your Agent Id"
+                autoComplete="autocomplete"
+                autoFocus="autofocus"
+                maxLength=""
+                name="agentId"
+                onChange={onChange} />
             </div>
-        </div>
+          </div> <br/>
+
+          <div className="form-group">
+            <div className="col-md-9" >
+              <CustomButton 
+                loggingIn={loggingIn} 
+                buttonClick={resetPin}
+                value={'Proceed'}
+              />
+            </div>
+          </div>
+          {
+            loginError ? <LoginError /> : null
+          }
+        </form>
       </div>
-  </div>
+    </LoginPageLayoutWrapper>
   )
 }
 export default ResetPin;

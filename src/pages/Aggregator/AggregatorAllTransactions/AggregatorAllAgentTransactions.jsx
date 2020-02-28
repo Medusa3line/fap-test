@@ -1,8 +1,10 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { useHistory, useParams, Link } from 'react-router-dom';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import AggregatorHeader from '../AggregatorHeader/AggregatorHeader';
 import AgentsTransactions from '../Components/AgentsTransactions';
 import SearchComponent from '../Components/SearchComponent';
+import ReactToPrint from 'react-to-print';
+
 import Pagination from "react-pagination-js";
 import "react-pagination-js/dist/styles.css";
 
@@ -10,9 +12,9 @@ import withTimeout from '../../../Components/HOCs/withTimeoutAggregator.hoc';
 import Spinner from '../../../Components/PreLoader/preLoader';
 import swal from '../../../Utils/alert';
 import {agentTransactions} from '../../../Utils/baseUrl';
-import PrintReceipt from '../../../Utils/print';
 import ExportToExcel from '../../../Components/ExportToExcel/ExportToExcel';
 import './AggregatorAllAgentTransactions.styles.scss';
+import BackButton from '../../../Components/BackButton/backButton';
 
 const { auth_token } = JSON.parse(sessionStorage.getItem('userDetails'))
 const AggregatorAllAgentTransactions = () =>  {
@@ -41,7 +43,7 @@ const AggregatorAllAgentTransactions = () =>  {
     })
   }
   const { agentId } = useParams();
-  const history = useHistory();
+  const componentRef = useRef()
 
   const toDate = async (event) => { 
     let date = event.target.value;
@@ -53,10 +55,6 @@ const AggregatorAllAgentTransactions = () =>  {
       ...state,
       toDate: todate
     })
-  }
-
-  const print = (divName) => {
-    PrintReceipt(divName);
   }
 
   const filter = async () => {
@@ -104,7 +102,7 @@ const AggregatorAllAgentTransactions = () =>  {
               hasNextRecord: result.respBody.hasNextRecord
             }))
         }else {
-          setState(state({
+          setState(state =>({
             ...state,
             transactions: [],
             transactionsCount: 1,
@@ -145,7 +143,7 @@ const AggregatorAllAgentTransactions = () =>  {
     })
   }
 
-    const { page, size, finishedLoading, transactionsCount, hasNextRecord } = state;
+    const { page, size, finishedLoading, transactionsCount } = state;
     const transactions = state.transactions.filter(transaction => {
         return (transaction.tranType.toLowerCase()).includes(state.searchField.toLowerCase())
       });
@@ -158,12 +156,8 @@ const AggregatorAllAgentTransactions = () =>  {
           		<AggregatorHeader />
               <div id="main">
               <div id="dashboard-wallet-div">
-                    <div id="income-wallet-div">
-                      <div id="back-button">
-                        <button className="btn btn-sm" onClick={() => history.goBack()}> 
-                          <i className="fa fa-chevron-left"></i> Back
-                        </button>
-                      </div>
+                    <div id="income-wallet-div" ref={componentRef}>
+                      <BackButton />
                       <div id="upperSection">
                         <div id="top">
                           <div>
@@ -173,9 +167,14 @@ const AggregatorAllAgentTransactions = () =>  {
                           </div>
                               
                           <div className="dropdown">
-                            <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" id="pad-aggregator-items">Export <span className="fa fa-chevron-down"></span></button>
+                            <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" id="pad-aggregator-items">Export </button>
                             <ul className="dropdown-menu dropdown">
-                              <li onClick={() => print('print-div')}><Link to="#">PDF</Link></li>
+                              <li>                                    
+                                <ReactToPrint
+                                  trigger={() => <Link to="#">PDF</Link>}
+                                  content={() => componentRef.current}
+                                />                                    
+                              </li>
                               <ExportToExcel />
                             </ul>
                           </div>

@@ -1,15 +1,9 @@
-.middle-panel{
-    padding: 20px 0 0 0;
-
-    #dashboard-card{
-        background-color: white; 
-        border-radius: 3px;
-        box-sizing: border-box; 
-        padding: 15px; 
-        box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
-        overflow: auto;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+.wallet-container{
+	left: 15%;
+	width: 70%;
+    background-color: white; 
+    position: relative;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
+    padding: 15px; 
+    border-radius: 5px;
 }

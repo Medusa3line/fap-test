@@ -4,10 +4,12 @@
     -webkit-animation: headerAnimation 3s linear infinite;
     -moz-animation: headerAnimation 3s linear infinite;
     animation: headerAnimation 3s linear infinite;
+    padding: 10px 0px;
 
     .fluid{
         display: flex;
         justify-content: space-between;
+        align-items: center;
         margin: 0 15%;
 
         @media only screen  and (max-width: '960px'){
@@ -34,8 +36,11 @@
 
     .dropdown {
         margin-right: 5px;
-        button span{
-            font-size: 8px;
+
+        button {
+            &:hover {
+                background-color: #FBB700;
+            }
         }
     }
 
@@ -46,7 +51,7 @@
 
     .nav.navbar-header{
         a{
-            padding: 10px 0;
+            padding: 5px 0;
 
             img {
                 width: 50px;

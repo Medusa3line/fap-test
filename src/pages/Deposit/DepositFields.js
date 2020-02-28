@@ -60,7 +60,7 @@ const DepositFields = ({ depositInitial, onChange, makingPayment, bank, acctName
                 <div className="col-sm-12 col-md-12 col-lg-12">
                   <button 
                     type="submit"
-                    className="btn col-sm-12 col-md-12 col-lg-12" 
+                    className="btn btn-danger col-sm-12 col-md-12 col-lg-12" 
                     id="validateButton"                    
                     onClick={manualValidation}>
                     {
@@ -139,6 +139,7 @@ const DepositFields = ({ depositInitial, onChange, makingPayment, bank, acctName
                     required="required" 
                     placeholder="Depositor's Phone Number" 
                     maxLength="11"
+                    minLength="11"
                     name="depositorNumber" 
                     value={depositorNumber}
                     onChange={onChange}
@@ -163,8 +164,8 @@ const DepositFields = ({ depositInitial, onChange, makingPayment, bank, acctName
                 <div className="col-sm-12 col-md-12 col-lg-12">
                   <button 
                     type="submit"
-                    className="btn col-sm-8 col-md-6 col-lg-4" 
-                    id="login_button"                    
+                    className="btn btn-success col-sm-8 col-md-6 col-lg-4" 
+                    disabled={makingPayment}
                     onClick={depositInitial}>
                     {
                       makingPayment ? <MakingPayment />
@@ -174,8 +175,7 @@ const DepositFields = ({ depositInitial, onChange, makingPayment, bank, acctName
                 </div>
               </div>
             </div>
-        }
-       
+        }       
       </div>
     </div>
     );

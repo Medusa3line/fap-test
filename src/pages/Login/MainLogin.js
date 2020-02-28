@@ -4,6 +4,7 @@ import Login from './Login.component';
 import { loginUrl } from '../../Utils/baseUrl';
 import { pinRegex } from '../../Utils/regex';
 import { customPageTitle } from '../../Utils/customTitle';
+import LoginPageLayoutWrapper from '../../Components/LoginPageLayoutWrapper/loginPageLayoutWrapper';
 
 export const LoginContext = createContext();
 const MainLogin = ({history}) => {
@@ -36,7 +37,6 @@ const onChange = (event, option) => {
 
 const loginButtonClick = (e) => {
   e.preventDefault();
-  let id = e.target.id;
   const { agentId, pin } = state;
     let reqBody = {
       agentId,
@@ -51,7 +51,6 @@ const loginButtonClick = (e) => {
         loggingIn: true,
         loginError: false
       });
-      document.getElementById(id).disabled = true;
     fetch(`${loginUrl}`, {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
@@ -59,14 +58,12 @@ const loginButtonClick = (e) => {
     })
     .then(response => response.json())
     .then(user => {
-      document.getElementById(id).disabled = false;
       setState({
         ...state,
         loggingIn: false
       })
       if(user.respCode === '00'){          
         sessionStorage.setItem('userDetails', JSON.stringify(user.respBody)); 
-        document.getElementById(id).disabled = false;   
         redirectToDashboard(user.respBody.userType)    
       } else {
         setState({
@@ -76,7 +73,6 @@ const loginButtonClick = (e) => {
         })
       }  
     }).catch(err => {
-      document.getElementById(id).disabled = false;
       setState({
         ...state,
         loggingIn: false
@@ -93,6 +89,8 @@ const redirectToDashboard = (userType) => {
     history.push("/aggregator")
     } else if (userType.includes('operator') || userType.includes('agent')){
       history.push("/dashboard")
+      // history.push("/open-an-account")
+
     } else {
       swal("Login Failed", 'User type unknown', 'error')              
     } 
@@ -109,7 +107,9 @@ const redirectToDashboard = (userType) => {
       errorMessage,
       pin
     }}>
-      <Login /> 
+      <LoginPageLayoutWrapper>
+        <Login />   
+      </LoginPageLayoutWrapper>
     </LoginContext.Provider>
   ); 
 }

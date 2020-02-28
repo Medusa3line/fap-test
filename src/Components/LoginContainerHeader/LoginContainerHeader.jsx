@@ -5,8 +5,8 @@ import './LoginContainerHeader.scss';
 export default function LoginContainerHeader({content}) {
     return (
         <div className="header">
-            <img src={Logo} id="logo" alt="3LINE LOGO" />
-            {content}
+            <img src={Logo} id="logo" alt="FCMB LOGO" />
+            <p>{content}</p>
         </div>
     )
 }

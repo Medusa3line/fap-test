@@ -1,0 +1,11 @@
+#panel{
+    font-weight: bold;
+    padding: 2vh 0vh;
+
+    > h4, > h5 {
+        font-weight: bolder;
+    }
+    small {
+        color: #ff0014;
+    }
+}

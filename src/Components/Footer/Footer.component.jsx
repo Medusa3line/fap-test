@@ -5,7 +5,7 @@ import './Footer.styles.scss';
 export default function Footer() {
     return (
         <footer>
-            <p>Powered by <img src={FooterLogo} alt="3LINE CARD MANAGEMENT LIMITED" /> </p>
+            <p>Powered by <img src={FooterLogo} alt="FCMB Logo" /> </p>
         </footer>
     )
 }

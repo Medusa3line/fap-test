@@ -5,8 +5,12 @@ const NetworkList = ({ name, getServiceNames, index }) => {
   return (
     <div>
       <li id="NetworkList" onClick={() => getServiceNames(name)}>
-        <img src={Logo}  alt={name} /> 
-        {name} 
+        <div>
+          <img src={Logo}  alt={name} /> 
+        </div>
+        <div>
+          {name}
+        </div> 
       </li>
     </div>
   );

@@ -51,8 +51,6 @@ class FCMBAccount extends Component {
   }
 
   validateBvn = (e) => {
-    let id = e.target.id;
-    document.getElementById(id).disabled = true;
     this.setState({makingPayment: true})
 
       fetch(`${validateBVN}/${this.state.bvn}`, {
@@ -63,7 +61,6 @@ class FCMBAccount extends Component {
       }).then(response => response.json())
         .then(result => {
           this.setState({makingPayment: false});
-          document.getElementById(id).disabled = false;
           if(result.respCode === '00'){
             this.setState({
               showValidateBVNButton: false, 
@@ -74,7 +71,6 @@ class FCMBAccount extends Component {
           }
         })
         .catch(err => {
-          document.getElementById(id).disabled = false;
           this.setState({makingPayment: false})
           swal('An Error Occured', `${err}`, 'error')
         });
@@ -82,12 +78,10 @@ class FCMBAccount extends Component {
 
   openAccount = (e) => {
     e.preventDefault();
-    let id = e.target.id;
     const { phoneNumber, email, lgOfResidence, nationality, occupation, nextOfKin, residentAddress, stateOfResidence } = this.state;
       if ( phoneNumber.trim() === '' || email.trim() === '' || nextOfKin.trim() === '' || nationality.trim() === '' || residentAddress.trim() === '' || lgOfResidence.trim() === '' || occupation.trim() === '' || stateOfResidence.trim() === ''){
           swal("Required Fields", "Fill all fields", "info")
       } else {
-        document.getElementById(id).disabled = true;
         this.setState({makingPayment: true})
         const { firstName, gender, lastName, phoneNumber, bvn, dob, email, mothersMaidenName, residentAddress, lgOfResidence, nextOfKin, occupation, nationality, middleName, maritalStatus, stateOfResidence, hasBVN } = this.state;
           let day = dob.slice(8);
@@ -124,7 +118,6 @@ class FCMBAccount extends Component {
           }).then(response => response.json())
             .then(result => {
               this.setState({makingPayment: false});
-              document.getElementById(id).disabled = false;
               if(result.respCode === '00'){
                 this.setState({ 
                   generatedAccountNumber: result.respBody.accountNumber, 
@@ -135,7 +128,6 @@ class FCMBAccount extends Component {
               }
             })
             .catch(err => {
-              document.getElementById(id).disabled = false;
               this.setState({makingPayment: false})
               swal('An Error Occured', `${err}`, 'error')
             });

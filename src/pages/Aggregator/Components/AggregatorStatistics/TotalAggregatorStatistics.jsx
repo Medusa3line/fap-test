@@ -2,7 +2,7 @@ import React from 'react';
 import Chart1 from "../../../../img/bar_chart_1.svg";
 import Chart2 from "../../../../img/bar_chart_2.svg";
 import Chart3 from "../../../../img/bar_chart_3.svg";
-import './AggregatorStatistics.styles.scss';
+// import './AggregatorStatistics.styles.scss';
 
 export default function TotalAggregatorStatistics({stats: {numOfBillPayment, numOfDeposits, numOfWithdrawal, totalAmount, totalBillPaymentAmount, totalDepositAmount, totalNumOfTransaction, totalWithdrawalAmount}}) {
     return (

@@ -3,20 +3,27 @@ import baseUrl from '../../Utils/baseUrl';
 
 import InternetServices from './InternetServices/InternetServices';
 import UtilityBills from './UtilityBills/UtilityBills';
-import CableTv from './CableTv/CableTv';
+import CableTv from './CableTV/CableTv';
 
-const { auth_token } = JSON.parse(sessionStorage.getItem('userDetails'));
-
-class BillFields extends Component {
-  state = {
-    userDetails : {},
-    route: 'internet_services',
-    value: 2,
-    serviceName: []
+ class BillFields extends Component {
+  constructor(){
+    super()
+    this.state = {
+      userDetails : {},
+      route: 'internet_services',
+      value: 2,
+      serviceName: []
+    }
   }
 
   onRouteChange = async (route, value) => {
-    await this.setState({serviceName: [], route: route, value: value}); 
+    await this.setState({serviceName: [], route: route, value: value})
+
+    await sessionStorage.getItem('userDetails') && this.setState ({
+      userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
+    })
+
+    let auth_token = this.state.userDetails.auth_token; 
     
     await fetch(`${baseUrl}/bills/category/${this.state.value}/service`, {
       method: 'post',
@@ -31,23 +38,30 @@ class BillFields extends Component {
       }); 
     }
 
-  componentDidMount = async () => {   
-    await fetch(`${baseUrl}/bills/category/${this.state.value}/service`, {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${auth_token}`
-      },
-      body: JSON.stringify({})
-    }).then(response => response.json())
-      .then(result => {
-          this.setState({ serviceName: result.respBody })
-        }
-      ); //End of Get Bill Payment Details
-  }
+    componentDidMount = async () => {
+      await sessionStorage.getItem('userDetails') && this.setState ({
+      userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
+    })
+    
+    if(sessionStorage.getItem('userDetails')){
+      let auth_token = this.state.userDetails.auth_token; 
+      await fetch(`${baseUrl}/bills/category/2/service`, {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${auth_token}`
+        },
+        body: JSON.stringify({})
+      }).then(response => response.json())
+        .then(result => {
+            this.setState({ serviceName: result.respBody })
+          }
+        ); //End of Get Bill Payment Details
+      }
+    }
 
   render(){
-    const { serviceName, route } = this.state;
+    const { serviceName, route }= this.state;
     return (
     <div>
       <div id="bill-list">
@@ -69,8 +83,8 @@ class BillFields extends Component {
                 return null;
             } 
           })()}
-          </div>           
-        </div>
+        </div>           
+      </div>
     </div>
   );
   }	

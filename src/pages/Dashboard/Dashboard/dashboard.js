@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import swal from '../../../Utils/alert';
 import withTimeout from '../../../Components/HOCs/withTimeout.hoc';
 import Spinner from '../../../Components/PreLoader/preLoader';
+import ReactToPrint from 'react-to-print'
 import {dashboardUrl, transactionHistoryUrl} from '../../../Utils/baseUrl';
-import PrintReceipt from '../../../Utils/print';
-import Header from '../../Header/Header';
 import Wallets from './Wallet/Wallet';
 import Table from './Table/Table';
 import './dashboard.styles.scss';
@@ -13,11 +12,13 @@ import { Link } from 'react-router-dom';
 import Pagination from "react-pagination-js";
 import "react-pagination-js/dist/styles.css";
 import { customPageTitle } from '../../../Utils/customTitle';
+import AuthenticatedPagesLayoutWrapper from '../../../Components/AuthenticatedPagesLayoutWrapper/authenticatedPagesLayoutWrapper';
 
 const Dashboard = () => {
   //Get User Information
   const { auth_token, userName } = JSON.parse(sessionStorage.getItem('userDetails'));
   customPageTitle('Dashboard')
+  const componentRef = useRef()
 
     const [state, setState] = useState({
       userDetails : {},
@@ -158,11 +159,7 @@ const Dashboard = () => {
     }
   }
 
-  const print = (divName) => {
-    PrintReceipt(divName);
-  }
-
-    const { page, size, finishedLoading, balance, totalCount, hasNextRecord } = state;
+    const { page, size, finishedLoading, balance, totalCount } = state;
     const transactions = state.transactions.filter(transaction => {
       return (transaction.transactionType.toLowerCase()).includes(state.searchField.toLowerCase())
     });
@@ -171,86 +168,85 @@ const Dashboard = () => {
         return <Spinner />
       } else {
         return (
-        <div className="body">  
-          <div className="container-fluid">  
-            <Header />
-              <div id="bottom-content">
-                <Wallets 
-                  walletBalance={balance.accountBalance} 
-                />
+        <AuthenticatedPagesLayoutWrapper>
+          <Wallets 
+            walletBalance={balance.accountBalance} 
+          />
 
-                {/* <!-- Table -->             */}
-                <div className="container" id="bottom_div">
-                  <div id="top-layer">
-                    <div>  
-                      <h4> &nbsp; Transactions History</h4>
-                    </div>
-                    <div>
-                      <button 
-                        type="button" 
-                        className="btn dropdown-toggle" 
-                        data-toggle="dropdown" 
-                        id="pad-aggregator-items"
-                      > Export 
-                        <span className="fa fa-chevron-down"></span>
-                      </button>
-                      <ul className="dropdown-menu dropdown">
-                        <li onClick={() => print('table')} id="pad-aggregator-items"><Link to="#">PDF</Link></li>
-                        <ExportToExcel />
-                      </ul>
-                    </div>
-                  </div>
-                  <div id="bottom-layer">
-                    <div className="form-group" id="bottom-layer-left">
-                      <select className="form-control" onChange={searchTransactions}>
-                        <option value="">All Transactions</option>
-                        <option value="deposit">Deposit</option>
-                        <option value="recharge">Recharge</option>
-                        <option value="bill payment"> Bill Payment</option>
-                        <option value="withdrawal">Withdrawal</option>
-                      </select>
-                    </div>
-                    <div className="form-group" id="bottom-layer-left">
-                      <select className="form-control" onChange={increasePageCount} value={size}>
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                        <option value="">All</option>
-                      </select>
-                    </div>
-                    <div id="bottom-layer-right">
-                      <div className="form-inline">
-                        From: <input type="date" onChange={fromDate} className="form-control" id="pad-aggregator-items" />
-                      </div>
-                      <div className="form-inline">
-                        To: <input type="date" onChange={toDate} className="form-control" id="pad-aggregator-items" />
-                      </div>
-                      <div>
-                        <h4><button type="button" className="btn btn-sm" onClick={fetchTransactions}>Filter</button></h4>
-                      </div>
-                    </div>
-                  </div>
-                  <br/>
-                  <div id="table">
-                    <Table 
-                      transactions={transactions}
-                    />
-                  </div>
-                  <div id="table-nav-buttons" className="row">
-                    <Pagination
-                      currentPage={page + 1}
-                      totalSize={totalCount}
-                      sizePerPage={size}
-                      changeCurrentPage={changeCurrentPage}
-                      numberOfPagesNextToActivePage={2}
-                      theme="bootstrap"
-                    />
-                  </div>
+          {/* <!-- Table -->             */}
+          <div className="container" id="bottom_div">
+            <div id="top-layer">
+              <div>  
+                <h4> &nbsp; Transactions History</h4>
+              </div>
+              <div>
+                <button 
+                  type="button" 
+                  className="btn dropdown-toggle" 
+                  data-toggle="dropdown" 
+                  id="pad-aggregator-items"
+                > Export 
+                </button>
+                <ul className="dropdown-menu dropdown">
+                  <li>
+                    <ReactToPrint
+                      trigger={() => <Link to="#">PDF</Link>}
+                      content={() => componentRef.current}
+                    /> 
+                  </li>                  
+                  <ExportToExcel />
+                </ul>
+              </div>
+            </div>
+            <div id="bottom-layer">
+              <div className="form-group" id="bottom-layer-left">
+                <select className="form-control" onChange={searchTransactions}>
+                  <option value="">All Transactions</option>
+                  <option value="deposit">Deposit</option>
+                  <option value="recharge">Recharge</option>
+                  <option value="bill payment"> Bill Payment</option>
+                  <option value="withdrawal">Withdrawal</option>
+                </select>
+              </div>
+              <div className="form-group" id="bottom-layer-left">
+                <select className="form-control" onChange={increasePageCount} value={size}>
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                  <option value="">All</option>
+                </select>
+              </div>
+              <div id="bottom-layer-right">
+                <div className="form-inline">
+                  From: <input type="date" onChange={fromDate} className="form-control" id="pad-aggregator-items" />
                 </div>
-              </div>   
+                <div className="form-inline">
+                  To: <input type="date" onChange={toDate} className="form-control" id="pad-aggregator-items" />
+                </div>
+                <div>
+                  <h4><button type="button" className="btn btn-sm" onClick={fetchTransactions}>Filter</button></h4>
+                </div>
+              </div>
+            </div>
+            <br/>
+            <div id="table" ref={componentRef}>
+              <Table 
+                transactions={transactions}
+              />
+            </div>
+            <div id="table-nav-buttons" className="row">
+              <Pagination
+                currentPage={page + 1}
+                totalSize={totalCount}
+                sizePerPage={size}
+                changeCurrentPage={changeCurrentPage}
+                numberOfPagesNextToActivePage={2}
+                theme="bootstrap"
+              />
+            </div>
           </div>
-        </div>
+        </AuthenticatedPagesLayoutWrapper>
       );
     } 
 }

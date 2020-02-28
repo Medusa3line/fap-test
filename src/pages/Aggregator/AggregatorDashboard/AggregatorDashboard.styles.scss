@@ -1,9 +1,14 @@
-#dashboard-wallet-div{
-    margin:0px; 
-    margin-bottom: 5vh;
-    box-sizing:border-box;
+#topPart{
     display: flex;
+    justify-content: space-between;
+    align-items: center;
     position: relative;
-    top: 2vh; 
-    overflow-x:auto;
+    margin: 1% 4%;
+    width: 92%;
+}
+#mainWrapper{
+    background-color: #f3f3f3;
+}
+#wrapper{
+    width: 100%;
 }

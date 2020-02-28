@@ -1,0 +1,22 @@
+.line {
+    position: relative;
+    margin-bottom: 40px;
+    
+    li{
+        display: inline-block;
+        padding: 5vw;
+    }
+
+    &:before, &:after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+    }
+
+    &:after {
+        right: 0;
+        height: 2px;
+        background:  linear-gradient(90deg, #E6061C 50%, #faa831 50%);
+    }
+}

@@ -2,58 +2,65 @@ import React from 'react';
 import MakingPayment from '../../../Components/makingPayment/makingPayment';
 import { manipulateNumber } from '../../../Utils/manipulateNumber';
 import { withRouter } from 'react-router-dom';
-import swal from '../../../Utils/alert';
+import swal from 'sweetalert';
 import baseUrl from '../../../Utils/baseUrl';
 
-const { auth_token } = JSON.parse(sessionStorage.getItem('userDetails'));
+class FidelityCashout extends React.Component{
+  constructor(){
+    super()
+    this.state = {
+      userDetails : {},
+      acctNumber: '',
+      narration: '',
+      amount: '',
+      agentPin: '',
+      otp: '',
+      isAccountNumberValid: false,
+      validating: false,
+      makingWithdrawal: false,
+      phoneNumber: '',
+      tranRef: ''
+    }
+  }
 
-class GTBCashout extends React.Component{
- state = {
-    userDetails : {},
-    paymentCode: '',
-    customerName: '',
-    amount: '',
-    agentPin: '',
-    isPaymentCodeValid: false,
-    validating: false,
-    makingWithdrawal: false,
-    phoneNumber: '',
-    tranRef: ''
+  componentDidMount = async () => {
+    await sessionStorage.getItem('userDetails') && this.setState ({
+      userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
+    })
   }
 
   onChange = async (e) => {
     await this.setState({[e.target.name]: e.target.value})
   }
 
-  onChangePhoneNumber = async (e) => {
-    await this.setState({phoneNumber: e.target.value})
-    if(this.state.isPaymentCodeValid){
-      this.setState({isPaymentCodeValid: false})
+  onChangeAmount = async (e) => {
+    await this.setState({amount: e.target.value})
+    if(this.state.isAccountNumberValid){
+      this.setState({isAccountNumberValid: false})
     }
   }
 
-  onChangePaymentCode = async (e) => {
-    await this.setState({paymentCode: e.target.value});
-    if(this.state.isPaymentCodeValid){
-      this.setState({isPaymentCodeValid: false})
+  onChangeAcctNumber = async (e) => {
+    await this.setState({acctNumber: e.target.value});
+    if(this.state.isAccountNumberValid){
+      this.setState({isAccountNumberValid: false})
     }
   }
 
-  validatePaymentCode = (e) => {
-    const { paymentCode, phoneNumber } = this.state;
-    if ( phoneNumber === '' || paymentCode === '' ){
+  validateAccountNumber = (e) => {
+    const { paymentCode, amount, narration } = this.state;
+    if ( amount === '' || paymentCode === '' || narration === '' ){
       swal("Failed Operation", "Fill all fields", "info")
     } else {
-      let id = e.target.id;
-      document.getElementById(id).disabled = true;
-      this.setState({validating: true})
-
       let reqBody = {
-        facCode: this.state.paymentCode,
-        mobileNumber: this.state.phoneNumber
+        accountNumber: this.state.acctNumber
       };
 
-      fetch(`${baseUrl}/transactions/gtb/validate/fac`, {
+      let auth_token = this.state.userDetails.auth_token;
+
+      this.setState({validating: true})
+
+      fetch(`${baseUrl}/transactions/fidelity/generate/otp`, {
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
@@ -62,18 +69,18 @@ class GTBCashout extends React.Component{
         body: JSON.stringify(reqBody)
       }).then(response => response.json())
         .then(validationStatus => {
-          document.getElementById(id).disabled = false;
+          ;
           this.setState({validating: false})
           if(validationStatus.respCode === '00'){
             this.setState({
-              isPaymentCodeValid: true
+              isAccountNumberValid: true
             })          
           } else {
             swal("Failed Operation", `${validationStatus.respDescription}`, "error")
           }
         })
         .catch(err => {
-          document.getElementById(id).disabled = false;
+          ;
           this.setState({validating: false})
           swal("Failed Operation", `${err}`, "error")
         })
@@ -81,24 +88,23 @@ class GTBCashout extends React.Component{
     }
   
     withdrawFund = (e) => {
-      const { paymentCode, phoneNumber, agentPin, amount, customerName } = this.state;
-      if ( phoneNumber === '' || paymentCode === '' || agentPin === '' || amount === '' || customerName === '' ){
+      const { acctNumber, agentPin, otp, amount, narration } = this.state;
+      if ( acctNumber === '' || agentPin === '' || amount === '' || narration === '' || otp === '' ){
         swal("Failed Operation", "Fill all fields", "info")
-      } else {
-        let id = e.target.id;
-        document.getElementById(id).disabled = true;
-        this.setState({makingWithdrawal: true})
-  
+      } else {  
         let reqBody = {
-          facCode: this.state.paymentCode,
-          mobileNumber: this.state.phoneNumber,
+          DebitAccountNumber: this.state.acctNumber,
           agentPin: this.state.agentPin,
-          amount: this.state.amount,
-          // terminalId: this.state.terminalId,
-          customerName: this.state.customerName,
+          otp: this.state.otp,
+          Amount: this.state.amount,
+          Narration: this.state.narration,
         };
   
-        fetch(`${baseUrl}/transactions/gtb/cashout`, {
+        let auth_token = this.state.userDetails.auth_token;
+  
+        this.setState({makingWithdrawal: true})
+  
+        fetch(`${baseUrl}/transactions/fidelity/cashout`, {
           method: 'post',
           headers: {
             'Content-Type': 'application/json',
@@ -107,7 +113,7 @@ class GTBCashout extends React.Component{
           body: JSON.stringify(reqBody)
         }).then(response => response.json())
           .then(withdrawalStatus => {
-            document.getElementById(id).disabled = false;
+            ;
             this.setState({makingWithdrawal: false})
             if(withdrawalStatus.respCode === '00'){ 
               swal("Successful Operation", " Successful Withdrawal ", "success");  
@@ -117,7 +123,7 @@ class GTBCashout extends React.Component{
             }
           })
           .catch(err => {
-            document.getElementById(id).disabled = false;
+            ;
             this.setState({makingWithdrawal: false})
             swal("Failed Operation", `${err}`, "error")
             this.props.history.push('/dashboard');
@@ -127,55 +133,68 @@ class GTBCashout extends React.Component{
     }
   render(){
     const { 
-      paymentCode, 
-      phoneNumber, 
-      customerName, 
-      agentPin, 
+      acctNumber, 
+      narration, 
+      agentPin,
+      otp, 
       amount, 
-      isPaymentCodeValid, 
+      isAccountNumberValid, 
       validating, 
       makingWithdrawal 
     } = this.state;
     return (
     <div>
-        <div className="form-horizontal">
-          <div className="form-group">
+      <div className="form-horizontal">
+        <div className="form-group">
             <div className="col-sm-12 col-md-12 col-lg-12">
               <input 
                 type="number" 
                 required="required" 
                 className="form-control" 
-                placeholder="Enter Payment Code"
+                maxLength="10"
+                placeholder="Enter Customer's Account Number"
                 name="paymentCode"
-                onChange={this.onChangePaymentCode}
-                value={paymentCode}
-              />                     
-            </div>
-          </div>
-          <div className="form-group">
-            <div className="col-sm-12 col-md-12 col-lg-12">
-              <input 
-                type="number" 
-                required="required"
-                maxLength="11" 
-                className="form-control" 
-                placeholder="Enter Phone Number"
-                name="phoneNumber"
-                onChange={this.onChangePhoneNumber}
-                value={phoneNumber} 
+                onChange={this.onChangeAcctNumber}
+                value={acctNumber}
                 onKeyPress={(e) => manipulateNumber(e)}
               />                     
             </div>
           </div>
+        <div className="form-group">
+          <div className="col-sm-12 col-md-12 col-lg-12">
+            <input 
+              type="number" 
+              className="form-control" 
+              required="required" 
+              placeholder="Amount" 
+              name="amount"
+              onChange={this.onChangeAmount}
+              value={amount}
+            />
+          </div>
+        </div>
+        <div className="form-group">
+          <div className="col-sm-12 col-md-12 col-lg-12">
+            <input 
+              type="text" 
+              required="required" 
+              className="form-control" 
+              placeholder="Narration"
+              name="narration"
+              onChange={this.onChange}
+              value={narration}
+            />                     
+          </div>
+        </div>
           {
-            !isPaymentCodeValid ?
+            !isAccountNumberValid ?
             <div className="form-group">        
               <div className="col-sm-12 col-md-12 col-lg-12">
                 <button 
                   type="submit"
-                  className="btn col-sm-8 col-md-8 col-lg-6" 
+                  className="btn btn-danger col-sm-8 col-md-8 col-lg-6" 
                   id="validate_button"                    
-                  onClick={this.validatePaymentCode}>
+                  onClick={this.validateAccountNumber}>
                   {
                     validating ? <MakingPayment />
                     : 'Validate'
@@ -188,31 +207,18 @@ class GTBCashout extends React.Component{
             <div className="form-group">
               <div className="col-sm-12 col-md-12 col-lg-12">
                 <input 
-                  type="text" 
-                  required="required" 
-                  className="form-control" 
-                  placeholder="Customer Name"
-                  name="customerName"
-                  onChange={this.onChange}
-                  value={customerName}
-                />                     
-              </div>
-            </div>
-
-            <div className="form-group">
-              <div className="col-sm-12 col-md-12 col-lg-12">
-                <input 
-                  type="number" 
+                  type="password" 
                   className="form-control" 
                   required="required" 
-                  placeholder="Amount" 
-                  name="amount"
+                  placeholder="Enter OTP sent to customer" 
+                  // maxLength="4"
+                  name="otp"
                   onChange={this.onChange}
-                  value={amount}
+                  value={otp} 
+                  onKeyPress={(e) => manipulateNumber(e)}
                 />
               </div>
             </div>
-
             <div className="form-group">
               <div className="col-sm-12 col-md-12 col-lg-12">
                 <input 
@@ -233,7 +239,7 @@ class GTBCashout extends React.Component{
               <div className="col-sm-12 col-md-12 col-lg-12">
                 <button 
                   type="submit"
-                  className="btn col-sm-8 col-md-6 col-lg-6" 
+                  className="btn btn-success col-sm-8 col-md-6 col-lg-6" 
                   id="withdrawal_button"                    
                   onClick={this.withdrawFund}>
                   {
@@ -251,4 +257,4 @@ class GTBCashout extends React.Component{
   }
 }
 
-export default withRouter(GTBCashout);
+export default withRouter(FidelityCashout);

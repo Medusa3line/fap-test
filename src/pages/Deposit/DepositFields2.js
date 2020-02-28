@@ -5,7 +5,7 @@ import { manipulateNumber } from '../../Utils/manipulateNumber';
 const DepositFields2 = ({ commission, amount, onChange, validation, makingPayment, bank, acctName, acctNumber, goBack }) => {
   return (
     <div>
-      <div className="form-horizontal" style={{textAlign: 'left'}} id="deposit-fields-2">
+      <div className="form-horizontal text-left" id="deposit-fields-2">
         <div className="form-group">
           <div className="col-sm-12 col-md-12 col-lg-12">
             <h5>Recipient Account Number: <span> {acctNumber} </span></h5>
@@ -50,16 +50,17 @@ const DepositFields2 = ({ commission, amount, onChange, validation, makingPaymen
             </div>
         </div>
         
-        <div style={{display: 'flex', justifyContent: 'space-between'}}> 
+        <div className="d-flex justify-content-between mb-5"> 
           <button 
             type="submit"
-            className="btn col-sm-8 col-md-6 col-lg-4"                    
+            className="btn btn-danger col-sm-8 col-md-6 col-lg-4"                    
             onClick={goBack}>Go Back
           </button>       
           <button 
             type="submit"
-            className="btn col-sm-8 col-md-6 col-lg-4" 
-            id="validation"                    
+            className="btn btn-success col-sm-8 col-md-6 col-lg-4" 
+            id="validation"
+            disabled={makingPayment}                    
             onClick={validation}>
             {
               makingPayment ? <MakingPayment />

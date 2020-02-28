@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom'
-import swal from '../../Utils/alert';
+import swal from 'sweetalert';
 import baseUrl from '../../Utils/baseUrl';
 import MakingPayment from '../../Components/makingPayment/makingPayment';
 import { manipulateNumber } from '../../Utils/manipulateNumber';
@@ -28,11 +28,9 @@ class TransferFields extends Component {
   }
 
   incomeToTradingTransfer = async (e) => {
-    if (this.state.ittAmount.trim() === '' || this.state.ittPin.trim() === ''){
+    if (this.state.ittAmount === '' || this.state.ittPin === ''){
         swal("Invalid Operation", "Please fill all fields", "error")
     } else {
-        let id = e.target.id;
-        document.getElementById(id).disabled = true;
         this.setState({makingPayment: true})
         let reqBody = {
         amount: this.state.ittAmount,
@@ -53,21 +51,25 @@ class TransferFields extends Component {
         }).then(response => response.json())
           .then(transferStatus => {
             this.setState({makingPayment: false})
-            document.getElementById(id).disabled = false;
+            ;
             if (transferStatus.respCode === '00'){
                 swal("Succesful Operation", "Transfer was Succesful", "success")
                 this.props.history.push('/dashboard');
+            } else if (transferStatus.respCode === '100'){
+                swal("Unsuccesful Operation", "Balance is insufficient", "error")
+            } else if (transferStatus.respCode === '154'){
+                swal("Unsuccesful Operation", "Pin is Incorrect", "error")
             } else {
-              if (transferStatus.respDescription !== null){
-                  swal("Unsuccesful Operation", transferStatus.respDescription, "error") 
-              } else {
-                  swal("Unsuccesful Operation", "An Error Occured, please try again later.", "error")
-              }
+                if (transferStatus.respDescription !== null){
+                   swal("Unsuccesful Operation", transferStatus.respDescription, "error") 
+                } else {
+                    swal("Unsuccesful Operation", "An Error Occured, please try again later.", "error")
+                }
             }
           }).catch(err => {
             this.setState({makingPayment: false})
-            swal("Unsuccesful Operation", `${err}`, "error");
-            document.getElementById(id).disabled = false;
+            swal("Unsuccesful Operation", "An Error Occured, Please try again", "error");
+            ;
             this.props.history.push('/dashboard');
           })
     }
@@ -78,8 +80,6 @@ class TransferFields extends Component {
     if (this.state.wtaAmount === '' || this.state.wtaPin === ''){
         swal("Invalid Operation", "Please fill all fields", "error")
     } else {
-        let id = e.target.id;
-        document.getElementById(id).disabled = true;
         this.setState({makingPayment: true})
         let reqBody = {
         amount: this.state.wtaAmount,
@@ -98,7 +98,7 @@ class TransferFields extends Component {
         }).then(response => response.json())
           .then(transferStatus => {
             this.setState({makingPayment: false})
-            document.getElementById(id).disabled = false;
+            ;
             if (transferStatus.respCode === '00'){
                 swal("Succesful Operation", "Transfer was Succesful", "success")
                 this.props.history.push('/dashboard');
@@ -115,7 +115,7 @@ class TransferFields extends Component {
             }
           }).catch(err => {
             this.setState({makingPayment: false});
-            document.getElementById(id).disabled = false;
+            ;
             swal("Unsuccesful Operation", "An Error Occured, Please try again", "error");
             this.props.history.push('/dashboard');
           })
@@ -131,15 +131,15 @@ render(){
             <div className="col-sm-12 col-md-12 col-lg-12">
               <select className="form-control" required="required" name="transferType" onChange={this.onChange} id="select_bank">
                   <option value="" defaultValue>Transfer Type</option>
-                  <option value="intra-bank">Intra-bank Transfer</option>
-                  <option value="inter-bank">Inter-bank Transfer</option>
+                  <option value="income-to-trading">Income to Trading Wallet Transfer</option>
+                  <option value="trading-to-account">Trading Wallet to Account Transfer</option>
               </select>
             </div>
           </div>
 
             {
               transferType === '' ? null: (
-                transferType === 'intra-bank' ? 
+                transferType === 'income-to-trading' ? 
                   <div>
                     <div className="form-group has-feedback">
                       <div className="col-sm-12 col-md-12 col-lg-12">
@@ -175,8 +175,9 @@ render(){
                       <div className="col-sm-12 col-md-12 col-lg-12">
                         <button 
                           type="submit"
-                          className="btn col-sm-8 col-md-6 col-lg-4" 
-                          id="validate_button"                    
+                          className="btn btn-danger col-sm-8 col-md-6 col-lg-4" 
+                          id="validate_button" 
+                          disabled={makingPayment}                   
                           onClick={this.incomeToTradingTransfer}>
                           {
                             makingPayment ? <MakingPayment />
@@ -228,8 +229,9 @@ render(){
                       <div className="col-sm-12 col-md-12 col-lg-12">
                         <button 
                           type="submit"
-                          className="btn col-sm-8 col-md-6 col-lg-4" 
-                          id="validate_button"                    
+                          className="btn btn-danger col-sm-8 col-md-6 col-lg-4" 
+                          id="validate_button"
+                          disabled={makingPayment}                    
                           onClick={this.walletToAccountTransfer}>
                           {
                             makingPayment ? <MakingPayment />

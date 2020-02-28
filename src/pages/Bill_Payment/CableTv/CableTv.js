@@ -2,47 +2,65 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import NetworkList from './NetworkList';
 import NetworkOptions from '../NetworkOptions';
-import swal from '../../../Utils/alert';
+import swal from 'sweetalert';
 import baseUrl from '../../../Utils/baseUrl';
 import MakingPayment from '../../../Components/makingPayment/makingPayment';
 import { manipulateNumber } from '../../../Utils/manipulateNumber';
-
-const { auth_token } = JSON.parse(sessionStorage.getItem('userDetails'));
  
 class CableTv extends Component {
-  state = {
-    serviceNames: 'Select Cable Subscription',
-    serviceID: [],
-    options: [],
-    id: '',
-    code: '',
-    optionName: 'Select Option',
-    amount: '',
-    charge: '',
-    deviceNumber: '',
-    agentPin:'',
-    makingPayment: false, 
-    validDeviceNumber: false,
-    customerName: '',
-    customerPhoneNumber: '',
-    payload: {}
+    constructor(){
+    super()
+    this.state = {
+      serviceNames: 'Select Cable Subscription',
+      serviceID: [],
+      options: [],
+      id: '',
+      code: '',
+      optionName: 'Select Option',
+      amount: '',
+      charge: '',
+      deviceNumber: '',
+      agentPin:'',
+      makingPayment: false, 
+      validDeviceNumber: false,
+      customerName: '',
+      customerPhoneNumber: '',
+      payload: {}
+    }
   }
 
-validateDeviceNumber = async(e) => {
-  let id = e.target.id;
+  componentDidMount = async () => {
+    await sessionStorage.getItem('userDetails') && this.setState ({
+      userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
+    }) 
+}
 
+// Manipulate Number input fields and Password fields for Pin to not accept anything other than numbers
+manipulateNumber = (e) => {
+  var inputKeyCode = e.keyCode ? e.keyCode : e.which;
+  if (((inputKeyCode >= 48 && inputKeyCode <= 57) || (inputKeyCode >= 97 && inputKeyCode <= 105)) && (inputKeyCode != null)){
+      if((e.target.value.length === e.target.maxLength) && (inputKeyCode === 45)){
+      e.preventDefault();
+    }
+  } else {
+    e.preventDefault();
+  }
+}
+
+validateDeviceNumber = async(e) => {
   if (this.state.amount === '' || this.state.deviceNumber === ''){
     swal("Failed Operation", "All Fields are required. Please fill all fields correctly", "error")
   } else if (this.state.code === ''){
     swal("Missing Field", "Select a Network", "info")
   } else {
-      document.getElementById(id).disabled = true;
-      this.setState({makingPayment: true})
+      ;
+      let auth_token = this.state.userDetails.auth_token;
       let reqBody = {
           customerId: this.state.deviceNumber,
           amount: this.state.amount,
           paymentCode: this.state.code
         };
+      this.setState({makingPayment: true})
 
       await fetch(`${baseUrl}/bills/validate`, {
         method: 'post',
@@ -53,7 +71,7 @@ validateDeviceNumber = async(e) => {
         body: JSON.stringify(reqBody)
       }).then(response => response.json())
         .then(result => {
-          document.getElementById(id).disabled = false;
+          ;
           this.setState({makingPayment: false})
           if(result.respCode === "00"){
             this.setState({
@@ -66,8 +84,8 @@ validateDeviceNumber = async(e) => {
             swal("Failed Operation", `${result.respDescription}`, "error");
           }   
     }).catch(err => {
-          swal("Failed Operation",`${err}`, "error");
-          document.getElementById(id).disabled = false;
+          swal("Failed Operation", "An Error Occurred, Please try again", "error");
+          ;
           this.setState({makingPayment: false, validDeviceNumber: false})
         })
   }
@@ -96,6 +114,8 @@ getServiceAmount = async (amount, optionName) => {
     //End of Unique ID generation
 
     //Get Service Code for each ID
+    let auth_token = this.state.userDetails.auth_token;
+
     await fetch(`${baseUrl}/bills/category/service/${this.state.id}/options`, {
       method: 'post',
       headers: {
@@ -109,7 +129,7 @@ getServiceAmount = async (amount, optionName) => {
         result.respBody.map((code) => this.setState({code: code.code} ))
     })
       .catch(err => {
-        swal('Error', `${err}`, 'error')
+        swal('Error', 'An Error Occured', 'info')
       });
   //End of Get Service Code for each ID
   }
@@ -124,22 +144,23 @@ getServiceAmount = async (amount, optionName) => {
 
 //Making the payment
   makePayment = async (e) => {
-    let id = e.target.id;
-
     if (this.state.amount === '' || this.state.deviceNumber === '' || this.state.agentPin === ''){
       swal("Failed Operation", "All Fields are required. Please fill all fields correctly", "error")
     } else if (this.state.code === ''){
       swal("Missing Field", "Select a Network", "info")
     } else {
-        document.getElementById(id).disabled = true;
-        this.setState({makingPayment: true})
+        ;
+
+        let auth_token = this.state.userDetails.auth_token;
         let reqBody = {
-          customerId: this.state.deviceNumber,
-          amount: this.state.amount,
-          pin: this.state.agentPin,
-          paymentCode: this.state.code,
-          phoneNumber: this.state.customerPhoneNumber
+            customerId: this.state.deviceNumber,
+            amount: this.state.amount,
+            pin: this.state.agentPin,
+            paymentCode: this.state.code,
+            phoneNumber: this.state.customerPhoneNumber
         };
+
+            this.setState({makingPayment: true})
 
         await fetch(`${baseUrl}/bills/pay`, {
           method: 'post',
@@ -150,7 +171,7 @@ getServiceAmount = async (amount, optionName) => {
           body: JSON.stringify(reqBody)
         }).then(response => response.json())
           .then(paymentResponse => {
-            document.getElementById(id).disabled = false;
+            ;
             this.setState({makingPayment: false})
             if(paymentResponse.respCode === "00"){
               swal("Successful Operation", "Recharge was successful", "success");
@@ -159,8 +180,8 @@ getServiceAmount = async (amount, optionName) => {
               swal("Failed Operation", `${paymentResponse.respDescription}`, "error");
             }     
       }).catch(err => {
-            swal("Failed Operation",`${err}`, "error");
-            document.getElementById(id).disabled = false;
+            swal("Failed Operation", "An Error Occurred, Please try again", "error");
+            ;
             this.setState({makingPayment: false});
             this.props.history.push('/dashboard');
           })
@@ -173,10 +194,17 @@ getServiceAmount = async (amount, optionName) => {
     const totalAmount = Number(amount) + Number(charge)
       return (
         <div>
-          <div className="row" style={{display:'flex', justifyContent: 'center', marginBottom:'5%'}}>
+          <div className="row d-flex justify-content-center mb-5">
             <ul className="nav navbar-nav">
               <div className="dropdown">
-                  <li className="btn dropdown-toggle" type="button" data-toggle="dropdown" style={{backgroundColor: '#faa831', width: '350px'}}><strong>{this.state.serviceNames}</strong> <span className="fa fa-chevron-down"></span></li>
+                  <li 
+                    className="btn dropdown-toggle" 
+                    type="button" 
+                    data-toggle="dropdown" 
+                    style={{backgroundColor: '#faa831', width: '350px'}}>
+                      <strong>{this.state.serviceNames}</strong> 
+                      
+                    </li>
                   <ul className="dropdown-menu dropdown"  id="billPaymentOptionsDropdown">
                     {
                       serviceName.map((name,i) => {
@@ -196,22 +224,25 @@ getServiceAmount = async (amount, optionName) => {
         {
           serviceNames === 'Select Cable Subscription' ?
           null :
-          <div className="row" style={{display:'flex', justifyContent: 'center', marginBottom:'5%'}}>
+          <div className="row d-flex justify-content-center mb-5">
             <ul className="nav navbar-nav">
               <div className="dropdown">
                 <li 
                   className="btn dropdown-toggle" 
-                  type="button" data-toggle="dropdown" 
-                  id="billPaymentOptions"
-                >
-                  <strong>{optionName}</strong> 
-                  <span className="fa fa-chevron-down"></span>
-                </li>
+                  type="button" 
+                  data-toggle="dropdown"
+                  id="billPaymentOptions" 
+                  >
+                    <strong>{optionName}</strong> 
+                    
+                  </li>
                 <ul className="dropdown-menu dropdown"  id="billPaymentOptionsDropdown">
                   {
                     options === null ? null : (options.length === 0 ? null : 
                       options.map((optionName,i) => {
-                        return <NetworkOptions getServiceAmount={() => this.getServiceAmount(optionName.amount, optionName.optionName)} key={i} optionName={optionName.optionName} amount={optionName.amount} />
+                        return <NetworkOptions 
+                          getServiceAmount={() => this.getServiceAmount(optionName.amount, optionName.optionName)} 
+                          key={i} optionName={optionName.optionName} amount={optionName.amount} />
                       })
                     ) 
                   }
@@ -255,8 +286,9 @@ getServiceAmount = async (amount, optionName) => {
                     !validDeviceNumber ? 
                     <button 
                       type="submit"
-                      className="btn col-sm-8 col-md-6 col-lg-4" 
-                      id="validateButton"                     
+                      className="btn btn-danger col-sm-8 col-md-6 col-lg-4" 
+                      id="validateButton"   
+                      disabled={makingPayment}                  
                       onClick={this.validateDeviceNumber}>
                       {
                         makingPayment ? <MakingPayment />
@@ -266,8 +298,9 @@ getServiceAmount = async (amount, optionName) => {
                     :
                     <button 
                       type="submit"
-                      className="btn col-sm-8 col-md-6 col-lg-4" 
-                      id="button"                     
+                      className="btn btn-success col-sm-8 col-md-6 col-lg-4" 
+                      id="button"    
+                      disabled={makingPayment}                 
                       onClick={this.makePayment}>
                       {
                         makingPayment ? <MakingPayment />

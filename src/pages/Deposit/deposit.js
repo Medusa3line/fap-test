@@ -1,41 +1,48 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import swal from '../../Utils/alert';
+import swal from 'sweetalert';
 import withTimeout from '../../Components/HOCs/withTimeout.hoc';
 import baseUrl from '../../Utils/baseUrl';
-import { customPageTitle } from '../../Utils/customTitle';
 
 import Balance from '../../Components/Balance/Balance';
 import DepositFields from './DepositFields';
 import DepositFields2 from './DepositFields2';
 import DepositReceipt from './DepositReceipt';
-import Layout from '../../Components/Layout/Layout.component';
-
-const { auth_token } = JSON.parse(sessionStorage.getItem('userDetails'));
-customPageTitle('Deposit')
+import AuthenticatedPagesLayoutWrapper from '../../Components/AuthenticatedPagesLayoutWrapper/authenticatedPagesLayoutWrapper';
+import Panel from '../../Components/Panel/panel';
+import SlimContentCardWrapper from '../../Components/SlimContentCardWrapper/slimContentCardWrapper';
+import FancyLine from '../../Components/FancyLine/fancyLine';
 
 class deposit extends Component {
   _isMounted = false;
-    
-  state = {
-    route: 'deposit', //Change back to deposit
-    userDetails: {},
-    transactionType: 'SAVING',
-    amount: '',
-    depositorName: '',
-    depositorNumber: '',
-    description: '',
-    commission: '',
-    pin: '',
-    makingPayment: false,
-    validAcct: false,
-    validatedButton: false,
-    bank: '',
-    acctNumber: '',
-    acctName: '',
-    nameValidation: false,
-    refNumber: '',
-    showReadOnlyAccountName: true
+    constructor(){
+      super()
+      this.state = {
+        route: 'deposit', //Change back to deposit
+        userDetails: {},
+        transactionType: 'SAVING',
+        amount: '',
+        depositorName: '',
+        depositorNumber: '',
+        description: '',
+        commission: '',
+        pin: '',
+        makingPayment: false,
+        validAcct: false,
+        validatedButton: false,
+        bank: '',
+        acctNumber: '',
+        acctName: '',
+        nameValidation: false,
+        refNumber: '',
+        showReadOnlyAccountName: true
+      }
+    }
+
+  componentDidMount = async () => {
+    await sessionStorage.getItem('userDetails') && this.setState ({
+      userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
+    })
   }
 
   changeBank = async (event) => {
@@ -49,18 +56,23 @@ class deposit extends Component {
     })
   }
 
-  depositInitial = (e) => {
-    const { amount, depositorName, depositorNumber, description, acctName } = this.state;
-    if ( amount === '' || depositorName === '' || depositorNumber === '' || description === '' || acctName === ''){
-        swal("Failed Operation", "Fill all fields", "info")
-    } else {
-      let id = e.target.id;
-      document.getElementById(id).disabled = true;
+    depositInitial = (e) => {
+      const { amount, depositorName, depositorNumber, description, acctName } = this.state;
+      if ( amount === '' || depositorName === '' || depositorNumber === '' || description === '' || acctName === ''){
+        return swal("Failed Operation", "Fill all fields", "info")
+      } 
+      if(depositorNumber.length < 11){
+        return swal("Failed Operation", "Phone Number is invalid", "info")
+      }
+
+      
       this.setState({makingPayment: true})
       let reqBody = {
         transactionType: this.state.transactionType,
         amount: this.state.amount
         };
+
+        let auth_token = this.state.userDetails.auth_token;
 
         fetch(`${baseUrl}/commission/getCommissionFee`, {
           method: 'post',
@@ -72,7 +84,7 @@ class deposit extends Component {
         }).then(response => response.json())
           .then(commission => {
             this.setState({makingPayment: false});
-            document.getElementById(id).disabled = false;
+            ;
             if(commission.respCode === '00'){
               this.setState({commission: commission.respBody.fee, route: 'deposit_1'})
             } else {
@@ -80,21 +92,18 @@ class deposit extends Component {
             }
           })
           .catch(err => {
-            document.getElementById(id).disabled = false;
             this.setState({makingPayment: false})
             swal('An Error Occured', 'There was an error while processing this request, please try again', 'info')
           });
-      }
-  }
+    }
 
   validateButton = () => {
-    let id = 'validateButton';
-    document.getElementById(id).disabled = true;
-
     let reqBody = {
       accountNumber: this.state.acctNumber,
       bankCode: this.state.bank
     };
+
+    let auth_token = this.state.userDetails.auth_token;
 
     this.setState({nameValidation: true})
 
@@ -108,7 +117,7 @@ class deposit extends Component {
     }).then(response => response.json())
       .then(validationStatus => {
         this.setState({nameValidation: false})
-        document.getElementById(id).disabled = false;
+        ;
         if(validationStatus.respCode === '999'){
           swal("Failed Operation", `Account Number ${validationStatus.respDescription}, please try again`, "error")
         } else if (validationStatus.respCode === '00'){
@@ -122,7 +131,7 @@ class deposit extends Component {
         }
       })
       .catch(err => {
-        document.getElementById(id).disabled = false;
+        ;
         this.setState({nameValidation: false})
         swal("Failed Operation", `${err}`, "info")
       })
@@ -147,11 +156,9 @@ class deposit extends Component {
   }
 
     validation = () => {
-      let id = "validation";
       if (this.state.pin === '') {
         swal('Empty agentPin', 'Agent Pin cannot be empty, please enter Pin and retry', 'info');
       } else {
-        document.getElementById(id).disabled = true;
         this.setState({makingPayment: true});
         const { acctNumber, pin, amount, bank, depositorName, depositorNumber, description } = this.state;
         let reqBody = {
@@ -171,6 +178,7 @@ class deposit extends Component {
           totalAmount: ''
         };
 
+          let auth_token = this.state.userDetails.auth_token;
           fetch(`${baseUrl}/transactions/savings`, {
             method: 'post',
             headers: {
@@ -193,7 +201,6 @@ class deposit extends Component {
               this.setState({makingPayment: false})
               swal('An Error Occured', 'An error occured, please try again', 'info');
             });
-            document.getElementById(id).disabled = false;
           }
         }
 
@@ -220,11 +227,10 @@ class deposit extends Component {
     showReadOnlyAccountName,
     depositorNumber,
     depositorName,
-    description,
-    route
+    description 
   } = this.state;
 
-  if (route === 'DepositReceipt') {
+  if (this.state.route === 'DepositReceipt') {
     return <DepositReceipt 
       amount={amount}
       commission={commission}
@@ -235,14 +241,15 @@ class deposit extends Component {
     />
   } else {
     return (
-      <Layout>
-        <div id="panel">
-          <h4> Deposit</h4>
-          <h6> Send money into customer's account </h6>
-        </div>
-        <div className="line"></div><br/>
+    <AuthenticatedPagesLayoutWrapper>
+      <SlimContentCardWrapper>
+        <Panel 
+          title="Deposit" 
+          snippet="Send money into customer's account " 
+        />
+        <FancyLine />
         {
-          route === 'deposit' ?
+          this.state.route === 'deposit' ?
             <div>
               <Balance /> 
               <DepositFields 
@@ -266,7 +273,7 @@ class deposit extends Component {
                 description={description}
               />
             </div> : (
-              route === 'deposit_1' ?
+              this.state.route === 'deposit_1' ?
                 <DepositFields2 
                   amount={amount}
                   onChange={this.onChange}
@@ -280,14 +287,11 @@ class deposit extends Component {
                 /> : 
                 null
             )                        
-        } 
-      </Layout>           
-              
+        }            
+      </SlimContentCardWrapper>
+    </AuthenticatedPagesLayoutWrapper>
   )
   }
-    
-
-    
   }
 }
 export default withTimeout(withRouter(deposit));

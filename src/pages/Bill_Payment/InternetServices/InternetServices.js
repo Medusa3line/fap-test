@@ -1,28 +1,48 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import NetworkList from './NetworkList';
-import swal from '../../../Utils/alert';
+import swal from 'sweetalert';
 import baseUrl from '../../../Utils/baseUrl';
 import NetworkOptions from '../NetworkOptions';
 import MakingPayment from '../../../Components/makingPayment/makingPayment';
 import { manipulateNumber } from '../../../Utils/manipulateNumber';
 
-const { auth_token } = JSON.parse(sessionStorage.getItem('userDetails'));
-
 class InternetServices extends Component {
-  state = {
-    serviceNames: 'Select Network',
-    serviceID: [],
-    options: [],
-    optionName: 'Select Option',
-    id: '',
-    code: '',
-    amount: '',
-    deviceNumber: '',
-    agentPin:'',
-    customerPhoneNumber: '',
-    makingPayment: false
+
+    constructor(){
+    super()
+    this.state = {
+      serviceNames: 'Select Network',
+      serviceID: [],
+      options: [],
+      optionName: 'Select Option',
+      id: '',
+      code: '',
+      amount: '',
+      deviceNumber: '',
+      agentPin:'',
+      customerPhoneNumber: '',
+      makingPayment: false
+    }
   }
+
+  componentDidMount = async () => {
+    await sessionStorage.getItem('userDetails') && this.setState ({
+      userDetails: JSON.parse(sessionStorage.getItem('userDetails'))
+    })
+}
+
+// Manipulate Number input fields and Password fields for Pin to not accept anything other than numbers
+manipulateNumber = (e) => {
+  var inputKeyCode = e.keyCode ? e.keyCode : e.which;
+  if (((inputKeyCode >= 48 && inputKeyCode <= 57) || (inputKeyCode >= 97 && inputKeyCode <= 105)) && (inputKeyCode != null)){
+      if((e.target.value.length === e.target.maxLength) && (inputKeyCode === 45)){
+      e.preventDefault();
+    }
+  } else {
+    e.preventDefault();
+  }
+}
 
   getServiceAmount = async (amount, optionName) => {
     await this.setState({amount: amount, optionName: optionName})
@@ -49,6 +69,8 @@ class InternetServices extends Component {
     //End of Unique ID generation
 
     //Get Service Code for each ID
+    let auth_token = this.state.userDetails.auth_token;
+
     await fetch(`${baseUrl}/bills/category/service/${this.state.id}/options`, {
       method: 'post',
       headers: {
@@ -62,7 +84,7 @@ class InternetServices extends Component {
         result.respBody.map((code) => this.setState({code: code.code} ))
     })
       .catch(err => {
-        swal('Error', `${err}`, 'error')
+        swal('Error', 'An Error Occured', 'info')
       });
   //End of Get Service Code for each ID
   }
@@ -73,14 +95,14 @@ class InternetServices extends Component {
 
   //Making the payment
   makePayment = async (e) => {
-    let id = e.target.id;
     if (this.state.amount === '' || this.state.deviceNumber === '' || this.state.agentPin === ''){
       swal("Failed Operation", "All Fields are required. Please fill all fields correctly", "error")
     } else if (this.state.code === ''){
       swal("Missing Field", "Select a Network", "info")
     } else {
-        document.getElementById(id).disabled = true;
-        this.setState({makingPayment: true})
+        ;
+
+        let auth_token = this.state.userDetails.auth_token;
         let reqBody = {
             customerId: this.state.deviceNumber,
             amount: this.state.amount,
@@ -88,6 +110,8 @@ class InternetServices extends Component {
             paymentCode: this.state.code,
             phoneNumber: this.state.customerPhoneNumber
           };
+
+            this.setState({makingPayment: true})
 
         await fetch(`${baseUrl}/bills/pay`, {
           method: 'post',
@@ -98,7 +122,7 @@ class InternetServices extends Component {
           body: JSON.stringify(reqBody)
         }).then(response => response.json())
           .then(paymentResponse => {
-            document.getElementById(id).disabled = false;
+            ;
             if(paymentResponse.respCode === "00"){
               swal("Successful Operation", "Data purchase was successful", "success");
               this.setState({makingPayment: false});
@@ -113,7 +137,7 @@ class InternetServices extends Component {
             }   
       }).catch(err => {
             swal("Failed Operation", "An Error Occurred, Please try again", "error");
-            document.getElementById(id).disabled = false;
+            ;
             this.setState({makingPayment: false});
             this.props.history.push('/dashboard');
           })
@@ -125,18 +149,26 @@ class InternetServices extends Component {
     const { options, makingPayment, serviceNames, optionName, amount } = this.state;
     return (
         <div>
-          <div className="row" style={{display:'flex', justifyContent: 'center', marginBottom:'5%'}}>
+          <div className="row d-flex justify-content-center mb-5">
             <ul className="nav navbar-nav">
               <div className="dropdown">
-                <li className="btn dropdown-toggle" type="button" data-toggle="dropdown" style={{backgroundColor: '#faa831', width: '350px'}}><strong>{this.state.serviceNames}</strong> <span className="fa fa-chevron-down"></span></li>
+                <li 
+                  className="btn dropdown-toggle" 
+                  type="button" 
+                  data-toggle="dropdown" 
+                  style={{backgroundColor: '#faa831', width: '350px'}}
+                >
+                  <strong>{this.state.serviceNames}</strong> 
+                  
+                </li>
                 <ul className="dropdown-menu dropdown" id="billPaymentOptionsDropdown">
                   {
                     serviceName.map((name,i) => {
                       return <NetworkList 
                         getServiceNames={() => this.getServiceNames(name.serviceName)} 
                         key={i} 
-                        name={name.serviceName} 
-                        index={i}
+                        name={name.serviceName}
+                        index={i} 
                       />
                     })
                   }
@@ -147,10 +179,10 @@ class InternetServices extends Component {
           {
             serviceNames === 'Select Network' ? 
             null :
-            <div className="row" style={{display:'flex', justifyContent: 'center', marginBottom:'5%'}}>
+            <div className="row d-flex justify-content-center mb-5">
               <ul className="nav navbar-nav">
                 <div className="dropdown">
-                  <li className="btn dropdown-toggle" type="button" data-toggle="dropdown" id="billPaymentOptions"><strong>{this.state.optionName}</strong> <span className="fa fa-chevron-down"></span></li>
+                  <li className="btn dropdown-toggle" type="button" data-toggle="dropdown" id="billPaymentOptions"><strong>{this.state.optionName}</strong> </li>
                   <ul className="dropdown-menu dropdown" id="billPaymentOptionsDropdown">
                     {
                       options === null ? null : (options.length === 0 ? null : 
@@ -188,8 +220,9 @@ class InternetServices extends Component {
                   <div className="form-group">          
                     <button 
                       type="submit"
-                      className="btn col-sm-8 col-md-6 col-lg-4" 
-                      id="button"                    
+                      className="btn btn-success col-sm-8 col-md-6 col-lg-4" 
+                      id="button"    
+                      disabled={makingPayment}                
                       onClick={this.makePayment}>
                       {
                         makingPayment ? <MakingPayment />

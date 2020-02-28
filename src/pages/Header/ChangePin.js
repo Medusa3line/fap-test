@@ -8,6 +8,7 @@ import { customPageTitle } from '../../Utils/customTitle';
 import LoginError from '../../Components/loginError/LoginError';
 import LoginContainerHeader from '../../Components/LoginContainerHeader/LoginContainerHeader';
 import CustomButton from '../../Components/CustomButton/CustomButton.component';
+import LoginPageLayoutWrapper from '../../Components/LoginPageLayoutWrapper/loginPageLayoutWrapper';
 
 const ChangePin = () => {
   customPageTitle('Change Pin');
@@ -32,7 +33,6 @@ const ChangePin = () => {
 
   const changePin = (e) => {
     e.preventDefault();
-  let id = e.target.id;
   setState({
     ...state,
     loginError: false
@@ -51,7 +51,6 @@ const ChangePin = () => {
       newPin: state.newPin,
       oldpin: state.oldPin
     };
-    document.getElementById(id).disabled = true;
     setState({
       ...state,
       loggingIn: true
@@ -65,7 +64,6 @@ const ChangePin = () => {
       body: JSON.stringify(reqBody)
     }).then (response => response.json())
     .then(result => {
-      document.getElementById(id).disabled = false;
       if (result.respCode === "00") {
         swal("Successful Operation", "New Pin has been set.", "success");
         setState({
@@ -88,7 +86,6 @@ const ChangePin = () => {
         ...state,
         loggingIn: false
       })
-      document.getElementById(id).disabled = false;
       swal('An Error Occured', `${err}`, 'error')
     });
   }
@@ -96,78 +93,75 @@ const ChangePin = () => {
 
   const { loginError, loggingIn, oldPin, newPin, newPinAgain, errorMessage } = state;
   return (
-    <div className="body">
-      <div id="login-layout">
-        <div id="fit-image">
-        </div>
-        <div className="animated zoomIn delay-2s">
-          <div id="login-container">
-            <LoginContainerHeader content={<p>Change Pin</p>} /><br/>
+    <LoginPageLayoutWrapper>
+      <div id="login-container">
+        <LoginContainerHeader content="Change Pin" /><br/>
+        <div>
+          <form onSubmit={changePin}>
+            <div className="form-group">
+              <div className="col-md-9" >
+                <input 
+                  type="password" 
+                  className="form-control" 
+                  required="required"
+                  placeholder="Enter Old Pin"
+                  autoComplete="autocomplete"
+                  autoFocus="autofocus"
+                  maxLength="4"
+                  name="oldPin"
+                  value={oldPin}
+                  onChange={onChange}
+                />
+              </div>
+            </div> 
+            <div className="form-group">
+              <div className="col-md-9" >          
+                <input 
+                  type="password" 
+                  className="form-control" 
+                  required="required"
+                  autoComplete="autocomplete" 
+                  placeholder="Enter New Pin"
+                  maxLength="4" 
+                  name="newPin"
+                  value={newPin}
+                  onChange={onChange}
+                />
+              </div>
+            </div> 
 
-            <div>
-              <form onSubmit={changePin}>
-                <div className="form-group">
-                  <div className="col-md-9" >
-                    <input 
-                      type="password" 
-                      className="form-control" 
-                      required="required"
-                      placeholder="Enter Old Pin"
-                      autoComplete="autocomplete"
-                      autoFocus="autofocus"
-                      maxLength="4"
-                      name="oldPin"
-                      value={oldPin}
-                      onChange={onChange}
-                    />
-                  </div>
-                </div> 
-                <div className="form-group">
-                  <div className="col-md-9" >          
-                    <input 
-                      type="password" 
-                      className="form-control" 
-                      required="required"
-                      autoComplete="autocomplete" 
-                      placeholder="Enter New Pin"
-                      maxLength="4" 
-                      name="newPin"
-                      value={newPin}
-                      onChange={onChange}
-                    />
-                  </div>
-                </div> 
+            <div className="form-group">
+              <div className="col-md-9" >          
+                <input 
+                  type="password" 
+                  className="form-control" 
+                  required="required"
+                  autoComplete="autocomplete" 
+                  placeholder="Confirm  New Pin"
+                  maxLength="4"
+                  name="newPinAgain" 
+                  value={newPinAgain}
+                  onChange={onChange}
+                />
+              </div>
+            </div> <br/>
 
-                <div className="form-group">
-                  <div className="col-md-9" >          
-                    <input 
-                      type="password" 
-                      className="form-control" 
-                      required="required"
-                      autoComplete="autocomplete" 
-                      placeholder="Confirm  New Pin"
-                      maxLength="4"
-                      name="newPinAgain" 
-                      value={newPinAgain}
-                      onChange={onChange}
-                    />
-                  </div>
-                </div> <br/>
-  
+            <div className="form-group">
+              <div className="col-md-9" >
                 <CustomButton 
                   loggingIn={loggingIn} 
                   buttonClick={changePin}
                   value={'Proceed'}
                 />
-              </form>
-              {
-                loginError ? <LoginError errorMessage={errorMessage} /> : null
-              }
+              </div>
             </div>
-          </div>
+          </form>
+          {
+            loginError ? <LoginError errorMessage={errorMessage} /> : null
+          }
+        </div>
       </div>
-      </div>
-    </div>
+    </LoginPageLayoutWrapper>
   )	
 }
 export default withTimeoutWithoutRestriction(ChangePin);

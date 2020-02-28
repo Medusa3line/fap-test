@@ -4,9 +4,9 @@ import MakingPayment from '../../../Components/makingPayment/makingPayment';
 
 const AccountFields1 = ({bvn, onChangeBVN, showValidateBVNButton, firstName, lastName, dob, gender, mothersMaidenName,  onChange, onSubmit, isThereBvn, hasBVN, showAccountOpeningFields, validateBvn, maritalStatus, middleName, makingPayment }) => {
     return (
-        <div className="row">                
+        <form onSubmit={onSubmit}>                
             <div className="form-group">
-                <div className="col-sm-12 col-md-12 col-lg-12" style={{marginBottom: '2vh'}}> 
+                <div className="col-sm-12 col-md-12 col-lg-12 mb-3"> 
                     {/* {<small>Do you have a BVN? </small>} */}
                     <select className="form-control" required="required" value={hasBVN} onChange={isThereBvn} name="hasBVN">
                         <option value="">Do you have a BVN? </option>
@@ -19,7 +19,7 @@ const AccountFields1 = ({bvn, onChangeBVN, showValidateBVNButton, firstName, las
                 hasBVN && !showAccountOpeningFields ? 
                 <form onSubmit={validateBvn}>
                     <div className="form-group">
-                        <div className="col-sm-12 col-md-12 col-lg-12" style={{marginBottom: '2vh'}}>
+                        <div className="col-sm-12 col-md-12 col-lg-12 mb-3">
                             <input 
                                 type="number" 
                                 className="form-control" 
@@ -39,8 +39,8 @@ const AccountFields1 = ({bvn, onChangeBVN, showValidateBVNButton, firstName, las
                             <button 
                                 type="submit" 
                                 className="btn" 
-                                id="bvnValidation"
                                 onClick={validateBvn}
+                                disabled={makingPayment}
                             > 
                             {
                                 makingPayment ? <MakingPayment />
@@ -57,7 +57,7 @@ const AccountFields1 = ({bvn, onChangeBVN, showValidateBVNButton, firstName, las
                 showAccountOpeningFields ?  
                 <form className="form" onSubmit={onSubmit}>
                     <div className="form-group">
-                        <div className="col-sm-12 col-md-12 col-lg-12" style={{marginBottom: '2vh'}}>
+                        <div className="col-sm-12 col-md-12 col-lg-12 mb-3">
                             <input 
                                 type="text" 
                                 required="required" 
@@ -70,7 +70,7 @@ const AccountFields1 = ({bvn, onChangeBVN, showValidateBVNButton, firstName, las
                         </div>
                     </div>
                     <div className="form-group">
-                        <div className="col-sm-12 col-md-12 col-lg-12" style={{marginBottom: '2vh'}}>
+                        <div className="col-sm-12 col-md-12 col-lg-12 mb-3">
                             <input 
                                 type="text" 
                                 className="form-control" 
@@ -83,7 +83,7 @@ const AccountFields1 = ({bvn, onChangeBVN, showValidateBVNButton, firstName, las
                         </div>
                     </div>
                     <div className="form-group">
-                        <div className="col-sm-12 col-md-12 col-lg-12" style={{marginBottom: '2vh'}}>
+                        <div className="col-sm-12 col-md-12 col-lg-12 mb-3">
                             <input 
                                 type="text" 
                                 className="form-control" 
@@ -96,7 +96,7 @@ const AccountFields1 = ({bvn, onChangeBVN, showValidateBVNButton, firstName, las
                         </div>
                     </div>
                     <div className="form-group">
-                        <div className="col-sm-12 col-md-12 col-lg-12" style={{marginBottom: '2vh'}}>
+                        <div className="col-sm-12 col-md-12 col-lg-12 mb-3">
                             <input 
                                 type="text" 
                                 className="form-control" 
@@ -120,7 +120,7 @@ const AccountFields1 = ({bvn, onChangeBVN, showValidateBVNButton, firstName, las
                         />
                     </div>                                                                   
                     <div className="form-group">
-                        <div className="col-sm-12 col-md-12 col-lg-12" style={{marginBottom: '2vh'}}>
+                        <div className="col-sm-12 col-md-12 col-lg-12 mb-3">
                             <select className="form-control" required="required" onChange={onChange} value={gender} name="gender">
                                 <option value="" >Gender</option>
                                 <option value="Female" >Female</option>
@@ -129,7 +129,7 @@ const AccountFields1 = ({bvn, onChangeBVN, showValidateBVNButton, firstName, las
                         </div>
                     </div>  
                     <div className="form-group">
-                        <div className="col-sm-12 col-md-12 col-lg-12" style={{marginBottom: '2vh'}}>
+                        <div className="col-sm-12 col-md-12 col-lg-12 mb-3">
                             <select className="form-control" required="required" onChange={onChange} value={maritalStatus} name="maritalStatus">
                                 <option value="" >Marital Status</option>
                                 <option value="Single" >Single</option>
@@ -142,9 +142,7 @@ const AccountFields1 = ({bvn, onChangeBVN, showValidateBVNButton, firstName, las
                     <div className="col-sm-12 col-md-12 col-lg-12">
                         <button 
                             type="submit" 
-                            className="btn col-sm-8 col-md-6 col-lg-4" 
-                            id="login"
-                            onClick={onSubmit}
+                            className="btn col-sm-8 col-md-6 col-lg-4"
                         > 
                         Next 
                         </button>
@@ -152,7 +150,7 @@ const AccountFields1 = ({bvn, onChangeBVN, showValidateBVNButton, firstName, las
                 </form>
                 : null
             }  
-        </div>
+        </form>
 	);
 }
 

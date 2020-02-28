@@ -1,22 +1,27 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Balance from '../../Components/Balance/Balance';
 import TransferFields from './TransferFields';
 import withTimeout from '../../Components/HOCs/withTimeout.hoc';
-import Layout from '../../Components/Layout/Layout.component';
-import { customPageTitle } from '../../Utils/customTitle';
+import AuthenticatedPagesLayoutWrapper from '../../Components/AuthenticatedPagesLayoutWrapper/authenticatedPagesLayoutWrapper';
+import Panel from '../../Components/Panel/panel';
+import SlimContentCardWrapper from '../../Components/SlimContentCardWrapper/slimContentCardWrapper';
+import FancyLine from '../../Components/FancyLine/fancyLine';
 
-const Transfer = () => {
-  customPageTitle('Transfer')
-  return (
-    <Layout>
-      <div id="panel">
-        <h4> Funds Transfer </h4>
-        <h6> Transfer funds to any account </h6>
-      </div>
-      <div className="line"></div><br/>
-      <Balance />    
-      <TransferFields />
-    </Layout>
-  )
+class transfer extends Component {
+  render() {
+    return (
+      <AuthenticatedPagesLayoutWrapper>
+        <SlimContentCardWrapper>
+          <Panel 
+            title="Wallet Transfer" 
+            snippet="Transfer funds to any account" 
+          />
+          <FancyLine />
+          <Balance />
+          <TransferFields />
+        </SlimContentCardWrapper>
+      </AuthenticatedPagesLayoutWrapper>
+    )
+  }
 }
-export default withTimeout(Transfer);
+export default withTimeout(transfer);

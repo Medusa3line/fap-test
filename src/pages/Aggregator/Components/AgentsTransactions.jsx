@@ -4,9 +4,9 @@ import NoResultFound from '../../../Components/NoResultFound/NoResultfound';
 
 const AgentsTransactions = ({ transactions, showPrintButton }) => {
 		return (
-			<div className="row" id="print-div">
-	            <div id="right-aggregator-view">
-	            	<table className="table table-responsive" id="table-to-xls">
+			<div id="print-div">
+	            <div id="right-aggregator-view" className="table-responsive">
+	            	<table className="table" id="table-to-xls">
 		              	<thead>
 			                <tr>
 								<th>S/N</th>

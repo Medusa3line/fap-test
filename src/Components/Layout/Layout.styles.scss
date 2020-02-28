@@ -1,6 +1,116 @@
-#bottom-content{
-	background-color: #f3f3f3 !important;
-	position: relative;
-    min-height: 100vh;
-    padding: 0 15px;
+#wrapper{
+    position: relative;
+
+    ::-webkit-scrollbar-track {
+        border: 1px solid var(--primaryColor);
+        border-radius: 5px;
+        background-color: var(--primaryAsh);
+    }
+    
+    ::-webkit-scrollbar {
+        width: 1px;
+        background-color: var(--primaryAsh);
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background-color: var(--primaryWhite);	
+    }
+}
+
+#mainPage{
+    transition:margin-left .75s;
+    overflow-y: none;
+    background-color: var(--primaryAsh);
+
+}
+@mixin sidebars {
+    height:100%;
+    padding-top: 0px !important;
+    background-color: #fff;
+    border-right: 1px solid var(--primaryWhite);
+    position:fixed!important;
+    z-index:1;
+    overflow:auto
+}
+#mySidebar{
+    @include sidebars;
+    display: none;
+}
+
+.children{
+    overflow-y: auto;
+    overflow-x: auto;
+    margin: 0;
+    position: relative;
+
+    #manipulateChildren{
+       top: 55px;
+       position: relative;
+       min-height: 100vh;
+    }
+
+    @media only screen and (max-width: 960px) {
+        >img {
+            display: unset !important;
+            position: fixed;
+            width: auto;
+            z-index: 1000;
+            max-height: 45px;
+            left: 40%;
+            width: 20%;
+            padding: 5px;
+        }
+    }
+} 
+
+//Toggle Button
+.menu-toggle-btn{
+    cursor: pointer;
+    height: 55px;
+    position: fixed;
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: white;
+    width: 100%;
+    box-shadow: inset 0 3em 3em var(--primaryAsh), 0 0 2px var(--primaryAsh), 0.3em 0.3em 1em var(--primaryAsh);
+    z-index: 1000;
+
+    span{
+        background: #262a62;
+        display: block;
+        width: 20px;
+        height: 4px;
+        border-radius: 5px;
+        margin-bottom: 5px;
+        -webkit-transition: all linear;
+        transition: all linear;
+    }
+    &.open{
+        span{
+            &:nth-child(1),
+            &:nth-child(3){
+                transform: translate(0px, 13px) rotate(-45deg) scalex(1.3);
+                margin: 0;
+            }
+            &:nth-child(2){
+                height: 0;
+                margin: 0;
+            }
+            &:nth-child(3){
+                transform: translate(0px, 9px) rotate(45deg) scalex(1.3);               
+            }
+        }
+    }
+}
+//End of Toggle Button
+
+@media only screen and (max-width: 900px) {
+    .children{
+        #manipulateChildren{
+            padding: 5px;
+        }
+    }
+    .menu-toggle-btn{
+        background-color: #A91C94;
+    }
 }

@@ -1,21 +1,26 @@
 import React from 'react';
 import withTimeout from '../../Components/HOCs/withTimeout.hoc';
 import FCMBAccount from './FCMB/FCMBaccount.component';
-import Layout from '../../Components/Layout/Layout.component';
 import { customPageTitle } from '../../Utils/customTitle';
 import './OpenAnAccount.styles.scss';
+import AuthenticatedPagesLayoutWrapper from '../../Components/AuthenticatedPagesLayoutWrapper/authenticatedPagesLayoutWrapper';
+import SlimContentCardWrapper from '../../Components/SlimContentCardWrapper/slimContentCardWrapper';
+import FancyLine from '../../Components/FancyLine/fancyLine';
+import Panel from '../../Components/Panel/panel';
 
 const OpenAnAccount = () => {  
   customPageTitle('Open An Account')
   return (
-    <Layout>
-      <div id="panel">
-        <h4> Open a Bank Account </h4>
-        <small>All fields are required * </small>
-      </div>
-      <div className="line"></div><br/>  
-      <FCMBAccount />                              
-    </Layout>  
+    <AuthenticatedPagesLayoutWrapper>
+      <SlimContentCardWrapper>
+        <Panel
+          title="Open a Bank Account" 
+          snippet="All fields are required *" 
+        />
+        <FancyLine /> 
+        <FCMBAccount />   
+      </SlimContentCardWrapper>                           
+    </AuthenticatedPagesLayoutWrapper>  
   )
 }
 export default withTimeout(OpenAnAccount);

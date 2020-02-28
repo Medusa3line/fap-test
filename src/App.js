@@ -1,11 +1,6 @@
 import React, { Component, lazy, Suspense } from 'react';
 import { Route, Switch, BrowserRouter } from 'react-router-dom';
 
-import 'bootstrap/dist/js/bootstrap.js';
-import './assets/css/bootstrap.min.css';
-import './assets/extras/animate.css';
-import './assets/css/font-awesome.min.css';
-
 import './scss/main.scss';
 
 // Routes for Login and setups

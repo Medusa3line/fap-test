@@ -6,8 +6,8 @@ const AccountFields2 = ({phoneNumber, email, residentAddress, lgOfResidence, nex
 	return (
         <div className="row">
             <form className="form" onSubmit={openAccount}>
-            <div className="form-group">
-                    <div className="col-sm-12 col-md-12 col-lg-12" style={{marginBottom: '2vh'}}>
+                <div className="form-group">
+                    <div className="col-sm-12 col-md-12 col-lg-12 mb-3">
                         <input 
                             type="number" 
                             className="form-control" 
@@ -22,7 +22,7 @@ const AccountFields2 = ({phoneNumber, email, residentAddress, lgOfResidence, nex
                     </div>
                 </div>
                 <div className="form-group">
-                    <div className="col-sm-12 col-md-12 col-lg-12" style={{marginBottom: '2vh'}}>
+                    <div className="col-sm-12 col-md-12 col-lg-12 mb-3">
                         <input 
                             type="email" 
                             className="form-control" 
@@ -35,7 +35,7 @@ const AccountFields2 = ({phoneNumber, email, residentAddress, lgOfResidence, nex
                     </div>
                 </div>
                 <div className="form-group">
-                    <div className="col-sm-12 col-md-12 col-lg-12" style={{marginBottom: '2vh'}}>
+                    <div className="col-sm-12 col-md-12 col-lg-12 mb-3">
                         <input 
                             type="text" 
                             className="form-control" 
@@ -48,7 +48,7 @@ const AccountFields2 = ({phoneNumber, email, residentAddress, lgOfResidence, nex
                     </div>
                 </div>
                 <div className="form-group">
-                    <div className="col-sm-12 col-md-12 col-lg-12" style={{marginBottom: '2vh'}}>
+                    <div className="col-sm-12 col-md-12 col-lg-12 mb-3">
                         <input 
                             type="text" 
                             className="form-control" 
@@ -61,7 +61,7 @@ const AccountFields2 = ({phoneNumber, email, residentAddress, lgOfResidence, nex
                     </div>
                 </div>
                 <div className="form-group">
-                    <div className="col-sm-12 col-md-12 col-lg-12" style={{marginBottom: '2vh'}}>
+                    <div className="col-sm-12 col-md-12 col-lg-12 mb-3">
                         <input 
                             type="text" 
                             className="form-control" 
@@ -74,7 +74,7 @@ const AccountFields2 = ({phoneNumber, email, residentAddress, lgOfResidence, nex
                     </div>
                 </div>
                 <div className="form-group">
-                    <div className="col-sm-12 col-md-12 col-lg-12" style={{marginBottom: '2vh'}}>
+                    <div className="col-sm-12 col-md-12 col-lg-12 mb-3">
                         <input 
                             type="text" 
                             className="form-control" 
@@ -87,7 +87,7 @@ const AccountFields2 = ({phoneNumber, email, residentAddress, lgOfResidence, nex
                     </div>
                 </div>
                 <div className="form-group">
-                    <div className="col-sm-12 col-md-12 col-lg-12" style={{marginBottom: '2vh'}}>
+                    <div className="col-sm-12 col-md-12 col-lg-12 mb-3">
                         <input 
                             type="text" 
                             className="form-control" 
@@ -100,7 +100,7 @@ const AccountFields2 = ({phoneNumber, email, residentAddress, lgOfResidence, nex
                     </div>
                 </div>
                 <div className="form-group">
-                    <div className="col-sm-12 col-md-12 col-lg-12" style={{marginBottom: '2vh'}}>
+                    <div className="col-sm-12 col-md-12 col-lg-12 mb-3">
                         <input 
                             type="text" 
                             className="form-control" 
@@ -119,9 +119,8 @@ const AccountFields2 = ({phoneNumber, email, residentAddress, lgOfResidence, nex
                         </button>
                         <button 
                             type="submit" 
-                            className="btn col-sm-8 col-md-6 col-lg-4" 
-                            id="submit_button"
-                            onClick={openAccount}
+                            className="btn col-sm-8 col-md-6 col-lg-4"
+                            disabled={makingPayment}
                         >
                             {
                                 makingPayment ? <MakingPayment />

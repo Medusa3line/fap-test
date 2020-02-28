@@ -10,6 +10,6 @@ const swal = (title, text, type) => Swal.fire({
     customClass: {
         popup: 'animated shake'
     },
-    footer: 'If this problem persists, please contact FCMB support'
+    // footer: 'If there is a problem, please contact FCMB support'
 })
 export default swal;

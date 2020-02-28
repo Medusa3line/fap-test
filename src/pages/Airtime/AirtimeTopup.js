@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import withTimeout from '../../Components/HOCs/withTimeout.hoc';
-import { customPageTitle } from '../../Utils/customTitle';
-import swal from '../../Utils/alert';
+import NetworkList from './NetworkList';
+import swal from 'sweetalert';
 import NetworkOptions from '../Bill_Payment/NetworkOptions';
-import NetworkList from './NetworkList'
 import baseUrl from '../../Utils/baseUrl';
 import MakingPayment from '../../Components/makingPayment/makingPayment';
+import withTimeout from '../../Components/HOCs/withTimeout.hoc';
 import { manipulateNumber } from '../../Utils/manipulateNumber';
-import Layout from '../../Components/Layout/Layout.component';
+import AuthenticatedPagesLayoutWrapper from '../../Components/AuthenticatedPagesLayoutWrapper/authenticatedPagesLayoutWrapper';
+import SlimContentCardWrapper from '../../Components/SlimContentCardWrapper/slimContentCardWrapper';
+import Panel from '../../Components/Panel/panel';
 
 const { auth_token } = JSON.parse(sessionStorage.getItem('userDetails'));
 
@@ -28,7 +29,6 @@ class AirtimeTopup extends Component {
   }
 
 componentDidMount = async () => { 
-  customPageTitle('Recharge');
   await fetch(`${baseUrl}/bills/category/1/service`, {
     method: 'post',
     headers: {
@@ -37,7 +37,7 @@ componentDidMount = async () => {
     },
     body: JSON.stringify({})
   }).then(response => response.json())
-    .then(result => {        
+    .then(result => {       
         this.setState({ Networks: result.respBody })
       }
     ); //End of Get Bill Payment Details
@@ -76,7 +76,11 @@ componentDidMount = async () => {
   }).then(response => response.json())
     .then(result => {
       this.setState({options: result.respBody});
-      result.respBody.map((code) => this.setState({code: code.code} ))
+      result.respBody.map((code) =>
+        this.setState({
+          code: code.code
+        })
+      )
   })
     .catch(err => {
       swal('Error', `${err}`, 'error')
@@ -90,14 +94,12 @@ componentDidMount = async () => {
 
 //Making the payment
   makePayment = async (e) => {
-    let id = e.target.id;
-
     if (this.state.amount === '' || this.state.deviceNumber === '' || this.state.agentPin === ''){
       swal("Failed Operation", "All Fields are required. Please fill all fields correctly", "error")
     } else if (this.state.code === ''){
       swal("Missing Field", "Select a Network", "info")
     } else {
-        document.getElementById(id).disabled = true;
+        ;
         this.setState({makingPayment: true})
         let reqBody = {
           customerId: this.state.deviceNumber,
@@ -116,7 +118,7 @@ componentDidMount = async () => {
           body: JSON.stringify(reqBody)
         }).then(response => response.json())
           .then(paymentResponse => {
-            document.getElementById(id).disabled = false;
+            ;
             if(paymentResponse.respCode === "00"){
               swal("Successful Operation", "Airtime recharge was successful", "success");
               this.setState({makingPayment: false})
@@ -130,7 +132,7 @@ componentDidMount = async () => {
               swal("Failed Operation", `${paymentResponse.respDescription}`, "error");
             }
       }).catch(err => {
-            document.getElementById(id).disabled = false;
+            ;
             swal("Failed Operation", `${err}`, "error")
             this.setState({makingPayment: false})
             this.props.history.push('/dashboard');
@@ -142,103 +144,106 @@ componentDidMount = async () => {
   render() {
     const { makingPayment, networkNames, options, optionName, amount, Networks } = this.state;
     return (
-      <Layout>
-        <div id="panel">
-          <h4> Airtime Topup </h4>
-        </div>                              
-        <div>
-          <div className="row" style={{display:'flex', justifyContent: 'center', marginBottom:'5%'}}>
-            <ul className="nav navbar-nav">
-              <div className="dropdown">
-                <li 
-                  className="btn dropdown-toggle" 
-                  type="button" data-toggle="dropdown" 
-                  style={{backgroundColor: '#faa831', width: '350px'}}
-                >
-                  <strong>{networkNames}</strong> 
-                  <span className="fa fa-chevron-down"></span>
-                </li>
-                <ul className="dropdown-menu dropdown" id="billPaymentOptionsDropdown">
-                  {
-                    Networks.map((name,i) => {
-                      return <NetworkList 
-                        getServiceNames={() => this.getServiceNames(name.serviceName)} 
-                        key={i} 
-                        name={name.serviceName} 
-                        index={i}
-                      />
-                    })
-                  }
-                </ul>
-              </div>
-            </ul>
-          </div>
-
-          {
-            networkNames === 'Select Network' ?
-            null :
-            <div className="row" style={{display:'flex', justifyContent: 'center', marginBottom:'5%'}}>
+      <AuthenticatedPagesLayoutWrapper>
+        <SlimContentCardWrapper>
+          <Panel 
+            title="Airtime Topup" 
+          />                              
+          <div>
+            <div className="row d-flex justify-content-center mb-5">
               <ul className="nav navbar-nav">
                 <div className="dropdown">
                   <li 
                     className="btn dropdown-toggle" 
                     type="button" data-toggle="dropdown" 
-                    id="billPaymentOptions"  
+                    style={{backgroundColor: '#faa831', width: '350px'}}
                   >
-                      <strong>{optionName}</strong> 
-                      <span className="fa fa-chevron-down"></span>
-                    </li>
-                  <ul className="dropdown-menu dropdown"  id="billPaymentOptionsDropdown">
+                    <strong>{networkNames}</strong> 
+                    
+                  </li>
+                  <ul className="dropdown-menu dropdown" id="billPaymentOptionsDropdown">
                     {
-                      options === null ? null : (options.length === 0 ? null : 
-                        options.map((optionName,i) => {
-                          return <NetworkOptions 
-                            getServiceAmount={() => this.getServiceAmount(optionName.amount, optionName.optionName)} 
-                            key={i} optionName={optionName.optionName} 
-                            amount={optionName.amount} 
-                          />
-                        })
-                      ) 
+                      Networks.map((name,i) => {
+                        return <NetworkList 
+                          getServiceNames={() => this.getServiceNames(name.serviceName)} 
+                          key={i} 
+                          name={name.serviceName} 
+                          index={i}
+                        />
+                      })
                     }
-                </ul>
+                  </ul>
                 </div>
               </ul>
             </div>
-          }
-        <div>
-          {
-            networkNames === 'Select Network' || optionName === 'Select Option' ? 
-              null : 
-              <React.Fragment>
-                <h4 id="serviceName"> {networkNames} </h4>
-                <form className="form-horizontal">
-                  <div className="form-group">
-                    <input className="form-control" type="number" name="amount" value={amount} step="0.01" maxLength="10" required="required" placeholder="Enter Amount" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} />
-                  </div>
-                  <div className="form-group">
-                    <input className="form-control" type="number" name="deviceNumber" required="required" placeholder="Enter Phone Number" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} maxLength="11" /> 
-                  </div>
-                  <div className="form-group">
-                    <input className="form-control" type="password" name="agentPin" required="required" placeholder="Enter Agent PIN" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} maxLength="4" />
-                  </div>
-                  <div className="form-group">         
-                    <button 
-                      type="submit"
-                      className="btn col-sm-8 col-md-6 col-lg-4" 
-                      id="button"                      
-                      onClick={this.makePayment}>
+
+            {
+              networkNames === 'Select Network' ?
+              null :
+              <div className="row d-flex justify-content-center mb-5">
+                <ul className="nav navbar-nav">
+                  <div className="dropdown">
+                    <li 
+                      className="btn dropdown-toggle" 
+                      type="button" data-toggle="dropdown" 
+                      id="billPaymentOptions"  
+                    >
+                        <strong>{optionName}</strong> 
+                        
+                      </li>
+                    <ul className="dropdown-menu dropdown"  id="billPaymentOptionsDropdown">
                       {
-                        makingPayment ? <MakingPayment />
-                        : 'Proceed'
+                        options === null ? null : (options.length === 0 ? null : 
+                          options.map((optionName,i) => {
+                            return <NetworkOptions 
+                              getServiceAmount={() => this.getServiceAmount(optionName.amount, optionName.optionName)} 
+                              key={i} optionName={optionName.optionName} 
+                              amount={optionName.amount} 
+                            />
+                          })
+                        ) 
                       }
-                    </button>
-                  </div> 
-                </form>
-            </React.Fragment>
-          }            
-        </div>
-        </div> 
-      </Layout>           
+                  </ul>
+                  </div>
+                </ul>
+              </div>
+            }
+            <div>
+              {
+                networkNames === 'Select Network' || optionName === 'Select Option' ? 
+                  null : 
+                  <React.Fragment>
+                    <h4 id="serviceName"> {networkNames} </h4>
+                    <form className="form-horizontal">
+                      <div className="form-group">
+                        <input className="form-control" type="number" name="amount" value={amount} step="0.01" maxLength="10" required="required" placeholder="Enter Amount" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} />
+                      </div>
+                      <div className="form-group">
+                        <input className="form-control" type="number" name="deviceNumber" required="required" placeholder="Enter Phone Number" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} maxLength="11" /> 
+                      </div>
+                      <div className="form-group">
+                        <input className="form-control" type="password" name="agentPin" required="required" placeholder="Enter Agent PIN" onChange={this.onChange} onKeyPress={(e) => manipulateNumber(e)} maxLength="4" />
+                      </div>
+                      <div className="form-group">         
+                        <button 
+                          type="submit"
+                          className="btn btn-success col-sm-8 col-md-6 col-lg-4" 
+                          id="button"
+                          disabled={makingPayment}                      
+                          onClick={this.makePayment}>
+                          {
+                            makingPayment ? <MakingPayment />
+                            : 'Proceed'
+                          }
+                        </button>
+                      </div> 
+                    </form>
+                </React.Fragment>
+              }            
+            </div>
+          </div> 
+        </SlimContentCardWrapper>
+      </AuthenticatedPagesLayoutWrapper>          
     )  
   }
 }

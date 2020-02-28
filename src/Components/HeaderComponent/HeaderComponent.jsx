@@ -2,27 +2,28 @@ import React from 'react';
 import './HeaderComponent.styles.scss';
 import Logo from '../../img/logo.png';
 import { Link, useHistory } from 'react-router-dom';
+import '../../pages/Header/header.scss'
 
-export default function HeaderComponent({ agentName }) {
+export default function HeaderComponent({ agentName, to }) {
     const history = useHistory();
     const Logout = () => {
         sessionStorage.clear();
         history.push('/');
     }
     return (
-        <div id="mainContainer">
-            <div className="fluid">
+        <div className="top">
+            <div className="header-container">
                 <div className="nav navbar-header">
-                    <Link to="/dashboard" className="navbar-brand"><img src={Logo} alt="" /></Link>
+                    <Link to={to} className="navbar-brand"><img src={Logo} alt="FCMB Logo" /></Link>
                 </div>
                 
-                <div id="rightContent">
+                <ul className="nav navbar-nav navbar-right">
                     <div className="dropdown">
                         <button
-                            className="btn btn-light btn-sm dropdown-toggle" 
+                            className="btn btn-light btn-sm dropdown-toggle m-0" 
                             type="button" 
                             data-toggle="dropdown" 
-                        > Menu <span className="fa fa-chevron-down"></span></button>
+                        > Menu </button>
                         <ul className="dropdown-menu dropdown">
                             <li><Link to={"/pinChange"}> Change Pin</Link></li>
                         </ul>
@@ -32,8 +33,8 @@ export default function HeaderComponent({ agentName }) {
                             <i className="fa fa-power-off" aria-hidden="true"></i>
                         </button>                        
                     </div>
-                </div> 
-            </div><br/>
+                </ul> 
+            </div>
         </div>
     )
 }

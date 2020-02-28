@@ -19,10 +19,10 @@ export default function AggregatorHeaderComponent({ agentName }) {
                 <div id="rightContent">
                     <div className="dropdown">
                         <button
-                            className="btn btn-light btn-sm dropdown-toggle" 
+                            className="btn btn-sm dropdown-toggle" 
                             type="button" 
                             data-toggle="dropdown" 
-                        > Menu <span className="fa fa-chevron-down"></span></button>
+                        > Menu</button>
                         <ul className="dropdown-menu dropdown">
                             <li><Link to={"/pinChange"}> Change Pin</Link></li>
                         </ul>
@@ -33,7 +33,7 @@ export default function AggregatorHeaderComponent({ agentName }) {
                         </button>                        
                     </div>
                 </div> 
-            </div><br/>
+            </div>
         </div>
     )
 }

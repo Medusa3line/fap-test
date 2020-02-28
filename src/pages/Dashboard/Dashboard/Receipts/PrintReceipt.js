@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import withTimeout from '../../../../Components/HOCs/withTimeout.hoc';
 import { useHistory } from 'react-router-dom';
+import ReactToPrint from 'react-to-print';
 
-import PrintReceipt from '../../../../Utils/print';
-import './PrintReceipt.styles.scss';
 import ReceiptFooter from '../../../../Components/ReceiptFooter/ReceiptFooter.component';
 
 const Receipt = () => {
@@ -14,6 +13,7 @@ const Receipt = () => {
 
 	const history = useHistory();
 	const { location } = history;
+	const componentRef = useRef()
 
 	useEffect(() => {
 		if (location.state === undefined){
@@ -28,77 +28,92 @@ const Receipt = () => {
 		}
 	}, [history, location.state])
 
-	const print = (divName) => {
-	    PrintReceipt(divName);
-  	}
-
 	const { transactionType, transactionRef, tranDate, status, amount, tranId, bankFrom, bankTo, beneficiary, agentName, fee } = state.transaction;
 	const { address } = state.userDetails;
 	const statusClass = () => {
 		if(status !== undefined){
-			if(status.toLowerCase().includes('success')){
-				return 'success'
-			} else if (status.toLowerCase().includes('pending')){
-				return 'pending'
-			} else if (status.toLowerCase().includes('failed')){
-				return 'failed'
-			} else if (status.toLowerCase().includes('reverse')){
-				return 'reverse'
+			const btnBaseStyle = {
+				borderRadius: '5px',
+				padding: '5px',
+				color: 'white',
+				cursor: 'not-allowed'
 			}
-		}
+			if(status.toLowerCase().includes('success')){
+				return {
+					...btnBaseStyle,
+					backgroundColor: '#4caf50', /* Green */
+				}
+			} 
+			else if (status.toLowerCase().includes('pending')){
+				return {
+					...btnBaseStyle,
+					backgroundColor: '#faa831', /* yellow */
+				}
+			} else if (status.toLowerCase().includes('failed')){
+				return {
+					...btnBaseStyle,
+					backgroundColor: '#E6061C', /* red */
+				}
+			} else if (status.toLowerCase().includes('reverse')){
+				return {
+					...btnBaseStyle,
+					backgroundColor: '#bdbdbd', /* Grey */
+				}
+			}
+		}	
 	}
 
 	return (
-		<div id="print-receipt">
-	        <div className="form-horizontal" id="deposit-fields-2">
-				<div id="receipt-header">
+		<div id="print-receipt" ref={componentRef}>
+	        <div className="form-horizontal" id="deposit-fields-2" >
+				<div className="receipt-header">
 					<h4>{transactionType !== undefined ? transactionType.replace(/_/g, ' '): null} </h4>
 					<h6>FCMB</h6>
-					<h5 className={statusClass()}>{status} </h5>
+					<h6 style={statusClass()}>{status} </h6>
 				</div>
 				<div className="form-group">
 		            <div className="col-sm-12 col-md-12 col-lg-12">
-		              <h5>Agent Name <span>{agentName}</span></h5>
+		              <h6>Agent Name <span>{agentName}</span></h6>
 		            </div>
 		        </div>
 				<div className="form-group">
 		            <div className="col-sm-12 col-md-12 col-lg-12">
-		              <h5>Agent's Address <span> {address} </span></h5>
+		              <h6>Agent's Address <span> {address} </span></h6>
 		            </div>
 		        </div>
 		        <div className="form-group">
 		            <div className="col-sm-12 col-md-12 col-lg-12">
-		              <h5>Transaction Id <span> {tranId} </span></h5>
+		              <h6>Transaction Id <span> {tranId} </span></h6>
 		            </div>
 		        </div>
 		        <div className="form-group">
 		            <div className="col-sm-12 col-md-12 col-lg-12">
-		              <h5>Date <span> {tranDate !== undefined ? tranDate.substring(0, tranDate.length - 18) : null } </span></h5>
+		              <h6>Date <span> {tranDate !== undefined ? tranDate.substring(0, tranDate.length - 18) : null } </span></h6>
 		            </div>
 		        </div>
 		        <div className="form-group">
 		            <div className="col-sm-12 col-md-12 col-lg-12">
-		              <h5>Time <span> {tranDate !== undefined ? tranDate.substring(11, tranDate.length - 9): null} </span></h5>
+		              <h6>Time <span> {tranDate !== undefined ? tranDate.substring(11, tranDate.length - 9): null} </span></h6>
 		            </div>
 		        </div>
 		        <div className="form-group">
 		            <div className="col-sm-12 col-md-12 col-lg-12">
-		              <h5>Account Number <span> {beneficiary} </span></h5>
+		              <h6>Account Number <span> {beneficiary} </span></h6>
 		            </div>
 		        </div>
 		        <div className="form-group">
 		            <div className="col-sm-12 col-md-12 col-lg-12">
-		              <h5>Recipient Bank <span>{bankTo} </span></h5>
+		              <h6>Recipient Bank <span>{bankTo} </span></h6>
 		            </div>
 		        </div>
 		        <div className="form-group">
 		            <div className="col-sm-12 col-md-12 col-lg-12">
-		              <h5>Sender's Bank <span>{bankFrom} </span></h5>
+		              <h6>Sender's Bank <span>{bankFrom} </span></h6>
 		            </div>
 		        </div>
 		        <div className="form-group">
 		        	<div className="col-sm-12 col-md-12 col-lg-12">
-		            	<h5> Reference Number <span> { transactionRef } </span> </h5>
+		            	<h6> Reference Number <span> { transactionRef } </span> </h6>
 		            </div>
 		        </div>
 
@@ -110,16 +125,18 @@ const Receipt = () => {
 
 		        <div className="form-group">
 		            <div className="col-sm-12 col-md-12 col-lg-12">
-		                <h5>Charge <span>₦{fee}</span></h5>
+		                <h6>Charge <span>₦{fee}</span></h6>
 		            </div>
 	          	</div>
 	        </div>
 
-	        <div id="receipt-footer">        
+	        <div className="d-flex justify-content-around mb-5">        
 	              <button type="submit"
-	                className="btn btn-xs col-sm-4 col-md-4 col-lg-4"
-	                onClick={() => print('deposit-fields-2')}>
-	                Print Receipt
+	                className="btn btn-xs col-sm-4 col-md-4 col-lg-4">
+	                <ReactToPrint
+						trigger={() => <span>Print Receipt</span>}
+						content={() => componentRef.current}
+					/>
 	            </button>
 	              
 	            <button

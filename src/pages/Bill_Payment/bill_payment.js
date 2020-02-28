@@ -1,20 +1,25 @@
-import React from 'react';
+import React, { Component } from 'react';
 
 import withTimeout from '../../Components/HOCs/withTimeout.hoc';
-import { customPageTitle } from '../../Utils/customTitle';
 
 import BillFields from './BillFields'
-import Layout from '../../Components/Layout/Layout.component';
+import AuthenticatedPagesLayoutWrapper from '../../Components/AuthenticatedPagesLayoutWrapper/authenticatedPagesLayoutWrapper';
+import SlimContentCardWrapper from '../../Components/SlimContentCardWrapper/slimContentCardWrapper';
+import Panel from '../../Components/Panel/panel';
 
- const BillPayment = () => {
-  customPageTitle('Pay Bills')
-  return (
-    <Layout>
-      <div id="panel">
-        <h4> Bill Payment </h4>
-      </div>                              
-      <BillFields />
-    </Layout>
-  )  
+ class bill_payment extends Component {
+
+  render() {
+    return (
+      <AuthenticatedPagesLayoutWrapper>
+        <SlimContentCardWrapper>
+          <Panel 
+            title="Bill Payment" 
+          />                             
+          <BillFields />     
+        </SlimContentCardWrapper>
+      </AuthenticatedPagesLayoutWrapper>
+    )  
+  }
 }
-export default withTimeout(BillPayment);
+export default withTimeout(bill_payment);
