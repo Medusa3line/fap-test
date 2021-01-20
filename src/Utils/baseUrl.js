@@ -1,9 +1,9 @@
 const baseUrl = () => {
     if(process.env.NODE_ENV === 'development'){
-        return "http://10.2.2.47:9090/api"; // FCMB test Parameter for test server
+        return "http://test.3lineng.com:9090/api"; // FCMB test Parameter for test server
         // return "http://41.219.149.51:9090/api"; // FCMB test Parameter for test server
     } else if(process.env.NODE_ENV === 'production') {
-        return "http://10.2.2.47:9090/api"; // FCMB live parameter (Change to the live url)
+        return "http://test.3lineng.com:9090/api"; // FCMB live parameter (Change to the live url)
         // return "http://41.219.149.51:9090/api"; // FCMB live parameter (Change to the live url)
     }
 }
