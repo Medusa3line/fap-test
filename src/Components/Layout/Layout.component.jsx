@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
-import './layout.styles.scss';
+import './Layout.styles.scss';
 import Sidebar from '../Sidebar/sidebar.component';
 import FreedomLogo from '../../img/logo.png'
 

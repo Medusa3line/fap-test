@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import Layout from '../Layout/layout.component';
+import Layout from '../Layout/Layout.component';
 
 export default function AuthenticatedPagesLayoutWrapper( { children }) {
     return (

@@ -3,7 +3,7 @@ import baseUrl from '../../Utils/baseUrl';
 
 import InternetServices from './InternetServices/InternetServices';
 import UtilityBills from './UtilityBills/UtilityBills';
-import CableTv from './CableTV/CableTv';
+import CableTv from './CableTv/CableTv';
 
  class BillFields extends Component {
   constructor(){
